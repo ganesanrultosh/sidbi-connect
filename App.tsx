@@ -1,5 +1,4 @@
-import { Box, Button, Flex, Icon, Pressable, Surface, Text, TextInput, Wrap } from '@react-native-material/core';
-import React, { useState } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './pages/Login';
@@ -7,16 +6,18 @@ import RegisterBasicInfo from './pages/RegisterBasicInfo';
 import RegisterContactInfo from './pages/RegisterContactInfo';
 import Register from './pages/Register';
 import { RootSiblingParent } from 'react-native-root-siblings';
-import OngoingLeads from './pages/OngoingLeads';
 import Home from './pages/Home';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import Lead from './pages/Lead';
+import LeadBasicInfo from './pages/LeadBasicInfo';
+import { DefaultTheme, Provider } from 'react-native-paper';
+import LeadContactInfo from './pages/LeadContactInfo';
+import LeadSubmission from './pages/LeadSubmission';
+import ForgotPassword from './pages/ForgotPassword';
 
 const Stack = createNativeStackNavigator();
 
 function App(): JSX.Element {
-  return <RootSiblingParent>
+  return <Provider theme={DefaultTheme}><RootSiblingParent>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Login" component={Login} />
@@ -24,17 +25,19 @@ function App(): JSX.Element {
         <Stack.Screen name="Registration: Contact Information" component={RegisterContactInfo} />
         <Stack.Screen name="Registration" component={Register} />
         <Stack.Screen name="Home" component={Home} options={{
+          headerTitle: "SIDBI Connect",
           headerTitleAlign: 'center',
           headerLeft: () => <FontAwesome6 name="bars" size={20} />,
           headerRight: () => <FontAwesome6 name="user" size={20} />
         }} />
-        <Stack.Screen name="Lead" component={Lead} />
+        <Stack.Screen name="Lead: Basic Information" component={LeadBasicInfo} />
+        <Stack.Screen name="Lead: Contact Information" component={LeadContactInfo} />
+        <Stack.Screen name="Lead: Submission" component={LeadSubmission} />
+        <Stack.Screen name="Forgot Password" component={ForgotPassword} />
       </Stack.Navigator>
-      {/* <Drawer.Navigator initialRouteName="Home">
-        <Drawer.Screen name="Home" component={Home} />
-      </Drawer.Navigator> */}
     </NavigationContainer>
   </RootSiblingParent>
+  </Provider>
 }
 
 

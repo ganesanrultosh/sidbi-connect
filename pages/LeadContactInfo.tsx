@@ -3,7 +3,7 @@ import { ScrollView, Text } from "react-native"
 import { useNavigation } from "@react-navigation/native";
 import { Button, Surface, TextInput } from "react-native-paper";
 
-const RegisterContactInfo = () => {
+const LeadContactInfo = () => {
   const navigation = useNavigation();
   return <Surface
     elevation={4}
@@ -31,8 +31,8 @@ const RegisterContactInfo = () => {
 
       </TextInput>
     </ScrollView>
-    <Button mode="contained" style={{alignSelf: "flex-end", display: "flex", margin: 10}} onPress={() => navigation.navigate('Registration' as never)}>Continue</Button>
+    <Button mode="contained" style={{alignSelf: "flex-end", display: "flex", margin: 10}} onPress={() => navigation.navigate('Lead: Submission' as never)}>Continue</Button>
   </Surface>
 }
 
-export default RegisterContactInfo;
+export default LeadContactInfo;

@@ -1,11 +1,14 @@
-import { Box, Button, Pressable, Surface, useTheme } from "@react-native-material/core";
-import { ScrollView, Text, TouchableOpacityComponent, View } from "react-native";
+import { Text, View } from "react-native";
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import {Linking} from 'react-native'
+import React from "react";
 
 const OngoingSiteVisitsHeader = () => {
   return <View style={{
-    backgroundColor: "lightgray", flexDirection: "row", justifyContent: "center", alignItems: "center"
+    backgroundColor: "lightgray", 
+    flexDirection: "row", 
+    justifyContent: "center", 
+    alignItems: "center",
+    marginTop: 20
   }}>
     <Text 
       style={{

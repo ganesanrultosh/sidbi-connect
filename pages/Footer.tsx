@@ -1,5 +1,5 @@
-import { Box, Flex } from "@react-native-material/core";
-import { Text, View } from "react-native";
+import React from "react";
+import { View } from "react-native";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 
 const Footer = () => {

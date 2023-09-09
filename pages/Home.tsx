@@ -4,6 +4,7 @@ import OngoingLeads from "./OngoingLeads";
 import OngoingLeadsHeader from "./OngoingLeadsHeader";
 import { ScrollView, Text, View } from "react-native";
 import Footer from "./Footer";
+import React from "react";
 
 const Home = () => {
   return <><View style={{ flex: 1 }}>
