@@ -4,6 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Button, RadioButton, Surface, Switch, TextInput, useTheme } from "react-native-paper";
 import { DatePickerInput } from "react-native-paper-dates";
 import CheckBox from "react-native-check-box";
+import DropDown from "react-native-paper-dropdown";
 
 const LeadSubmission = () => {
   const navigation = useNavigation();
@@ -20,12 +21,33 @@ const LeadSubmission = () => {
   const [concentSent, setConcentSent] = useState(false)
   const [termsAgreed, setTermsAgreed] = useState(false)
 
+  const [branch, setBranch] = useState("")
+  const [showBranchDropDown, setShowBranchDropDown] = useState(false);
+
+  let branchDomain = [{
+    label: 'Chennai',
+    value: 'Chennai',
+  }, {
+    label: 'Lucknow',
+    value: 'Lucknow',
+  }];
+
   return <Surface
     elevation={4}
     style={{ width: "95%", margin: 10, padding: 20 }}
   >
     <ScrollView>
       <Text style={{ fontSize: 15, fontWeight: "bold", marginBottom: 3 }}>Submission</Text>
+      <DropDown
+        label="Branch"
+        mode={"outlined"}
+        visible={showBranchDropDown}
+        showDropDown={() => setShowBranchDropDown(true)}
+        onDismiss={() => setShowBranchDropDown(false)}
+        value={branch}
+        list={branchDomain}
+        setValue={setBranch}
+      />
       <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center', marginBottom: 10 }}>
         <DatePickerInput
           locale="en-In"

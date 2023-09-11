@@ -4,14 +4,12 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 
 const OngoingLeadsHeader = () => {
-  const navigation = useNavigation();
-  
   return <View style={{
     backgroundColor: "lightgray", 
     flexDirection: "row", 
     justifyContent: "center", 
     alignItems: "center",
-    marginTop: 20
+    margin: 10
   }}>
     <Text 
       style={{
@@ -22,9 +20,6 @@ const OngoingLeadsHeader = () => {
         }}>
       Ongoing Leads 
       </Text>
-      <FontAwesome6 name={"circle-plus"} size={25} style={{padding: 15, alignSelf: "flex-end", color: "blue"}} onPress={() => {
-        navigation.navigate('Lead: Basic Information' as never)
-      }}/>
   </View>
 }
 

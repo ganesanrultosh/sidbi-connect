@@ -1,0 +1,22 @@
+0) Formix/Yup integration
+
+1) NeSL API (PAN validation and getting the Name from PAN)
+2) Drop down value for category and subcategory (Single API to get master data given the master data key)
+3) City and State given PINCODE
+4) Registration API with PAN, email and existing customer dedup API
+5) Login API
+6) Branch list given the PINCODE
+7) Customer Concent Mobile & Email OPT generation
+8) Customer Concent Mobile or Email OTP Validation
+9) Lead submission API
+10) List of leads given the TPE
+11) Forgot password Mobile & Email OTP Generation
+12) Forgot password - set password
+13) Logout
+
+Mobile OTP Generation
+Mobile OTP Validation
+Email OTP Generation
+Email OTP Validation
+
+

@@ -13,6 +13,7 @@ import { DefaultTheme, Provider } from 'react-native-paper';
 import LeadContactInfo from './pages/LeadContactInfo';
 import LeadSubmission from './pages/LeadSubmission';
 import ForgotPassword from './pages/ForgotPassword';
+import Leads from './pages/Leads';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +33,7 @@ function App(): JSX.Element {
         }} />
         <Stack.Screen name="Lead: Basic Information" component={LeadBasicInfo} />
         <Stack.Screen name="Lead: Contact Information" component={LeadContactInfo} />
+        <Stack.Screen name="Leads" component={Leads} />
         <Stack.Screen name="Lead: Submission" component={LeadSubmission} />
         <Stack.Screen name="Forgot Password" component={ForgotPassword} />
       </Stack.Navigator>
