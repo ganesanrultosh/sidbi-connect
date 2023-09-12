@@ -16,7 +16,7 @@ const OngoingLeads = () => {
     <View><Surface
       elevation={4}
       style={{ margin: 10, padding: 10, width: 200 }}>
-      <Text style={{ fontWeight: "bold", color: "black" }}>Lead: SOWBHAGYA GAR</Text>
+      <Text style={{ fontWeight: "bold", color: "black" }}>SOWBHAGYA GAR</Text>
       <Text style={{ fontWeight: "bold", fontSize: 12 }}>18th July, 2023</Text>
       <Text style={{ fontWeight: "bold", color: "black", marginTop: 10 }}>Loan Amount: 3 Lac</Text>
       <Text style={{ fontWeight: "bold", color: "black" }}>Type: Entity</Text>
@@ -142,7 +142,7 @@ const OngoingLeads = () => {
       <Surface
         elevation={4}
         style={{ margin: 10, padding: 10, width: 200 }}>
-        <Text style={{ fontWeight: "bold", color: "black" }}>Lead: SOWBHAGYA GAR</Text>
+        <Text style={{ fontWeight: "bold", color: "black" }}>Lead: SOWBHAGYA GAR SOWBHAGYA GAR SOWBHAGYA GAR</Text>
         <Text style={{ fontWeight: "bold", fontSize: 12 }}>18th July, 2023</Text>
         <Text style={{ fontWeight: "bold", color: "black", marginTop: 10 }}>Loan Amount: 3 Lac</Text>
         <Text style={{ fontWeight: "bold", color: "black" }}>Type: Entity</Text>

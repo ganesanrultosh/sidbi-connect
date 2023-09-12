@@ -3,6 +3,7 @@ import { ScrollView, Text, View } from "react-native"
 import { useNavigation } from "@react-navigation/native";
 import { Button, RadioButton, Surface, TextInput, useTheme } from "react-native-paper";
 import DropDown from "react-native-paper-dropdown";
+import Footer from "./Footer";
 
 const LeadBasicInfo = () => {
 
@@ -22,7 +23,7 @@ const LeadBasicInfo = () => {
     value: 'Loan Type 2',
   }];
 
-  return <Surface
+  return <View style={{ flex: 1 }}><ScrollView><Surface
     elevation={4}
     style={{ width: "95%", margin: 10, padding: 20 }}
   >
@@ -72,8 +73,8 @@ const LeadBasicInfo = () => {
       </View>
     </ScrollView>
     <Button mode="contained" style={{ alignSelf: "flex-end", display: "flex", margin: 10 }} onPress={() => navigation.navigate('Lead: Contact Information' as never)}>Continue</Button>
-
-  </Surface>
+  </Surface></ScrollView>
+  <Footer/></View>
 }
 
 export default LeadBasicInfo;

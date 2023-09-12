@@ -1,18 +1,16 @@
-import React, { useState } from "react";
-import { ScrollView, Text, View } from "react-native"
+import React from "react";
+import { ScrollView, StyleSheet, Text } from "react-native"
 import { useNavigation } from "@react-navigation/native";
-import { Button, Surface, TextInput } from "react-native-paper";
-import DropDown from "react-native-paper-dropdown";
+import { Button, Surface } from "react-native-paper";
+import { Field, Formik } from "formik";
+import * as yup from 'yup';
+import CustomInput from "../components/CustomInput";
+import CustomDropDown from "../components/CustomDropDown";
 
 const RegisterBasicInfo = () => {
 
   const navigation = useNavigation();
 
-  const [category, setCategory] = useState("")
-  const [showCategoryDropDown, setShowCategoryDropDown] = useState(false);
-  const [subCategory, setSubCategory] = useState("")
-  const [showSubCategoryDropDown, setShowSubCategoryDropDown] = useState(false);
-  
   let categoryMaster = [{
     label: 'Entity',
     value: 'Entity',
@@ -20,8 +18,6 @@ const RegisterBasicInfo = () => {
     label: 'Individual',
     value: 'Individual',
   }];
-
-  
 
   let subCategoryMaster = [{
     label: 'Original Equipment Manufactures',
@@ -43,59 +39,112 @@ const RegisterBasicInfo = () => {
     value: 'Other/Professional Individuals',
   }];
 
-  
+  const basicInfoValidationSchema = yup.object().shape({
+    pan: yup
+      .string()
+      .matches(/[A-Z]{5}[0-9]{4}[A-Z]{1}/, "Please enter valid PAN")
+      .required('PAN is Required'),
+    name: yup
+      .string()
+      .required('Name is required'),
+    category: yup
+      .string()
+      .required('Category is required'),
+    subCategory: yup
+      .string()
+      .required('Sub Category is required'),
+    keyPerson: yup
+      .string()
+      .when("category", (category, schema) => {
+        if(String(category) === "Entity")
+          return schema.required("Key person is required")
+        return schema
+      })
+  })
 
-  return <Surface
-    elevation={4}
-    style={{ width: "95%", margin: 10, padding: 20 }}
+  const initialValue = { 
+    pan: '', 
+    name: '', 
+    category: '', 
+    subCategory: '', 
+    keyPerson: '' 
+  };
+
+  return <Formik
+    validationSchema={basicInfoValidationSchema}
+    initialValues={initialValue}
+    onSubmit={values => {
+      navigation.navigate('Registration: Contact Information' as never)
+    }}
   >
-    <ScrollView style={{ padding: 5 }}>
-      <Text style={{ fontSize: 15, fontWeight: "bold", marginBottom: 10 }}>Basic Information</Text>
-      <TextInput label={"PAN No (*)"} mode='outlined' style={{ marginBottom: 10 }}>
-
-      </TextInput>
-      <TextInput label={"Name of Individual/Entity"} mode='outlined' 
-        style={{ marginBottom: 10 }}>
-
-      </TextInput>
-      <DropDown
-        label="Category"
-        mode={"outlined"}
-        visible={showCategoryDropDown}
-        showDropDown={() => setShowCategoryDropDown(true)}
-        onDismiss={() => setShowCategoryDropDown(false)}
-        value={category}
-        list={categoryMaster}
-        setValue={setCategory}
-        dropDownStyle={{marginBottom: 5}}
-      />
-      <View style={{marginTop: 10}}>
-      <DropDown
-        label="Category"
-        mode={"outlined"}
-        visible={showSubCategoryDropDown}
-        showDropDown={() => setShowSubCategoryDropDown(true)}
-        onDismiss={() => setShowSubCategoryDropDown(false)}
-        value={subCategory}
-        list={subCategoryMaster}
-        setValue={setSubCategory}
-        dropDownStyle={{marginBottom: 5}}
-      />
-      </View>
+    {({
+      values,
+      handleSubmit,
+      isValid
+    }) => (<Surface elevation={4} style={styles.basicInfoSurface}>
+      <ScrollView style={styles.scrollView}>
+        <Text style={styles.basicInfoTitle}>Basic Information</Text>
+        <Field
+          component={CustomInput}
+          name="pan"
+          label="PAN (*)"
+        />
+        <Field
+          component={CustomInput}
+          name="name"
+          label="Name of Individual/Entity (*)"
+        />
+        <Field
+          component={CustomDropDown}
+          name="category"
+          label="Category (*)"
+          list={categoryMaster}
+        />
+        <Field
+          component={CustomDropDown}
+          name="subCategory"
+          label="Sub Category (*)"
+          list={subCategoryMaster}
+        />
       {
-        category === "Entity" && 
-        <TextInput label={"Key Person Name"} mode='outlined' style={{ marginTop: 10 }}>
-        </TextInput>
+        values.category === "Entity" &&
+        <Field
+          component={CustomInput}
+          name="keyPerson"
+          label="Key Person Name (*)"
+        />
       }
-
-    </ScrollView>
-    {/* <Button title="Back" variant="outlined" style={{width: "25%", alignSelf: "flex-start", display: "flex"}}></Button> */}
-    <Button 
-      mode="contained" 
-      style={{ alignSelf: "flex-end", display: "flex", margin: 10 }} 
-      onPress={() => navigation.navigate('Registration: Contact Information' as never)}>Continue</Button>
-
-  </Surface>
+      </ScrollView>
+      <Button
+        mode="contained"
+        disabled={!isValid}
+        style={styles.continueButton}
+        onPress={(e:any) => handleSubmit(e)}>
+          Continue
+      </Button>
+    </Surface>)}
+  </Formik>
 }
+
+const styles = StyleSheet.create({
+  basicInfoSurface: { 
+    width: "95%", 
+    margin: 10, 
+    padding: 20 
+  },
+  continueButton: { 
+    alignSelf: "flex-end", 
+    display: "flex", 
+    margin: 10 
+  },
+  basicInfoTitle: { 
+    fontSize: 15, 
+    fontWeight: "bold", 
+    marginBottom: 10 
+  },
+  scrollView: { 
+    padding: 5 
+  }
+})
 
 export default RegisterBasicInfo;
