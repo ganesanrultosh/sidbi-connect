@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   errorInput: {
-    borderColor: 'red',
+    backgroundColor: '#FFCCBB'
   }
 })
 

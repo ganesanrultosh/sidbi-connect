@@ -33,8 +33,8 @@ const LeadBasicInfo = () => {
   const initialValue = {
     entityName: '',
     loanAmount: '',
-    loandType: '',
-    customerType: 'new'
+    loanType: '',
+    customerType: ''
   }
 
   const basicInfoValidationSchema = yup.object().shape({

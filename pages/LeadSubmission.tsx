@@ -35,11 +35,11 @@ const LeadSubmission = () => {
 
   const initialValues = {
     branch: '',
-    dataOfIncorporation: '',
+    dateOfIncorporation: '',
     min3YrsIT: false,
     recent3YrsBankStmt: false,
     isRegisteredUnderGST: false,
-    filledBy: 'customer',
+    filledBy: '',
     termsAgreed: false
   }
 
@@ -47,7 +47,7 @@ const LeadSubmission = () => {
     branch: yup
       .string()
       .required('Branch is required.'),
-    dateOfIncorporation: yup.date().required('Date of incorporation required'),
+    dateOfIncorporation: yup.string().required('Date of incorporation required'),
     min3YrsIT: yup
       .boolean()
       .isTrue('Customer should have 3 yrs IT Returns'),

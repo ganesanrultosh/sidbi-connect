@@ -25,7 +25,7 @@ const CustomDropDown = (props : any) => {
         value={value}
         list={props.list}
         setValue={(text) => onChange(name)(text)}
-        dropDownStyle={{marginBottom: 10}}
+        inputProps={{style: [styles.dropDown, hasError && styles.errorInput]}}
         {...inputProps}
       />
       {hasError && <Text style={styles.errorText}>{errors[name]}</Text>}
@@ -34,15 +34,13 @@ const CustomDropDown = (props : any) => {
 }
 
 const styles = StyleSheet.create({
-  textInput: {
-    width: '100%',
-  },
+  dropDown: { },
   errorText: {
     fontSize: 10,
     color: 'red',
   },
   errorInput: {
-    borderColor: 'red',
+    backgroundColor: '#FFCCBB'
   }
 })
 

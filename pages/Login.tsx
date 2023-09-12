@@ -84,12 +84,13 @@ const Login = () => {
       <Text style={styles.scenarioQuestion} >Become a partner</Text>
       <Button
         onPress={() => {
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{ name: 'Registration: Basic Information' }],
-            })
-          );
+          // navigation.dispatch(
+          //   CommonActions.reset({
+          //     index: 0,
+          //     routes: [{ name: 'Registration: Basic Information' }],
+          //   })
+          // );
+          navigation.navigate('Registration: Basic Information' as never);
         }}
         mode='contained'
         style={styles.registerButton}

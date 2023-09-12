@@ -18,7 +18,7 @@ const CustomerDataPicker = (props: any) => {
   const hasError = errors[name] && touched[name]
 
   return (
-    <>
+    <View style={{marginBottom: 10}}>
         <View style={styles.datePicker}>
           <DatePickerInput
             locale='en-In'
@@ -27,21 +27,26 @@ const CustomerDataPicker = (props: any) => {
             inputMode="start"
             mode="outlined"
             {...inputProps}
+            style={hasError && styles.errorInput}
           />
         </View>
       {hasError && <Text style={styles.errorText}>{errors[name]}</Text>}
-    </>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
-  datePicker: { justifyContent: 'center', flex: 1, alignItems: 'center', marginBottom: 10 },
+  datePicker: { 
+    justifyContent: 'center', 
+    flex: 1, 
+    alignItems: 'center'
+  },
   errorText: {
     fontSize: 10,
     color: 'red',
   },
   errorInput: {
-    borderColor: 'red',
+    backgroundColor: '#FFCCBB'
   }
 })
 

@@ -14,8 +14,8 @@ const CustomerSwitch = (props : any) => {
   const hasError = errors[name] && touched[name]
 
   return (
-    <View>
-      <View style={{ flexDirection: 'row', alignContent: 'center', marginBottom: 10 }}>
+    <View style={{marginBottom: 10}}>
+      <View style={{ flexDirection: 'row', alignContent: 'center' }}>
         <View style={{ flex: 7, alignSelf: 'flex-start' }}>
           <Text style={{ fontSize: 16 }}>{inputProps.label}</Text>
         </View>
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   errorInput: {
-    borderColor: 'red',
+    backgroundColor: '#FFCCBB'
   }
 })
 
