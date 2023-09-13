@@ -1,10 +1,10 @@
-import React from "react";
-import { ScrollView, StyleSheet, Text } from "react-native"
-import { useNavigation } from "@react-navigation/native";
-import { Button, Surface } from "react-native-paper";
 import { Field, Formik } from "formik";
 import * as yup from 'yup';
 import CustomInput from "../components/CustomInput";
+import { ScrollView, StyleSheet, Text } from "react-native";
+import React from "react";
+import { Button, Surface } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 
 const LeadContactInfo = () => {
   const navigation = useNavigation();

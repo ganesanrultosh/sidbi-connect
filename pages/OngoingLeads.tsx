@@ -49,7 +49,7 @@ const OngoingLeads = () => {
         </View>
         <Button style={{ alignSelf: "flex-end" }}>Continue</Button>
       </Surface></View>
-      <View><Surface
+    <View><Surface
       elevation={4}
       style={{ margin: 10, padding: 10, width: 200 }}>
       <Text style={{ fontWeight: "bold", color: "black" }}>Lead: SOWBHAGYA GAR</Text>
@@ -85,7 +85,7 @@ const OngoingLeads = () => {
         </View>
         <Button style={{ alignSelf: "flex-end" }}>Continue</Button>
       </Surface></View>
-      <View><Surface
+    <View><Surface
       elevation={4}
       style={{ margin: 10, padding: 10, width: 200 }}>
       <Text style={{ fontWeight: "bold", color: "black" }}>Lead: SOWBHAGYA GAR</Text>
@@ -121,7 +121,7 @@ const OngoingLeads = () => {
         </View>
         <Button style={{ alignSelf: "flex-end" }}>Continue</Button>
       </Surface></View>
-      <View><Surface
+    <View><Surface
       elevation={4}
       style={{ margin: 10, padding: 10, width: 200 }}>
       <Text style={{ fontWeight: "bold", color: "black" }}>Lead: SOWBHAGYA GAR</Text>

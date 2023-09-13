@@ -105,7 +105,7 @@ const LeadBasicInfo = () => {
           </Button>
         </Surface>
       </ScrollView>
-      <Footer />
+      {/* <Footer /> */}
     </View>)}
   </Formik>
 }
