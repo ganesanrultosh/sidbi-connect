@@ -16,7 +16,7 @@ const CustomDropDown = (props : any) => {
   const [showDropDown, setShowDropDown] = useState(false);
 
   return (
-    <View style={{marginBottom: 10}}>
+    <View style={{marginBottom: 0}}>
       <DropDown
         mode={"outlined"}
         visible={showDropDown}
@@ -34,7 +34,9 @@ const CustomDropDown = (props : any) => {
 }
 
 const styles = StyleSheet.create({
-  dropDown: { },
+  dropDown: { 
+    marginBottom: 10
+  },
   errorText: {
     fontSize: 10,
     color: 'red',

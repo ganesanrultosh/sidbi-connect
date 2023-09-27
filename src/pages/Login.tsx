@@ -5,9 +5,13 @@ import { Button, Surface } from "react-native-paper";
 import { Field, Formik } from "formik";
 import * as yup from 'yup';
 import CustomInput from "../components/CustomInput";
+import { loginUser } from "../services/authService";
+import useToken from "../components/Authentication/useToken";
+import Toast from "react-native-root-toast";
 
 const Login = () => {
   const navigation = useNavigation();
+  const {setToken} = useToken();
 
   const loginValidationSchema = yup.object().shape({
     email: yup
@@ -27,13 +31,33 @@ const Login = () => {
       <Formik
         validationSchema={loginValidationSchema}
         initialValues={{ email: '', password: '' }}
-        onSubmit={values => {
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{ name: 'Home' }],
-            })
-          )
+        onSubmit={async (values) => {
+          
+          await loginUser({
+            username: values.email,
+            password: values.password
+          })
+          .then((response) => response.json())
+          .then(async (data : any) => {
+            if(data.error) {
+              Toast.show(data.error);
+            } else {
+              let token = data;
+              await setToken(token)
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: 'Root' }],
+                })
+              )
+            }
+          }).catch((error : any) => {
+              console.log(error)
+              Toast.show("Login failed. Possible network error!");
+            }
+          );
+
+          
         }}
         >
         {({ 
@@ -78,12 +102,6 @@ const Login = () => {
       <Text style={styles.scenarioQuestion} >Become a partner</Text>
       <Button
         onPress={() => {
-          // navigation.dispatch(
-          //   CommonActions.reset({
-          //     index: 0,
-          //     routes: [{ name: 'Registration: Basic Information' }],
-          //   })
-          // );
           navigation.navigate('Registration: Basic Information' as never);
         }}
         mode='contained'

@@ -2,21 +2,21 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import { DrawerActions, NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Login from './pages/Login';
-import RegisterBasicInfo from './pages/RegisterBasicInfo';
-import RegisterContactInfo from './pages/RegisterContactInfo';
-import Register from './pages/Register';
+import Login from './src/pages/Login';
+import RegisterBasicInfo from './src/pages/RegisterBasicInfo';
+import RegisterContactInfo from './src/pages/RegisterContactInfo';
+import Register from './src/pages/Register';
 import { RootSiblingParent } from 'react-native-root-siblings';
-import Home from './pages/Home';
+import Home from './src/pages/Home';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import LeadBasicInfo from './pages/LeadBasicInfo';
+import LeadBasicInfo from './src/pages/LeadBasicInfo';
 import { DefaultTheme, Provider } from 'react-native-paper';
-import LeadContactInfo from './pages/LeadContactInfo';
-import LeadSubmission from './pages/LeadSubmission';
-import ForgotPassword from './pages/ForgotPassword';
-import Leads from './pages/Leads';
-import OpenDrawer from './pages/OpenDrawer';
-import Root from './pages/Root';
+import LeadContactInfo from './src/pages/LeadContactInfo';
+import LeadSubmission from './src/pages/LeadSubmission';
+import ForgotPassword from './src/pages/ForgotPassword';
+import Leads from './src/pages/Leads';
+import OpenDrawer from './src/pages/OpenDrawer';
+import Root from './src/pages/Root';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,7 +29,7 @@ function App(): JSX.Element {
         <Stack.Screen name="Registration: Basic Information" component={RegisterBasicInfo} />
         <Stack.Screen name="Registration: Contact Information" component={RegisterContactInfo} />
         <Stack.Screen name="Registration" component={Register} />
-        <Stack.Screen name="Home" component={Root} options={{ headerShown: false }}/>
+        <Stack.Screen name="Root" component={Root} options={{ headerShown: false }}/>
         <Stack.Screen name="Lead: Basic Information" component={LeadBasicInfo} />
         <Stack.Screen name="Lead: Contact Information" component={LeadContactInfo} />
         <Stack.Screen name="Leads" component={Leads} />

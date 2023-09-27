@@ -8,18 +8,24 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "android-apk": "cd ./android && ./gradlew app:assembleRelease"
   },
   "dependencies": {
     "@react-navigation/drawer": "^6.6.3",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/native-stack": "^6.9.13",
+    "@reduxjs/toolkit": "^1.9.6",
+    "@types/react-native": "^0.72.2",
     "@types/react-native-check-box": "^2.1.2",
     "deprecated-react-native-prop-types": "^4.2.1",
     "formik": "^2.4.4",
     "react": "18.2.0",
     "react-native": "0.72.4",
     "react-native-check-box": "^2.1.7",
+    "react-native-config": "^1.5.1",
+    "react-native-dotenv": "^3.4.9",
+    "react-native-encrypted-storage": "^4.0.3",
     "react-native-gesture-handler": "^2.12.1",
     "react-native-paper": "^5.10.3",
     "react-native-paper-dates": "^0.18.20",
@@ -32,6 +38,7 @@
     "react-native-switch-selector": "^2.3.0",
     "react-native-toast-message": "^2.1.6",
     "react-native-vector-icons": "^10.0.0",
+    "react-redux": "^8.1.2",
     "yup": "^1.2.0"
   },
   "devDependencies": {

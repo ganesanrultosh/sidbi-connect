@@ -1,20 +1,140 @@
 0) Formix/Yup integration
 
 1) NeSL API (PAN validation and getting the Name from PAN)
-2) Drop down value for category and subcategory (Single API to get master data given the master data key)
-3) City and State given PINCODE
-4) Registration API with PAN, email and existing customer dedup API
-5) Login API
-6) Branch list given the PINCODE
-7) Customer Concent Mobile & Email OPT generation
-8) Customer Concent Mobile or Email OTP Validation
-9) Lead submission API
-10) List of leads given the TPE
-11) Forgot password Mobile & Email OTP Generation
-12) Forgot password - set password
-13) Logout
+POST request: /open/api/<PAN-NO>/validate
+response: 
+200 - Success
+{
+  pan: <PAN-NO>,
+  name: <NAME>
+}
+404 - Not found
+400 - Invalid PAN
 
-Mobile OTP Generation
-Mobile OTP Validation
-Email OTP Generation
-Email OTP Validation
+2) Drop down value for category and subcategory (Single API to get master data given the master data key)
+GET request: /open/api/masterdata
+response: 
+200 - Success
+{
+  "category": [
+    {
+      label: 'xyz',
+      value: 'xyz'
+    }
+  ], 
+  "subcategory": [
+    {
+      label: 'xyz',
+      value: 'xyz'
+    }
+  ]
+}
+
+3) City and State given PINCODE
+GET request /open/api/<PINCODE>/details
+response:
+200 - Success
+{
+  'city': [
+    {'label': 'Chennai', 'value': 'Chennai'}
+  ], 
+  'state': [
+    {'label': 'Tamil Nadu', 'value': 'Tamil Nadu'}
+  ],
+  'branchlist': [
+    {'label': 'Branch 1', 'value': 'Branch 1'}
+  ]
+}
+4) Registration API with PAN, email and existing customer dedup API
+POST request: /open/api/partners
+Body:
+{
+  username: 'ganesan@gmail.com',
+  password: 'password',
+  confirmPassword: 'password',
+  partnerName: 'Ganesan',
+  mobileNo: '8939758416',
+  pan: 'ALQPG9479C',
+  keyPerson: 'Ganesan',
+  address: 'Address',
+  city: 'City',
+  state: 'State',
+  pinCode: '600001',
+  type: 'Entity',
+  category: 'Sub category'
+}
+Response:
+200 Sucess with created Entity
+400 Invalid request
+{
+  message: 'error'
+}
+409 Duplicate
+{
+  message: 'Customer already exists with the given PAN number'
+}
+
+5) Login API
+POST request: /open/api/authenticate
+body:
+{
+  username: 'ganesan@gmail.com',
+  password: 'password'
+}
+
+6) Branch list given the PINCODE
+Reuse: GET request /open/api/<PINCODE>/details
+7) Customer Concent Mobile & Email OPT generation
+POST request /api/otp/generate
+body: 
+{
+  'mobile': '8939758416',
+  'email': 'customer@gmail.com'
+}
+
+9) Lead submission API
+POST Request /api/<PARTNERID>/leads
+
+name
+pan
+loanAmount
+loanType
+customerType
+itrFiling
+bankStatement
+gstRegime
+mobileNo,
+email,
+officeAddress
+city
+state
+pinCode
+dateOfIncorp
+applicationFillingBy
+branchName
+customerConcent
+otp
+partnerId
+
+10) List of leads given the TPE
+GET Request /api/<PARTNERID>/leads
+
+11) Forgot password Mobile & Email OTP Generation
+POST Request /open/api/forgotpassword
+BODY:
+{
+  username: 'ganesansays@gmail.com'
+}
+12) Forgot password - set password
+POST Request /open/api/setpassword
+{
+  username: 'ganesansays@gmail.com',
+  otp: 1234
+  password: 'password',
+  confirmPassword: 'confirmPassword',
+  captcha: <CPATCHA>
+}
+
+13) Logout
+POST request /api/partners/<PARTNERID>/logout
+

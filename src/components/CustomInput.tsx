@@ -37,6 +37,7 @@ const CustomInput = (props : any) => {
 const styles = StyleSheet.create({
   textInput: {
     width: "100%",
+    marginBottom: 10
   },
   errorText: {
     fontSize: 10,
