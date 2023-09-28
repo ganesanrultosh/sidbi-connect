@@ -89,7 +89,7 @@ const Login = () => {
       <Button
         onPress={() => {
           navigation.navigate(
-            "Forgot Password" as never
+            "ForgotPassword" as never
           );
         }}
         mode="outlined"
@@ -102,7 +102,7 @@ const Login = () => {
       <Text style={styles.scenarioQuestion} >Become a partner</Text>
       <Button
         onPress={() => {
-          navigation.navigate('Registration: Basic Information' as never);
+          navigation.navigate('RegisterBasicInfo' as never);
         }}
         mode='contained'
         style={styles.registerButton}

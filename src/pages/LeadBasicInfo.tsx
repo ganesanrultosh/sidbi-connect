@@ -58,7 +58,7 @@ const LeadBasicInfo = () => {
     validationSchema={basicInfoValidationSchema}
     initialValues={initialValue}
     onSubmit={values => {
-      navigation.navigate('Lead: Contact Information' as never)
+      navigation.navigate('LeadContactInfo' as never)
     }}
   >
     {({

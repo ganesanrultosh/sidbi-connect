@@ -26,15 +26,15 @@ function App(): JSX.Element {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Registration: Basic Information" component={RegisterBasicInfo} />
-        <Stack.Screen name="Registration: Contact Information" component={RegisterContactInfo} />
-        <Stack.Screen name="Registration" component={Register} />
+        <Stack.Screen name="RegisterBasicInfo" component={RegisterBasicInfo} />
+        <Stack.Screen name="RegisterContactInfo" component={RegisterContactInfo} />
+        <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Root" component={Root} options={{ headerShown: false }}/>
-        <Stack.Screen name="Lead: Basic Information" component={LeadBasicInfo} />
-        <Stack.Screen name="Lead: Contact Information" component={LeadContactInfo} />
+        <Stack.Screen name="LeadBasicInfo" component={LeadBasicInfo} />
+        <Stack.Screen name="LeadContactInfo" component={LeadContactInfo} />
         <Stack.Screen name="Leads" component={Leads} />
-        <Stack.Screen name="Lead: Submission" component={LeadSubmission} />
-        <Stack.Screen name="Forgot Password" component={ForgotPassword} />
+        <Stack.Screen name="LeadSubmission" component={LeadSubmission} />
+        <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       </Stack.Navigator>
     </NavigationContainer>
   </RootSiblingParent>

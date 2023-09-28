@@ -18,7 +18,7 @@ const HomeNavIcons = () => {
       style={{ margin: 10, backgroundColor: "#fff" }}
     >
       <TouchableOpacity style={styles.buttonFacebookStyle} activeOpacity={0.5} onPress={() => {
-        navigation.navigate('Lead: Basic Information' as never)
+        navigation.navigate('LeadBasicInfo' as never)
       }}>
         <Image
           source={require('../images/LeadGenerationIcon.png')}

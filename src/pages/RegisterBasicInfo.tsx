@@ -74,7 +74,7 @@ const RegisterBasicInfo = () => {
     validationSchema={basicInfoValidationSchema}
     initialValues={initialValue}
     onSubmit={values => {
-      navigation.navigate('Registration: Contact Information' as never)
+      navigation.navigate('RegisterContactInfo' as never)
     }}
   >
     {({

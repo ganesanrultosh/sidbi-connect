@@ -46,7 +46,7 @@ const LeadContactInfo = () => {
     validationSchema={contactInfoValidationSchema}
     initialValues={initialValue}
     onSubmit={values => {
-      navigation.navigate('Lead: Submission' as never)
+      navigation.navigate('LeadSubmission' as never)
     }}
   >
     {({
