@@ -1,16 +1,21 @@
 import React from "react";
 import { ScrollView, StyleSheet, Text } from "react-native"
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import Toast from "react-native-root-toast";
 import { Button, Surface } from "react-native-paper";
 import { Field, Formik } from "formik";
 import * as yup from 'yup';
 import CustomInput from "../components/CustomInput";
 import CustomCheckBox from "../components/CustomCheckBox";
+import { PartnerRegistrationProps, PartnerRegistrationRouteProps } from "./NavigationProps";
+import { signupUser } from "../services/authService";
 
-const Register = () => {
+const Register = (props:PartnerRegistrationProps) => {
 
   const navigation = useNavigation();
+  const route = useRoute<PartnerRegistrationRouteProps>();
+
+  const { partner } = route.params;
 
   const registrationValidationSchema = yup.object().shape({
     password: yup
@@ -27,18 +32,42 @@ const Register = () => {
     termsAccepted: yup.boolean().isTrue('Please read and accept the terms and condition')
   })
 
-  const initialValue = {
+  const initialValue = { 
+    pan: '', 
+    username: '', 
+    category: '', 
+    subCategory: '', 
+    keyPerson: '',
+    mobileNo: '', 
+    pinCode: undefined, 
+    city: '', 
+    state: '',
+    address: '',
     password: '',
     confirmPassword: '',
-    termsAccepted: false
-  }
+    termsAccepted: false,
+    ...partner
+  };
 
   return <Formik
     validationSchema={registrationValidationSchema}
     initialValues={initialValue}
-    onSubmit={values => {
-      Toast.show('Registration sucessfully submitted.', { duration: Toast.durations.LONG })
-      navigation.navigate('Login' as never)
+    onSubmit={async (values) => {
+      await signupUser(values as Partner)
+        .then((response) => response.json())
+        .then(async (data : any) => {
+          if(data.error) {
+            Toast.show(data.error);
+          } else {
+            Toast.show('Registration sucessfully submitted.', { duration: Toast.durations.LONG })
+            navigation.navigate('Login' as never)
+          }
+        }).catch((error : any) => {
+            console.log(error)
+            Toast.show(error, { duration: Toast.durations.LONG })
+          }
+        );
+      console.log("Register", values)
     }}
   >
     {({

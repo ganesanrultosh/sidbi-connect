@@ -1,6 +1,6 @@
 import React from "react";
 import { ScrollView, StyleSheet, Text } from "react-native"
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Button, Surface } from "react-native-paper";
 import { Field, Formik } from "formik";
 import * as yup from 'yup';
@@ -64,17 +64,29 @@ const RegisterBasicInfo = () => {
 
   const initialValue = { 
     pan: '', 
-    name: '', 
+    username: '', 
+    name: '',
     category: '', 
     subCategory: '', 
-    keyPerson: '' 
+    keyPerson: '',
+    mobileNo: '', 
+    pinCode: undefined, 
+    city: '', 
+    state: '',
+    address: '',
+    password: '',
+    confirmPassword: '',
+    termsAccepted: false
   };
 
   return <Formik
     validationSchema={basicInfoValidationSchema}
     initialValues={initialValue}
     onSubmit={values => {
-      navigation.navigate('RegisterContactInfo' as never)
+      console.log("On Submit: ", values as Partner)
+      navigation.navigate(
+        'RegisterContactInfo', 
+        {partner: values as Partner})
     }}
   >
     {({

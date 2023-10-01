@@ -1,20 +1,25 @@
 import React from "react";
 import { ScrollView, StyleSheet, Text } from "react-native"
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Button, Surface } from "react-native-paper";
 import { Field, Formik } from "formik";
 import * as yup from 'yup';
 import CustomInput from "../components/CustomInput";
+import { PartnerRegistrationContactProps, PartnerRegistrationContactRouteProps } from "./NavigationProps";
 
-const RegisterContactInfo = () => {
+const RegisterContactInfo = (props: PartnerRegistrationContactProps) => {
+
   const navigation = useNavigation();
+  const route = useRoute<PartnerRegistrationContactRouteProps>();
+
+  const { partner } = route.params;
 
   const contactInfoValidationSchema = yup.object().shape({
-    email: yup
+    username: yup
       .string()
       .email("Enter a valid email")
       .required('Email is required'),
-    phoneNo: yup
+    mobileNo: yup
       .string()
       .matches(/^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/, "Enter a valid phone number")
       .required('Phone number is required'),
@@ -34,19 +39,29 @@ const RegisterContactInfo = () => {
   })
 
   const initialValue = { 
-    email: '', 
-    phoneNo: '', 
-    pinCode: '', 
+    pan: '', 
+    username: '', 
+    category: '', 
+    subCategory: '', 
+    keyPerson: '',
+    mobileNo: '', 
+    pinCode: undefined, 
     city: '', 
     state: '',
-    address: ''
+    address: '',
+    password: '',
+    confirmPassword: '',
+    termsAccepted: false,
+    ...partner
   };
 
   return <Formik
     validationSchema={contactInfoValidationSchema}
     initialValues={initialValue}
     onSubmit={values => {
-      navigation.navigate('Register' as never)
+      navigation.navigate(
+        'Register',
+        {partner: values as Partner})
     }}
   >
     {({
@@ -61,12 +76,12 @@ const RegisterContactInfo = () => {
         <Text style={styles.header}>Contact Information</Text>
         <Field
           component={CustomInput}
-          name="email"
+          name="username"
           label="Email (*)"
         />
         <Field
           component={CustomInput}
-          name="phoneNo"
+          name="mobileNo"
           label="Phone No (*)"
         />
         <Field

@@ -27,11 +27,7 @@ function loginUser(credentials: {
   });
 }
 
-async function signupUser(signupInput: {
-  username: string;
-  phoneNumber: string;
-  captchaResponse: string;
-}) {
+async function signupUser(signupInput: Partner) {
   return fetch(`${apiEndpoint}/auth/signup`, {
     method: "POST",
     headers: {

@@ -22,11 +22,11 @@ const CustomRadioGroup = (props: any) => {
           <Text style={{ fontWeight: "bold", marginBottom: 5 }}>{inputProps.header}</Text>
           {
             inputProps.radioList.map((item: any) => {
-              return <View style={{ flexDirection: 'row', alignContent: 'center' }}>
-                <View style={{ flex: 1, alignSelf: 'center' }}>
+              return <View key={`v1-${item.label}`} style={{ flexDirection: 'row', alignContent: 'center' }}>
+                <View key={`v2-${item.label}`} style={{ flex: 1, alignSelf: 'center' }}>
                   <Text>{item.label}</Text>
                 </View>
-                <View style={{ flex: 1 }}>
+                <View key={`v3-${item.label}`} style={{ flex: 1 }}>
                   <RadioButton value={item.value} />
                 </View>
               </View>
