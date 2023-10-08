@@ -1,6 +1,6 @@
 // CustomInput.js
 import React, { useState } from 'react'
-import { Text, TextInput, StyleSheet, View } from 'react-native'
+import { Text, StyleSheet, View } from 'react-native'
 import DropDown from 'react-native-paper-dropdown'
 
 const CustomDropDown = (props : any) => {

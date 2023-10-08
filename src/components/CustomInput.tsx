@@ -8,6 +8,7 @@ const CustomInput = (props : any) => {
   const {
     field: { name, onBlur, onChange, value },
     form: { errors, touched, setFieldTouched },
+    onChange: any,
     ...inputProps
   } = props
 
@@ -22,7 +23,12 @@ const CustomInput = (props : any) => {
           hasError && styles.errorInput
         ]}
         value={value}
-        onChangeText={(text) => onChange(name)(text)}
+        onChangeText={
+          (text) => {
+            onChange(name)(text)
+            props.onChange && props.onChange(text)
+          }
+        }
         onBlur={() => {
           setFieldTouched(name)
           onBlur(name)

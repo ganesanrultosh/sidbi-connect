@@ -7,6 +7,7 @@ import { Button, Surface } from "react-native-paper";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { LeadContactInfoProps, LeadContactInfoRouteProps } from "./NavigationProps";
 import { Lead } from "../models/Lead";
+import CustomDropDownEditable from "../components/CustomDropDownEditable";
 
 const LeadContactInfo = (props : LeadContactInfoProps ) => {
   const navigation = useNavigation();
@@ -14,6 +15,17 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
   const route = useRoute<LeadContactInfoRouteProps>();
 
   const { lead } = route.params;
+
+  // let cityDomain = [{
+  //   label: 'Loan Type 1',
+  //   value: 'Loan Type 1',
+  // }, {
+  //   label: 'Loan Type 2',
+  //   value: 'Loan Type 2',
+  // },{
+  //   label: "Type your own",
+  //   value: "custom"
+  // }];
 
   const contactInfoValidationSchema = yup.object().shape({
     email: yup
@@ -72,6 +84,8 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
     }}
   >
     {({
+      errors,
+      setFieldTouched,
       values,
       handleSubmit,
       isValid
@@ -95,11 +109,20 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
           component={CustomInput}
           name="pinCode"
           label="Pincode (*)"
+          validateOnChange={true}
+          onChange = {(value: any) => {
+            if(/^[1-9][0-9]{5}$/.test(value) &&
+            values.city == "" &&
+            values.state == "") {
+              console.log("Trigger city and state")
+            }
+          } }
         />
         <Field
-          component={CustomInput}
+          component={CustomDropDownEditable}
           name="city"
           label="City (*)"
+          // list={cityDomain}
         />
         <Field
           component={CustomInput}
