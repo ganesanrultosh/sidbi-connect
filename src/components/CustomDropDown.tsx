@@ -16,7 +16,7 @@ const CustomDropDown = (props : any) => {
   const [showDropDown, setShowDropDown] = useState(false);
 
   return (
-    <View style={{marginBottom: 0}}>
+    props.list && <View style={{marginBottom: 0}}>
       <DropDown
         mode={"outlined"}
         visible={showDropDown}

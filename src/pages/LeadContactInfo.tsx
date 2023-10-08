@@ -2,12 +2,14 @@ import { Field, Formik } from "formik";
 import * as yup from 'yup';
 import CustomInput from "../components/CustomInput";
 import { ScrollView, StyleSheet, Text } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Surface } from "react-native-paper";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { LeadContactInfoProps, LeadContactInfoRouteProps } from "./NavigationProps";
 import { Lead } from "../models/Lead";
 import CustomDropDownEditable from "../components/CustomDropDownEditable";
+import { useGetMasterQuery } from "../slices/masterSlice";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 const LeadContactInfo = (props : LeadContactInfoProps ) => {
   const navigation = useNavigation();
@@ -16,16 +18,41 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
 
   const { lead } = route.params;
 
-  // let cityDomain = [{
-  //   label: 'Loan Type 1',
-  //   value: 'Loan Type 1',
-  // }, {
-  //   label: 'Loan Type 2',
-  //   value: 'Loan Type 2',
-  // },{
-  //   label: "Type your own",
-  //   value: "custom"
-  // }];
+  const [pincode, setPinCode] = useState<number>()
+  const [states, setStates] = useState<string | undefined>()
+  const [cities, setCities] = useState<any>()
+
+  const {
+    data : master, 
+    error : masterError, 
+    isLoading : isMasterLoading } = useGetMasterQuery(pincode || skipToken)
+
+  useEffect(() => {
+    if(!isMasterLoading && master) {
+      let stateList: any = [];
+      stateList.push({
+        label: master.state,
+        value: master.state
+      })
+      stateList.push({
+        label: "Type your own",
+        value: "custom"
+      })
+      setStates(stateList);
+      let cityList : any = [];
+      master.cities?.map((value) => {
+        cityList.push({
+          label: value,
+          value
+        })
+      })
+      cityList.push({
+        label: "Type your own",
+        value: "custom"
+      })
+      setCities(cityList)
+    }
+  }, [master])
 
   const contactInfoValidationSchema = yup.object().shape({
     email: yup
@@ -84,8 +111,6 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
     }}
   >
     {({
-      errors,
-      setFieldTouched,
       values,
       handleSubmit,
       isValid
@@ -114,7 +139,7 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
             if(/^[1-9][0-9]{5}$/.test(value) &&
             values.city == "" &&
             values.state == "") {
-              console.log("Trigger city and state")
+              setPinCode(value)
             }
           } }
         />
@@ -122,12 +147,15 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
           component={CustomDropDownEditable}
           name="city"
           label="City (*)"
-          // list={cityDomain}
+          list={cities}
+          disabled={!master && !isMasterLoading}
         />
         <Field
-          component={CustomInput}
+          component={CustomDropDownEditable}
           name="state"
           label="State (*)"
+          list={states}
+          disabled={!master && !isMasterLoading}
         />
         <Field
           component={CustomInput}

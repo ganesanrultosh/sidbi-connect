@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native"
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Button, Surface, useTheme } from "react-native-paper";
@@ -14,6 +14,8 @@ import { LeadSubmissionProps, LeadSubmissionRouteProps } from "./NavigationProps
 import { useAddLeadMutation } from "../slices/leadSlice";
 import { Lead } from "../models/Lead";
 import Toast from "react-native-root-toast";
+import { useGetMasterQuery } from "../slices/masterSlice";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 const LeadSubmission = (props: LeadSubmissionProps) => {
   const navigation = useNavigation();
@@ -26,13 +28,7 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
 
   const [addLead, result] = useAddLeadMutation();
   
-  let branchDomain = [{
-    label: 'Chennai',
-    value: 'Chennai',
-  }, {
-    label: 'Lucknow',
-    value: 'Lucknow',
-  }];
+  const [branches, setBranches] = useState<any>();
 
   let filledByList = [{
     label: 'Partner',
@@ -64,6 +60,24 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
     otp: "",
     ...lead
   }
+
+  const {
+    data : master, 
+    error : masterError, 
+    isLoading : isMasterLoading } = useGetMasterQuery(initialValues.pinCode || skipToken)
+
+  useEffect(() => {
+    if(!isMasterLoading && master) {
+      let branchList : any = [];
+      master.branchCodes?.map((value) => {
+        branchList.push({
+          label: value,
+          value
+        })
+      })
+      if(branchList.length > 0) setBranches(branchList)
+    }
+  }, [master])
 
   const submissionValidationSchema = yup.object().shape({
     branchName: yup
@@ -128,7 +142,7 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
           component={CustomDropDown}
           name="branchName"
           label="Branch (*)"
-          list={branchDomain}
+          list={branches}
         />
         <Field
           component={CustomerDataPicker}
