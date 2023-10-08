@@ -8,6 +8,7 @@ import * as yup from 'yup';
 import CustomInput from "../components/CustomInput";
 import CustomDropDown from "../components/CustomDropDown";
 import CustomRadioGroup from "../components/CustomRadioGroup";
+import { Lead } from "../models/Lead";
 
 const LeadBasicInfo = () => {
 
@@ -30,15 +31,30 @@ const LeadBasicInfo = () => {
     value: 'existing',
   }];
 
-  const initialValue = {
-    entityName: '',
-    loanAmount: '',
-    loanType: '',
-    customerType: ''
+  const initialValues = {
+    name: "",
+    pan: "",
+    loanAmount: undefined,
+    loanType: "",
+    customerType: "",
+    itrFiling: "",
+    bankStatement: "",
+    gstRegime: "",
+    mobileNo: "",
+    email: "",
+    officeAddress: "",
+    city: "",
+    state: "",
+    pinCode: undefined,
+    dateOfIncorp: undefined,
+    applicationFillingBy: "",
+    branchName: "",
+    customerConcent: "",
+    otp: ""
   }
 
   const basicInfoValidationSchema = yup.object().shape({
-    entityName: yup
+    name: yup
       .string()
       .required('Entity Name is required.'),
     loanAmount: yup
@@ -56,9 +72,11 @@ const LeadBasicInfo = () => {
 
   return <Formik
     validationSchema={basicInfoValidationSchema}
-    initialValues={initialValue}
+    initialValues={initialValues}
     onSubmit={values => {
-      navigation.navigate('LeadContactInfo' as never)
+      navigation.navigate(
+        'LeadContactInfo',
+        {lead: values as Lead})
     }}
   >
     {({
@@ -72,7 +90,7 @@ const LeadBasicInfo = () => {
             <Text style={styles.headerText}>Basic Information</Text>
             <Field
               component={CustomInput}
-              name="entityName"
+              name="name"
               label="Entity Name (*)"
             />
             <Field

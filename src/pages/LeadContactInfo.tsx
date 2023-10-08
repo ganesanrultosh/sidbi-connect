@@ -4,17 +4,23 @@ import CustomInput from "../components/CustomInput";
 import { ScrollView, StyleSheet, Text } from "react-native";
 import React from "react";
 import { Button, Surface } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { LeadContactInfoProps, LeadContactInfoRouteProps } from "./NavigationProps";
+import { Lead } from "../models/Lead";
 
-const LeadContactInfo = () => {
+const LeadContactInfo = (props : LeadContactInfoProps ) => {
   const navigation = useNavigation();
+
+  const route = useRoute<LeadContactInfoRouteProps>();
+
+  const { lead } = route.params;
 
   const contactInfoValidationSchema = yup.object().shape({
     email: yup
       .string()
       .email("Enter a valid email")
       .required('Email is required'),
-    phoneNo: yup
+    mobileNo: yup
       .string()
       .matches(/^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/, "Enter a valid phone number")
       .required('Phone number is required'),
@@ -33,20 +39,36 @@ const LeadContactInfo = () => {
       .required("Address is required")
   })
 
-  const initialValue = { 
-    email: '', 
-    phoneNo: '', 
-    pinCode: '', 
-    city: '', 
-    state: '',
-    address: ''
-  };
+  const initialValues = {
+    name: "",
+    pan: "",
+    loanAmount: undefined,
+    loanType: "",
+    customerType: "",
+    itrFiling: "",
+    bankStatement: "",
+    gstRegime: "",
+    mobileNo: "",
+    email: "",
+    address: "",
+    city: "",
+    state: "",
+    pinCode: "",
+    dateOfIncorp: undefined,
+    applicationFillingBy: "",
+    branchName: "",
+    customerConcent: "",
+    otp: "",
+    ...lead
+  }
 
   return <Formik
     validationSchema={contactInfoValidationSchema}
-    initialValues={initialValue}
+    initialValues={initialValues}
     onSubmit={values => {
-      navigation.navigate('LeadSubmission' as never)
+      navigation.navigate(
+        'LeadSubmission',
+        {lead: values as Lead})
     }}
   >
     {({
@@ -66,7 +88,7 @@ const LeadContactInfo = () => {
         />
         <Field
           component={CustomInput}
-          name="phoneNo"
+          name="mobileNo"
           label="Phone No (*)"
         />
         <Field

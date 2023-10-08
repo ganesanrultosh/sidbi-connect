@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native"
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Button, Surface, useTheme } from "react-native-paper";
 import { Field, Formik } from "formik";
 import * as yup from 'yup';
@@ -10,12 +10,21 @@ import CustomerDataPicker from "../components/CustomerDataPicker";
 import CustomerSwitch from "../components/CustomerSwitch";
 import CustomInput from "../components/CustomInput";
 import CustomCheckBox from "../components/CustomCheckBox";
+import { LeadSubmissionProps, LeadSubmissionRouteProps } from "./NavigationProps";
+import { useAddLeadMutation } from "../slices/leadSlice";
+import { Lead } from "../models/Lead";
+import Toast from "react-native-root-toast";
 
-const LeadSubmission = () => {
+const LeadSubmission = (props: LeadSubmissionProps) => {
   const navigation = useNavigation();
   const theme = useTheme();
 
+  const route = useRoute<LeadSubmissionRouteProps>();
+  const { lead } = route.params;
+
   const [concentSent, setConcentSent] = useState(false)
+
+  const [addLead, result] = useAddLeadMutation();
   
   let branchDomain = [{
     label: 'Chennai',
@@ -34,30 +43,43 @@ const LeadSubmission = () => {
   }];
 
   const initialValues = {
-    branch: '',
-    dateOfIncorporation: '',
-    min3YrsIT: false,
-    recent3YrsBankStmt: false,
-    isRegisteredUnderGST: false,
-    filledBy: '',
-    termsAgreed: false
+    name: "",
+    pan: "",
+    loanAmount: undefined,
+    loanType: "",
+    customerType: "",
+    itrFiling: false,
+    bankStatement: false,
+    gstRegime: false,
+    mobileNo: "",
+    email: "",
+    address: "",
+    city: "",
+    state: "",
+    pinCode: undefined,
+    dateOfIncorp: undefined,
+    applicationFillingBy: "",
+    branchName: "",
+    customerConcent: "",
+    otp: "",
+    ...lead
   }
 
   const submissionValidationSchema = yup.object().shape({
-    branch: yup
+    branchName: yup
       .string()
       .required('Branch is required.'),
-    dateOfIncorporation: yup.string().required('Date of incorporation required'),
-    min3YrsIT: yup
+    dateOfIncorp: yup.string().required('Date of incorporation required'),
+    itrFiling: yup
       .boolean()
       .isTrue('Customer should have 3 yrs IT Returns'),
-    recent3YrsBankStmt: yup
+    bankStatement: yup
       .boolean()
       .isTrue('Customer should have 3 yrs bank statement'),
-    isRegisteredUnderGST: yup
+    gstRegime: yup
       .boolean()
       .isTrue('Customer should be registered under GST'),
-    filledBy: yup
+    applicationFillingBy: yup
       .string()
       .required('Filled by is required'),
     otp: yup
@@ -73,8 +95,26 @@ const LeadSubmission = () => {
   return <Formik
     validationSchema={submissionValidationSchema}
     initialValues={initialValues}
-    onSubmit={() => {
-      navigation.navigate('Home' as never)
+    onSubmit={async (values) => {
+      let lead = {
+        ...values, 
+        parentId: 1, 
+        "bankStatement": values.bankStatement ? "Yes" : "No",
+        "gstRegime": values.gstRegime ? "Yes" : "No",
+        "itrFiling": values.itrFiling ? "Yes" : "No",
+        "dateOfIncorp": "2023-01-01",
+      }
+      console.log("Lead Submission", lead)
+      await addLead(lead as Lead).unwrap()
+        .then(() => {
+            Toast.show('Lead submitted sucessfully!')
+            navigation.navigate('Home')
+          })
+        .catch(
+          (error) => {
+            console.log("Error: ", error, result)
+            Toast.show("Error submitting lead!")
+          })
     }}
   >
     {({
@@ -86,34 +126,34 @@ const LeadSubmission = () => {
         <Text style={styles.header}>Submission</Text>
         <Field
           component={CustomDropDown}
-          name="branch"
+          name="branchName"
           label="Branch (*)"
           list={branchDomain}
         />
         <Field
           component={CustomerDataPicker}
-          name="dateOfIncorporation"
+          name="dateOfIncorp"
           label="Date of incorporation"
         />
         <Field
           component={CustomerSwitch}
-          name="min3YrsIT"
+          name="itrFiling"
           label="Does the customer have Min 3 years of Income tax return filing?"
         />
         <Field
           component={CustomerSwitch}
-          name="recent3YrsBankStmt"
+          name="bankStatement"
           label="Does the customer have most recent 12 months (till last month) bank statement?"
         />
         <Field
           component={CustomerSwitch}
-          name="isRegisteredUnderGST"
+          name="gstRegime"
           label="Is the customer registered under GST?"
         />
         <View style={{ marginTop: 10, borderBlockColor: "black", borderWidth: 1, padding: 10, borderRadius: 10, backgroundColor: `${theme.colors.background}` }}>
           <Field
             component={CustomRadioGroup}
-            name="filledBy"
+            name="applicationFillingBy"
             header={"Who will be filling the online loan application?"}
             radioList={filledByList}
           />
