@@ -16,6 +16,7 @@ import { Lead } from "../models/Lead";
 import Toast from "react-native-root-toast";
 import { useGetMasterQuery } from "../slices/masterSlice";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { sendConsent } from "../services/concentService";
 
 const LeadSubmission = (props: LeadSubmissionProps) => {
   const navigation = useNavigation();
@@ -29,6 +30,8 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
   const [addLead, result] = useAddLeadMutation();
   
   const [branches, setBranches] = useState<any>();
+
+  const [resendConsent, setResendConsent] = useState(false);
 
   let filledByList = [{
     label: 'Partner',
@@ -171,16 +174,28 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
             header={"Who will be filling the online loan application?"}
             radioList={filledByList}
           />
-          {!concentSent && <Button 
-            mode="contained-tonal" 
-            style={{ width: "50%", alignSelf: "center", marginTop: 10 }} 
-            onPress={() => { setConcentSent(true) }}>Get cocent</Button>}
           {concentSent && 
-          <Field
+          <><Field
             component={CustomInput}
             name="otp"
             label="OTP (*)"
-          />}
+          />
+          {!resendConsent && <Text>If you have not got the OTP, You can retry after 3 mins</Text>}
+          </>}
+          {(!concentSent || resendConsent) && <Button 
+            mode="contained-tonal" 
+            style={{ width: "50%", alignSelf: "center", marginTop: 10 }} 
+            onPress={async () => { 
+                setResendConsent(false)
+                sendConsent({mobileNo: initialValues.mobileNo})
+                  .then((response) => response.json())
+                  .then(async (data : any) => {
+                    setTimeout(() => {
+                      setResendConsent(true)
+                    }, 180000);
+                    setConcentSent(true) 
+                  });
+              }}>{resendConsent ? "Resend OTP" : "Get consent"}</Button>}
         </View>
         <Field
             component={CustomCheckBox}

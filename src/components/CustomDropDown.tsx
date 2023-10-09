@@ -1,12 +1,12 @@
 // CustomInput.js
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Text, StyleSheet, View } from 'react-native'
 import DropDown from 'react-native-paper-dropdown'
 
 const CustomDropDown = (props : any) => {
   const {
     field: { name, onBlur, onChange, value },
-    form: { errors, touched, setFieldTouched },
+    form: { errors, touched, setFieldTouched, setFieldValue },
     list: any,
     ...inputProps
   } = props
@@ -14,6 +14,13 @@ const CustomDropDown = (props : any) => {
   const hasError = errors[name] && touched[name]
 
   const [showDropDown, setShowDropDown] = useState(false);
+
+  useEffect(() => {
+    if(value != "") {
+      setFieldValue(name, "")
+      setFieldTouched(name)
+    }
+  }, [props.list])
 
   return (
     props.list && <View style={{marginBottom: 0}}>
@@ -24,7 +31,9 @@ const CustomDropDown = (props : any) => {
         onDismiss={() => setShowDropDown(false)}
         value={value}
         list={props.list}
-        setValue={(text) => onChange(name)(text)}
+        setValue={(text) => {
+          onChange(name)(text)
+        }}
         inputProps={{style: [styles.dropDown, hasError && styles.errorInput]}}
         {...inputProps}
       />

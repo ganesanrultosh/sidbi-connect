@@ -19,18 +19,23 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
   const { lead } = route.params;
 
   const [pincode, setPinCode] = useState<number>()
-  const [states, setStates] = useState<string | undefined>()
+  const [states, setStates] = useState<any>()
   const [cities, setCities] = useState<any>()
+  const [refreshList, setRefreshList] = useState(false)
 
   const {
     data : master, 
     error : masterError, 
-    isLoading : isMasterLoading } = useGetMasterQuery(pincode || skipToken)
+    isLoading: isMasterLoading,
+    isSuccess : isMasterSuccess,
+   } = useGetMasterQuery(pincode || skipToken)
 
   useEffect(() => {
-    if(!isMasterLoading && master) {
+    console.log("-----", refreshList, isMasterLoading, isMasterSuccess, master)
+    if(refreshList && !isMasterLoading && isMasterSuccess) {
+      console.log("useeffect", "----")
       let stateList: any = [];
-      stateList.push({
+      master && stateList.push({
         label: master.state,
         value: master.state
       })
@@ -40,7 +45,7 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
       })
       setStates(stateList);
       let cityList : any = [];
-      master.cities?.map((value) => {
+      master.cities && master.cities?.map((value) => {
         cityList.push({
           label: value,
           value
@@ -51,6 +56,7 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
         value: "custom"
       })
       setCities(cityList)
+      setRefreshList(false)
     }
   }, [master])
 
@@ -136,27 +142,48 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
           label="Pincode (*)"
           validateOnChange={true}
           onChange = {(value: any) => {
-            if(/^[1-9][0-9]{5}$/.test(value) &&
-            values.city == "" &&
-            values.state == "") {
+            if(/^[1-9][0-9]{5}$/.test(value)) {
+              console.log(value)
               setPinCode(value)
+              setRefreshList(true)
             }
           } }
         />
+        {masterError && 
+          <><Text style={{color: 'red'}}>City & State not found for the pin code.</Text>
+          <Field
+          component={CustomInput}
+          name="city"
+          label="City (*)"
+          enableReinitialize
+          disabled={isMasterLoading}
+        />
         <Field
+          component={CustomInput}
+          name="state"
+          label="State (*)"
+          enableReinitialize
+          disabled={isMasterLoading}
+        /></>
+        }
+        {!masterError && <><Field
           component={CustomDropDownEditable}
           name="city"
           label="City (*)"
           list={cities}
-          disabled={!master && !isMasterLoading}
+          enableReinitialize
+          clearValue={refreshList}
+          disabled={isMasterLoading}
         />
         <Field
           component={CustomDropDownEditable}
           name="state"
           label="State (*)"
           list={states}
-          disabled={!master && !isMasterLoading}
-        />
+          enableReinitialize
+          clearValue={refreshList}
+          disabled={isMasterLoading}
+        /></>}
         <Field
           component={CustomInput}
           name="address"
