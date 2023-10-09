@@ -1,12 +1,20 @@
 import { Pressable, ScrollView, Text, View } from "react-native";
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { Linking } from 'react-native'
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Surface, useTheme } from "react-native-paper";
+import { RootState } from "@reduxjs/toolkit/query";
+import { useAppSelector } from "../app/hooks";
 
 const OngoingLeads = () => {
 
   const theme = useTheme();
+
+  const {leads} = useAppSelector(state => state.persistedLeads);
+
+  useEffect(() => {
+    console.log("ongoing leads", leads);
+  }, [leads]);
 
   return <View><ScrollView
     horizontal={true}

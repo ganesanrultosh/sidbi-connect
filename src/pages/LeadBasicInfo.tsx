@@ -9,11 +9,14 @@ import CustomInput from "../components/CustomInput";
 import CustomDropDown from "../components/CustomDropDown";
 import CustomRadioGroup from "../components/CustomRadioGroup";
 import { Lead } from "../models/Lead";
+import { saveLead } from "../slices/leadCacheSlice";
+import { useDispatch } from "react-redux";
 
 const LeadBasicInfo = () => {
 
   const navigation = useNavigation();
   const theme = useTheme();
+  const disptach = useDispatch();
 
   let loanTypeDomain = [{
     label: 'Loan Type 1',
@@ -54,6 +57,10 @@ const LeadBasicInfo = () => {
   }
 
   const basicInfoValidationSchema = yup.object().shape({
+    pan: yup
+      .string()
+      .matches(/[A-Z]{5}[0-9]{4}[A-Z]{1}/, "Please enter valid PAN")
+      .required('PAN is Required'),
     name: yup
       .string()
       .required('Entity Name is required.'),
@@ -74,9 +81,10 @@ const LeadBasicInfo = () => {
     validationSchema={basicInfoValidationSchema}
     initialValues={initialValues}
     onSubmit={values => {
+      disptach(saveLead(values as Lead));
       navigation.navigate(
         'LeadContactInfo',
-        {lead: values as Lead})
+        {lead: values as Lead});
     }}
   >
     {({
@@ -88,6 +96,11 @@ const LeadBasicInfo = () => {
         <Surface elevation={4} style={styles.surfaceStyle}>
           <ScrollView style={styles.scrollView}>
             <Text style={styles.headerText}>Basic Information</Text>
+            <Field
+              component={CustomInput}
+              name="pan"
+              label="PAN (*)"
+            />
             <Field
               component={CustomInput}
               name="name"

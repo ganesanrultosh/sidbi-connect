@@ -17,10 +17,14 @@ import Toast from "react-native-root-toast";
 import { useGetMasterQuery } from "../slices/masterSlice";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { sendConsent } from "../services/concentService";
+import { useDispatch } from "react-redux";
+import { deleteLead } from "../slices/leadCacheSlice";
+import { useAppDispatch } from "../app/hooks";
 
 const LeadSubmission = (props: LeadSubmissionProps) => {
   const navigation = useNavigation();
   const theme = useTheme();
+  const dispatch = useAppDispatch();
 
   const route = useRoute<LeadSubmissionRouteProps>();
   const { lead } = route.params;
@@ -124,7 +128,8 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
       console.log("Lead Submission", lead)
       await addLead(lead as Lead).unwrap()
         .then(() => {
-            Toast.show('Lead submitted sucessfully!')
+            Toast.show('Lead submitted sucessfully!');
+            dispatch(deleteLead(initialValues.pan));
             navigation.navigate('Home')
           })
         .catch(
