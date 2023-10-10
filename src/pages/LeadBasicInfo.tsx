@@ -24,11 +24,11 @@ const LeadBasicInfo = (props : LeadBasicInfoProps) => {
   const { leads } = useAppSelector(state => state.persistedLeads);
 
   let loanTypeDomain = [{
-    label: 'Loan Type 1',
-    value: 'Loan Type 1',
+    label: 'Machinery Loan',
+    value: 'Machinery Loan',
   }, {
-    label: 'Loan Type 2',
-    value: 'Loan Type 2',
+    label: 'Project Loan',
+    value: 'Project Loan',
   }];
 
   let customerValueList = [{

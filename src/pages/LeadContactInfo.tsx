@@ -97,8 +97,9 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
   return <Formik
     validationSchema={contactInfoValidationSchema}
     initialValues={initialValues}
-    onSubmit={values => {
+    onSubmit={(values, form) => {
       let currentValues = {...leadInfo, ...values} as Lead
+      form.validateForm()
       console.log("Navigating to submission", currentValues)
       disptach(saveLead(currentValues));
       setLeadInfo(currentValues)

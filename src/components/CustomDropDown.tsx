@@ -17,13 +17,15 @@ const CustomDropDown = (props : any) => {
 
   useEffect(() => {
     if(props.list && value && value !== "") {
-      let found = props.list?.map((item : any) => {
+      let found = props.list?.find((item : any) => {
         if(item.value === value) return true;
       });
+      console.log("Custom drop down props.list", name, found)
       if(!found) {
         setFieldValue(name, "")
-        setFieldTouched(name)
-      }
+        setFieldTouched(name, true)
+      } 
+      
     }
   }, [props.list])
 
