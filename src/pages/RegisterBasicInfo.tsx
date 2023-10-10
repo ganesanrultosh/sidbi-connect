@@ -1,7 +1,7 @@
 import React from "react";
 import { ScrollView, StyleSheet, Text } from "react-native"
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { Button, Surface } from "react-native-paper";
+import { Button, Surface, useTheme } from "react-native-paper";
 import { Field, Formik } from "formik";
 import * as yup from 'yup';
 import CustomInput from "../components/CustomInput";
@@ -10,6 +10,21 @@ import CustomDropDown from "../components/CustomDropDown";
 const RegisterBasicInfo = () => {
 
   const navigation = useNavigation();
+  const theme = useTheme();
+  const styles = StyleSheet.create({
+    basicInfoSurface: { width: "90%", margin: 20, padding: 20 },
+    basicInfoTitle: { 
+      color: `${theme.colors.onBackground}`,
+      fontSize: 20, fontWeight: "bold", marginBottom: 20 },
+    continueButton: { 
+      alignSelf: "flex-end", 
+      display: "flex", 
+      margin: 10 
+    },
+    scrollView: { 
+      padding: 5 
+    }
+  })
 
   let categoryMaster = [{
     label: 'Entity',
@@ -138,25 +153,6 @@ const RegisterBasicInfo = () => {
   </Formik>
 }
 
-const styles = StyleSheet.create({
-  basicInfoSurface: { 
-    width: "95%", 
-    margin: 10, 
-    padding: 20 
-  },
-  continueButton: { 
-    alignSelf: "flex-end", 
-    display: "flex", 
-    margin: 10 
-  },
-  basicInfoTitle: { 
-    fontSize: 15, 
-    fontWeight: "bold", 
-    marginBottom: 10 
-  },
-  scrollView: { 
-    padding: 5 
-  }
-})
+
 
 export default RegisterBasicInfo;

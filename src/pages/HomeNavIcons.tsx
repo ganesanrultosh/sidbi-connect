@@ -8,15 +8,16 @@ const HomeNavIcons = () => {
 
   const navigation = useNavigation();
 
-  return <View style={{
+  return <Surface elevation={0} style={{
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    margin: 10
+    marginVertical: 15,
+    paddingVertical: 10
   }}>
     <Surface
-      elevation={4}
-      style={{ margin: 10, backgroundColor: "#fff" }}
+      elevation={2}
+      style={{ margin: 10 }}
     >
       <TouchableOpacity style={styles.buttonFacebookStyle} activeOpacity={0.5} onPress={() => {
         navigation.navigate(
@@ -31,8 +32,8 @@ const HomeNavIcons = () => {
       </TouchableOpacity>
     </Surface>
     <Surface
-      elevation={4}
-      style={{ margin: 10, backgroundColor: "#fff" }}
+      elevation={2}
+      style={{ margin: 10 }}
     >
       <TouchableOpacity style={styles.buttonFacebookStyle} activeOpacity={0.5} onPress={() => {
         navigation.navigate('Leads' as never)
@@ -44,7 +45,7 @@ const HomeNavIcons = () => {
         <Text style={styles.buttonTextStyle}> View Leads </Text>
       </TouchableOpacity>
     </Surface>
-  </View>
+  </Surface>
 
 }
 
@@ -83,6 +84,7 @@ const styles = StyleSheet.create({
   buttonTextStyle: {
     marginBottom: 4,
     marginLeft: 10,
+    fontSize: 18
   },
   buttonIconSeparatorStyle: {
     backgroundColor: '#fff',

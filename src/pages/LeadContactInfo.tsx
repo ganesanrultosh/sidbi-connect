@@ -3,7 +3,7 @@ import * as yup from 'yup';
 import CustomInput from "../components/CustomInput";
 import { ScrollView, StyleSheet, Text } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Button, Surface } from "react-native-paper";
+import { Button, Surface, useTheme } from "react-native-paper";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { LeadContactInfoProps, LeadContactInfoRouteProps } from "./NavigationProps";
 import { Lead, leadDefaultValue } from "../models/Lead";
@@ -16,7 +16,19 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 const LeadContactInfo = (props : LeadContactInfoProps ) => {
   const navigation = useNavigation();
   const disptach = useAppDispatch();
+
+  const theme = useTheme();
   
+  const styles = StyleSheet.create({
+    contactInfoSurface: { width: "90%", margin: 20, padding: 20 },
+    header: { 
+      color: `${theme.colors.onBackground}`,
+      fontSize: 20, fontWeight: "bold", marginBottom: 20 },
+    scrollView: { padding: 5 },
+    continueButton: { alignSelf: "flex-end", display: "flex", margin: 10 }
+  })
+  
+
   const route = useRoute<LeadContactInfoRouteProps>();
   const { lead } = route.params;
   const { leads } = useAppSelector(state => state.persistedLeads);
@@ -194,14 +206,6 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
     </Surface>)}
   </Formik>
 }
-
-const styles = StyleSheet.create({
-  contactInfoSurface: { width: "95%", margin: 10, padding: 20 },
-  scrollView: { padding: 5 },
-  header: { fontSize: 15, fontWeight: "bold", marginBottom: 10 },
-  continueButton: { alignSelf: "flex-end", display: "flex", margin: 10 }
-})
-
 
 
 export default LeadContactInfo;

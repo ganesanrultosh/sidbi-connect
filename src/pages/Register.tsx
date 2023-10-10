@@ -2,7 +2,7 @@ import React from "react";
 import { ScrollView, StyleSheet, Text } from "react-native"
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Toast from "react-native-root-toast";
-import { Button, Surface } from "react-native-paper";
+import { Button, Surface, useTheme } from "react-native-paper";
 import { Field, Formik } from "formik";
 import * as yup from 'yup';
 import CustomInput from "../components/CustomInput";
@@ -14,6 +14,19 @@ const Register = (props:PartnerRegistrationProps) => {
 
   const navigation = useNavigation();
   const route = useRoute<PartnerRegistrationRouteProps>();
+
+  const theme = useTheme();
+
+  const styles = StyleSheet.create(
+    {
+      surface: { width: "90%", margin: 20, padding: 20 },
+      headerText: { 
+            color: `${theme.colors.onBackground}`,
+            fontSize: 20, fontWeight: "bold", marginBottom: 20 },
+      scrollView: { padding: 5 },
+      registerButton: { alignSelf: "flex-start", display: "flex", margin: 10 }
+    }
+  )
 
   const { partner } = route.params;
 
@@ -107,14 +120,5 @@ const Register = (props:PartnerRegistrationProps) => {
     </Surface>)}
   </Formik>
 }
-
-const styles = StyleSheet.create(
-  {
-    surface: { width: "95%", margin: 10, padding: 20 },
-    scrollView: { padding: 5 },
-    headerText: { fontSize: 15, fontWeight: "bold", marginBottom: 10 },
-    registerButton: { alignSelf: "flex-start", display: "flex", margin: 10 }
-  }
-)
 
 export default Register;

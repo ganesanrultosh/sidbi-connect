@@ -6,14 +6,17 @@ import React from "react";
 import HomeNavIcons from "./HomeNavIcons";
 import Feed from "./Feed";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { Surface } from "react-native-paper";
 
 const Home = () => {
   return <>
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: "#f2f2f2" }}>
       <ScrollView>
         <HomeNavIcons />
-        <OngoingLeadsHeader />
-        <OngoingLeads />
+        <Surface elevation={0} style={{paddingBottom: 15}}>
+          <OngoingLeadsHeader />
+          <OngoingLeads />
+        </Surface>
       </ScrollView>
     </View>
     {/* <View>

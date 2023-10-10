@@ -3,7 +3,6 @@ import { leadSlice } from "../slices/leadSlice";
 import { masterSlice } from "../slices/masterSlice";
 import { leadLocalStoreSlice } from "../slices/leadCacheSlice";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 
 const persistLeadConfig = {
   key: 'leads',

@@ -18,6 +18,17 @@ const LeadBasicInfo = (props : LeadBasicInfoProps) => {
 
   const navigation = useNavigation();
   const theme = useTheme();
+  const styles = StyleSheet.create({
+    viewStyle: { flex: 1 },
+    surfaceStyle: { width: "90%", margin: 20, padding: 20 },
+    headerText: { 
+      color: `${theme.colors.onBackground}`,
+      fontSize: 20, fontWeight: "bold", marginBottom: 20 },
+    scrollView: { padding: 5 },
+    continueButton: { alignSelf: "flex-end", display: "flex", margin: 10 },
+    radioGroupEnclosure: { marginTop: 10, borderBlockColor: "black", borderWidth: 1, padding: 10, borderRadius: 3 }
+  })
+
   const disptach = useAppDispatch();
   const route = useRoute<LeadBasicInfoRouteProps>();
   const { lead } = route.params;
@@ -133,14 +144,5 @@ const LeadBasicInfo = (props : LeadBasicInfoProps) => {
     </View>)}
   </Formik>
 }
-
-const styles = StyleSheet.create({
-  viewStyle: { flex: 1 },
-  surfaceStyle: { width: "95%", margin: 10, padding: 20 },
-  headerText: { fontSize: 15, fontWeight: "bold", marginBottom: 10 },
-  scrollView: { padding: 5 },
-  continueButton: { alignSelf: "flex-end", display: "flex", margin: 10 },
-  radioGroupEnclosure: { marginTop: 10, borderBlockColor: "black", borderWidth: 1, padding: 10, borderRadius: 3 }
-})
 
 export default LeadBasicInfo;

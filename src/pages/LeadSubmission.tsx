@@ -24,6 +24,17 @@ import Moment from 'moment';
 const LeadSubmission = (props: LeadSubmissionProps) => {
   const navigation = useNavigation();
   const theme = useTheme();
+  const styles = StyleSheet.create({
+    surface: { width: "93%", margin: 15, padding: 20 },
+      header: { 
+        color: `${theme.colors.onBackground}`,
+        fontSize: 20, fontWeight: "bold", marginBottom: 20 },
+    actionContainer: { flexDirection: 'row', alignContent: 'center' },
+    buttonContainer: { flex: 2, alignSelf: 'flex-start' },
+    button: { alignSelf: "flex-start", display: "flex", marginTop: 10 }
+  })
+
+  
   const dispatch = useAppDispatch();
 
   const route = useRoute<LeadSubmissionRouteProps>();
@@ -252,13 +263,5 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
     </Surface>)}
   </Formik>
 }
-
-const styles = StyleSheet.create({
-  surface: { width: "95%", margin: 10, padding: 20 },
-  header: { fontSize: 15, fontWeight: "bold", marginBottom: 3 },
-  actionContainer: { flexDirection: 'row', alignContent: 'center' },
-  buttonContainer: { flex: 2, alignSelf: 'flex-start' },
-  button: { alignSelf: "flex-start", display: "flex", marginTop: 10 }
-})
 
 export default LeadSubmission;

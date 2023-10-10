@@ -1,7 +1,7 @@
 import { useNavigation, CommonActions } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native"
-import { Button, Surface } from "react-native-paper";
+import { Button, Surface, useTheme } from "react-native-paper";
 import { Field, Formik } from "formik";
 import * as yup from 'yup';
 import CustomInput from "../components/CustomInput";
@@ -12,6 +12,59 @@ import Toast from "react-native-root-toast";
 const Login = () => {
   const navigation = useNavigation();
   const {setToken} = useToken();
+
+  const theme = useTheme();
+
+  const styles = StyleSheet.create({
+    loginContainer: { 
+      width: "90%", 
+      alignContent: "center", 
+      alignItems: "center", 
+      alignSelf: "center" 
+    },
+    headerText: { 
+      color: `${theme.colors.onBackground}`,
+      fontWeight: "bold", 
+      fontSize: 20, 
+      marginTop: 50, 
+      alignSelf: "center" 
+    },
+    loginSurface: { 
+      width: "95%", 
+      margin: 50, 
+      padding: 20 
+    },
+    scenarioQuestion: { 
+      fontWeight: "bold", 
+      margin: 5, 
+      alignSelf: "center" 
+    },
+    scenarioContent: { 
+      margin: 5, 
+      marginBottom: 15, 
+      alignSelf: "center" 
+    },
+    emailInput: { 
+      margin: 3 
+    },
+    passwordInput: { 
+      margin: 3 
+    },
+    signinButton: { 
+      margin: 10 
+    },
+    passwordButton: { 
+      margin: 10 
+    },
+    registrationSurface: { 
+      width: "95%", 
+      margin: 0, 
+      padding: 20 
+    },
+    registerButton: { 
+      margin: 10 
+    }
+  });
 
   const loginValidationSchema = yup.object().shape({
     email: yup
@@ -111,54 +164,6 @@ const Login = () => {
   </View>
 }
 
-const styles = StyleSheet.create({
-  loginContainer: { 
-    width: "90%", 
-    alignContent: "center", 
-    alignItems: "center", 
-    alignSelf: "center" 
-  },
-  headerText: { 
-    fontWeight: "bold", 
-    fontSize: 20, 
-    marginTop: 50, 
-    alignSelf: "center" 
-  },
-  loginSurface: { 
-    width: "95%", 
-    margin: 50, 
-    padding: 20 
-  },
-  scenarioQuestion: { 
-    fontWeight: "bold", 
-    margin: 5, 
-    alignSelf: "center" 
-  },
-  scenarioContent: { 
-    margin: 5, 
-    marginBottom: 15, 
-    alignSelf: "center" 
-  },
-  emailInput: { 
-    margin: 3 
-  },
-  passwordInput: { 
-    margin: 3 
-  },
-  signinButton: { 
-    margin: 10 
-  },
-  passwordButton: { 
-    margin: 10 
-  },
-  registrationSurface: { 
-    width: "95%", 
-    margin: 0, 
-    padding: 20 
-  },
-  registerButton: { 
-    margin: 10 
-  }
-});
+
 
 export default Login;
