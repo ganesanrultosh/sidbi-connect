@@ -65,7 +65,7 @@ const OngoingLeads = () => {
     return <Surface
       elevation={4}
       style={{ margin: 10, padding: 10, width: 200 }}>
-      <Text style={{ fontWeight: "bold", color: "black" }}>{lead?.name}</Text>
+      <Text style={{ fontWeight: "bold", color: "black" }}>{lead?.entityName}</Text>
       <Text style={{ fontWeight: "bold", fontSize: 12 }}>{lead?.dateCreated}</Text>
       <Text style={{ fontWeight: "bold", color: "black", marginTop: 10 }}>Loan Amount: {lead?.loanAmount} Lac</Text>
       <Text style={{ fontWeight: "bold", color: "black" }}>Type: {lead?.customerType?.toLocaleUpperCase()}</Text>

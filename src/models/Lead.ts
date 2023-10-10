@@ -2,7 +2,7 @@ import { Child } from "./baseModels";
 import Moment from 'moment';
 
 export interface Lead extends Child {
-  name?: string;
+  entityName?: string;
   pan?: string;
   loanAmount?: number;
   loanType?: string;
@@ -21,7 +21,8 @@ export interface Lead extends Child {
   branchName?: string;
   customerConcent?: string;
   otp?: string;
-  dateCreated?: string
+  dateCreated?: string;
+  proposalStatus?: string;
 }
 
 export const leadDefaultValue = {

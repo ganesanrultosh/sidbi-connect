@@ -51,7 +51,7 @@ const LeadBasicInfo = (props : LeadBasicInfoProps) => {
       .string()
       .matches(/[A-Z]{5}[0-9]{4}[A-Z]{1}/, "Please enter valid PAN")
       .required('PAN is Required'),
-    name: yup
+    entityName: yup
       .string()
       .required('Entity Name is required.'),
     loanAmount: yup
@@ -95,7 +95,7 @@ const LeadBasicInfo = (props : LeadBasicInfoProps) => {
             />
             <Field
               component={CustomInput}
-              name="name"
+              name="entityName"
               label="Entity Name (*)"
             />
             <Field

@@ -44,9 +44,8 @@ export const crudApiTemplateWithParent = (parent: string, entity: string) => {
   return {
     listItem: (parentId: number, ) => {
       return {
-        url: `/${parent}/${parentId}/${entity}/search`,
-        method: "POST",
-        body: {},
+        url: `/${parent}/${parentId}/${entity}`,
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
