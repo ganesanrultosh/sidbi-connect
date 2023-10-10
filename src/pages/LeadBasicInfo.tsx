@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native"
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Button, Surface, useTheme } from "react-native-paper";
 import Footer from "./Footer";
 import { Field, Formik } from "formik";
@@ -8,15 +8,20 @@ import * as yup from 'yup';
 import CustomInput from "../components/CustomInput";
 import CustomDropDown from "../components/CustomDropDown";
 import CustomRadioGroup from "../components/CustomRadioGroup";
-import { Lead } from "../models/Lead";
+import { Lead, leadDefaultValue } from "../models/Lead";
 import { saveLead } from "../slices/leadCacheSlice";
 import { useDispatch } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { LeadBasicInfoProps, LeadBasicInfoRouteProps } from "./NavigationProps";
 
-const LeadBasicInfo = () => {
+const LeadBasicInfo = (props : LeadBasicInfoProps) => {
 
   const navigation = useNavigation();
   const theme = useTheme();
-  const disptach = useDispatch();
+  const disptach = useAppDispatch();
+  const route = useRoute<LeadBasicInfoRouteProps>();
+  const { lead } = route.params;
+  const { leads } = useAppSelector(state => state.persistedLeads);
 
   let loanTypeDomain = [{
     label: 'Loan Type 1',
@@ -34,27 +39,12 @@ const LeadBasicInfo = () => {
     value: 'existing',
   }];
 
-  const initialValues = {
-    name: "",
-    pan: "",
-    loanAmount: undefined,
-    loanType: "",
-    customerType: "",
-    itrFiling: "",
-    bankStatement: "",
-    gstRegime: "",
-    mobileNo: "",
-    email: "",
-    officeAddress: "",
-    city: "",
-    state: "",
-    pinCode: undefined,
-    dateOfIncorp: undefined,
-    applicationFillingBy: "",
-    branchName: "",
-    customerConcent: "",
-    otp: ""
-  }
+  const initialValues = lead?.pan && leads[lead?.pan] ? {
+    ...leadDefaultValue,
+    ...leads[lead?.pan].lead
+  } : {...leadDefaultValue}
+
+  const [leadInfo, setLeadInfo] = useState<Lead>(initialValues)
 
   const basicInfoValidationSchema = yup.object().shape({
     pan: yup
@@ -79,12 +69,14 @@ const LeadBasicInfo = () => {
 
   return <Formik
     validationSchema={basicInfoValidationSchema}
-    initialValues={initialValues}
+    initialValues={leadInfo}
     onSubmit={values => {
-      disptach(saveLead(values as Lead));
+      let currentValues = {...leadInfo, ...values} as Lead
+      disptach(saveLead(currentValues));
+      setLeadInfo(currentValues)
       navigation.navigate(
         'LeadContactInfo',
-        {lead: values as Lead});
+        {lead: currentValues})
     }}
   >
     {({
@@ -114,7 +106,8 @@ const LeadBasicInfo = () => {
             <Field
               component={CustomDropDown}
               name="loanType"
-              label="Loand Type (*)"
+              label="Loan Type (*)"
+              enableReinitialize
               list={loanTypeDomain}
             />
             <View style={styles.radioGroupEnclosure}>

@@ -7,6 +7,8 @@ export type PartnerRegistrationRouteProps = RouteProp<RootStackParamList, 'Regis
 export type PartnerRegistrationContactProps = NativeStackScreenProps<RootStackParamList, 'RegisterContactInfo'>;
 export type PartnerRegistrationContactRouteProps = RouteProp<RootStackParamList, 'RegisterContactInfo'>;
 
+export type LeadBasicInfoProps = NativeStackScreenProps<RootStackParamList, 'LeadBasicInfo'>;
+export type LeadBasicInfoRouteProps = RouteProp<RootStackParamList, 'LeadBasicInfo'>;
 export type LeadContactInfoProps = NativeStackScreenProps<RootStackParamList, 'LeadContactInfo'>;
 export type LeadContactInfoRouteProps = RouteProp<RootStackParamList, 'LeadContactInfo'>;
 export type LeadSubmissionProps = NativeStackScreenProps<RootStackParamList, 'LeadSubmission'>;

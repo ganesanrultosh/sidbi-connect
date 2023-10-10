@@ -40,7 +40,7 @@ export const leadLocalStoreSlice = createSlice({
         }
       },
     deleteLead: (state: LeadLocalStore, 
-      action: PayloadAction<string>) => {
+      action: PayloadAction<string | undefined>) => {
         if(action.payload) {
           if(state.leads[action.payload]) {
             delete state.leads[action.payload];

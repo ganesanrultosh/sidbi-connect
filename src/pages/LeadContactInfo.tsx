@@ -6,17 +6,27 @@ import React, { useEffect, useState } from "react";
 import { Button, Surface } from "react-native-paper";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { LeadContactInfoProps, LeadContactInfoRouteProps } from "./NavigationProps";
-import { Lead } from "../models/Lead";
+import { Lead, leadDefaultValue } from "../models/Lead";
 import CustomDropDownEditable from "../components/CustomDropDownEditable";
 import { useGetMasterQuery } from "../slices/masterSlice";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { saveLead } from "../slices/leadCacheSlice";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 
 const LeadContactInfo = (props : LeadContactInfoProps ) => {
   const navigation = useNavigation();
-
+  const disptach = useAppDispatch();
+  
   const route = useRoute<LeadContactInfoRouteProps>();
-
   const { lead } = route.params;
+  const { leads } = useAppSelector(state => state.persistedLeads);
+
+  const initialValues = lead?.pan && leads[lead?.pan] ? {
+    ...leadDefaultValue,
+    ...leads[lead?.pan].lead
+  } : {...leadDefaultValue}
+
+  const [leadInfo, setLeadInfo] = useState<Lead>(initialValues)
 
   const [pincode, setPinCode] = useState<number>()
   const [states, setStates] = useState<any>()
@@ -84,36 +94,17 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
       .required("Address is required")
   })
 
-  const initialValues = {
-    name: "",
-    pan: "",
-    loanAmount: undefined,
-    loanType: "",
-    customerType: "",
-    itrFiling: "",
-    bankStatement: "",
-    gstRegime: "",
-    mobileNo: "",
-    email: "",
-    address: "",
-    city: "",
-    state: "",
-    pinCode: "",
-    dateOfIncorp: undefined,
-    applicationFillingBy: "",
-    branchName: "",
-    customerConcent: "",
-    otp: "",
-    ...lead
-  }
-
   return <Formik
     validationSchema={contactInfoValidationSchema}
     initialValues={initialValues}
     onSubmit={values => {
+      let currentValues = {...leadInfo, ...values} as Lead
+      console.log("Navigating to submission", currentValues)
+      disptach(saveLead(currentValues));
+      setLeadInfo(currentValues)
       navigation.navigate(
         'LeadSubmission',
-        {lead: values as Lead})
+        {lead: currentValues})
     }}
   >
     {({

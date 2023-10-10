@@ -7,19 +7,19 @@ import * as yup from 'yup';
 import CustomDropDown from "../components/CustomDropDown";
 import CustomRadioGroup from "../components/CustomRadioGroup";
 import CustomerDataPicker from "../components/CustomerDataPicker";
-import CustomerSwitch from "../components/CustomerSwitch";
+import CustomSwitch from "../components/CustomSwitch";
 import CustomInput from "../components/CustomInput";
 import CustomCheckBox from "../components/CustomCheckBox";
 import { LeadSubmissionProps, LeadSubmissionRouteProps } from "./NavigationProps";
 import { useAddLeadMutation } from "../slices/leadSlice";
-import { Lead } from "../models/Lead";
+import { Lead, leadDefaultValue } from "../models/Lead";
 import Toast from "react-native-root-toast";
 import { useGetMasterQuery } from "../slices/masterSlice";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { sendConsent } from "../services/concentService";
-import { useDispatch } from "react-redux";
-import { deleteLead } from "../slices/leadCacheSlice";
-import { useAppDispatch } from "../app/hooks";
+import { deleteLead, saveLead } from "../slices/leadCacheSlice";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import Moment from 'moment';
 
 const LeadSubmission = (props: LeadSubmissionProps) => {
   const navigation = useNavigation();
@@ -28,6 +28,8 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
 
   const route = useRoute<LeadSubmissionRouteProps>();
   const { lead } = route.params;
+  const { leads } = useAppSelector(state => state.persistedLeads);
+  const [leadInfo, setLeadInfo] = useState(leadDefaultValue)
 
   const [concentSent, setConcentSent] = useState(false)
 
@@ -45,28 +47,12 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
     value: 'customer',
   }];
 
-  const initialValues = {
-    name: "",
-    pan: "",
-    loanAmount: undefined,
-    loanType: "",
-    customerType: "",
-    itrFiling: false,
-    bankStatement: false,
-    gstRegime: false,
-    mobileNo: "",
-    email: "",
-    address: "",
-    city: "",
-    state: "",
-    pinCode: undefined,
-    dateOfIncorp: undefined,
-    applicationFillingBy: "",
-    branchName: "",
-    customerConcent: "",
-    otp: "",
-    ...lead
-  }
+  const initialValues = lead?.pan && leads[lead?.pan] ? {
+    ...leadDefaultValue,
+    ...leads[lead?.pan].lead,
+  } : {...leadDefaultValue} as Lead
+
+  console.log("Submission", initialValues)
 
   const {
     data : master, 
@@ -85,6 +71,18 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
       if(branchList.length > 0) setBranches(branchList)
     }
   }, [master])
+
+  const saveLeadToStore = (values : Lead) => {
+    let lead = {
+      ...leadInfo,
+      ...values, 
+      parentId: 1, 
+      "dateOfIncorp": values.dateOfIncorp ? Moment(values.dateOfIncorp).format('YYYY-MM-DD HH:MM') : undefined,
+    }
+    console.log("Saving", lead)
+    setLeadInfo(lead)
+    dispatch(saveLead(lead))
+  }
 
   const submissionValidationSchema = yup.object().shape({
     branchName: yup
@@ -116,30 +114,43 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
   return <Formik
     validationSchema={submissionValidationSchema}
     initialValues={initialValues}
-    onSubmit={async (values) => {
+    onSubmit={async (values, isValid) => {
       let lead = {
+        ...leadInfo,
         ...values, 
         parentId: 1, 
         "bankStatement": values.bankStatement ? "Yes" : "No",
         "gstRegime": values.gstRegime ? "Yes" : "No",
         "itrFiling": values.itrFiling ? "Yes" : "No",
-        "dateOfIncorp": "2023-01-01",
+        "dateOfIncorp": Moment(values.dateOfIncorp).format('YYYY-MM-DD'),
       }
-      console.log("Lead Submission", lead)
-      await addLead(lead as Lead).unwrap()
-        .then(() => {
-            Toast.show('Lead submitted sucessfully!');
-            dispatch(deleteLead(initialValues.pan));
-            navigation.navigate('Home')
-          })
-        .catch(
-          (error) => {
-            console.log("Error: ", error, result)
-            Toast.show("Error submitting lead!")
-          })
-    }}
+      if(isValid) {
+        console.log("Lead Submission", lead)
+        await addLead(lead as Lead).unwrap()
+          .then(() => {
+              Toast.show('Lead submitted sucessfully!');
+              dispatch(deleteLead(initialValues.pan));
+              navigation.navigate('Home')
+            })
+          .catch(
+            (error) => {
+              console.log("Error: ", error, result)
+              if(error.data.error) {
+                Toast.show(error.data.error)
+              } else {
+                Toast.show("Error submitting lead!")
+              }
+              
+            })
+      } else {
+        console.log("Saving", lead)
+        dispatch(saveLead(lead))
+      }
+    }
+    }
   >
     {({
+      values,
       handleSubmit,
       isValid
     }) => (<Surface elevation={4} style={styles.surface}
@@ -150,25 +161,28 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
           component={CustomDropDown}
           name="branchName"
           label="Branch (*)"
+          enableReinitialize
           list={branches}
         />
         <Field
           component={CustomerDataPicker}
           name="dateOfIncorp"
           label="Date of incorporation"
+          value={values.dateOfIncorp ? Moment(values.dateOfIncorp, "YYYY-MM-DD HH:MM").toDate() : undefined}
         />
         <Field
-          component={CustomerSwitch}
+          component={CustomSwitch}
           name="itrFiling"
           label="Does the customer have Min 3 years of Income tax return filing?"
+          enableReinitialize
         />
         <Field
-          component={CustomerSwitch}
+          component={CustomSwitch}
           name="bankStatement"
           label="Does the customer have most recent 12 months (till last month) bank statement?"
         />
         <Field
-          component={CustomerSwitch}
+          component={CustomSwitch}
           name="gstRegime"
           label="Is the customer registered under GST?"
         />
@@ -193,7 +207,7 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
             onPress={async () => { 
                 setResendConsent(false)
                 sendConsent({mobileNo: initialValues.mobileNo})
-                  .then((response) => response.json())
+                  .then((response) => response?.json())
                   .then(async (data : any) => {
                     setTimeout(() => {
                       setResendConsent(true)
@@ -208,6 +222,14 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
             rightText={"I/We accept the Terms and Conditions"}
           />
         <View style={styles.actionContainer}>
+          <View style={styles.buttonContainer}>
+            <Button 
+              mode="contained" 
+              style={styles.button} 
+              onPress={(e:any) => saveLeadToStore(values)}>
+                Save
+            </Button>
+          </View>
           <View style={styles.buttonContainer}>
             <Button 
               mode="contained" 

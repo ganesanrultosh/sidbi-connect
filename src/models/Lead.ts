@@ -1,23 +1,29 @@
 import { Child } from "./baseModels";
+import Moment from 'moment';
 
 export interface Lead extends Child {
-  name: string | undefined;
-  pan: string | undefined;
-  loanAmount: number | undefined;
-  loanType: string | undefined;
-  customerType: string | undefined;
-  itrFiling: string | undefined;
-  bankStatement: string | undefined;
-  gstRegime: string | undefined;
-  mobileNo: string | undefined;
-  email: string | undefined;
-  officeAddress: string | undefined;
-  city: string | undefined;
-  state: string | undefined;
-  pinCode: number | undefined;
-  dateOfIncorp: string | undefined;
-  applicationFillingBy: string | undefined;
-  branchName: string | undefined;
-  customerConcent: string | undefined;
-  otp: string | undefined;
+  name?: string;
+  pan?: string;
+  loanAmount?: number;
+  loanType?: string;
+  customerType?: string;
+  itrFiling?: string;
+  bankStatement?: string;
+  gstRegime?: string;
+  mobileNo?: string;
+  email?: string;
+  officeAddress?: string;
+  city?: string;
+  state?: string;
+  pinCode?: number;
+  dateOfIncorp?: string;
+  applicationFillingBy?: string;
+  branchName?: string;
+  customerConcent?: string;
+  otp?: string;
+  dateCreated?: string
 }
+
+export const leadDefaultValue = {
+  dateCreated: Moment(new Date()).format("YYYY-MM-DD")
+ }

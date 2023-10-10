@@ -16,9 +16,14 @@ const CustomDropDown = (props : any) => {
   const [showDropDown, setShowDropDown] = useState(false);
 
   useEffect(() => {
-    if(value != "") {
-      setFieldValue(name, "")
-      setFieldTouched(name)
+    if(props.list && value && value !== "") {
+      let found = props.list?.map((item : any) => {
+        if(item.value === value) return true;
+      });
+      if(!found) {
+        setFieldValue(name, "")
+        setFieldTouched(name)
+      }
     }
   }, [props.list])
 

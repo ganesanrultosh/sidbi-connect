@@ -4,7 +4,7 @@ import { Text, StyleSheet, Switch, View } from 'react-native'
 import { TextInput } from 'react-native-paper'
 
 
-const CustomerSwitch = (props : any) => {
+const CustomSwitch = (props : any) => {
   const {
     field: { name, onBlur, onChange, value },
     form: { errors, touched, setFieldTouched, setFieldValue },
@@ -45,4 +45,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default CustomerSwitch
+export default CustomSwitch

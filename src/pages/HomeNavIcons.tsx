@@ -2,6 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { Surface } from "react-native-paper";
+import { Lead } from "../models/Lead";
 
 const HomeNavIcons = () => {
 
@@ -18,7 +19,9 @@ const HomeNavIcons = () => {
       style={{ margin: 10, backgroundColor: "#fff" }}
     >
       <TouchableOpacity style={styles.buttonFacebookStyle} activeOpacity={0.5} onPress={() => {
-        navigation.navigate('LeadBasicInfo' as never)
+        navigation.navigate(
+          'LeadBasicInfo',
+          {lead: {} as Lead})
       }}>
         <Image
           source={require('../images/LeadGenerationIcon.png')}
