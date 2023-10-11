@@ -1,7 +1,6 @@
 interface Partner {
     username: string | undefined;
     password: string | undefined;
-    confirmPassword: string| undefined;
     mobileNo: string | undefined;
     pan: string | undefined;
     keyPerson: string | undefined;
@@ -12,4 +11,5 @@ interface Partner {
     category: string | undefined;
     subCategory: string | undefined;
     termsAccepted: boolean | undefined;
+    saltKey: string | undefined;
 }

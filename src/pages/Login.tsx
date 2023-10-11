@@ -5,9 +5,12 @@ import { Button, Surface, useTheme } from "react-native-paper";
 import { Field, Formik } from "formik";
 import * as yup from 'yup';
 import CustomInput from "../components/CustomInput";
-import { loginUser } from "../services/authService";
+import { loginUser, randomKeys } from "../services/authService";
 import useToken from "../components/Authentication/useToken";
 import Toast from "react-native-root-toast";
+import uuid from 'react-native-uuid';
+import { sha256 } from 'react-native-sha256';
+import encrypt from "../components/Authentication/passwordUtil";
 
 const Login = () => {
   const navigation = useNavigation();
@@ -85,33 +88,34 @@ const Login = () => {
         validationSchema={loginValidationSchema}
         initialValues={{ email: '', password: '' }}
         onSubmit={async (values) => {
-          
-          await loginUser({
-            username: values.email,
-            password: values.password
-          })
-          .then((response) => response.json())
-          .then(async (data : any) => {
-            if(data.error) {
-              Toast.show(data.error);
-            } else {
-              let token = data;
-              await setToken(token)
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 0,
-                  routes: [{ name: 'Root' }],
+            await encrypt(values.password)
+              .then(async (encryptedPassword : {password: string, key: string}) => {
+                await loginUser({
+                  username: values.email,
+                  password: encryptedPassword.password,
+                  saltkey: encryptedPassword.key
                 })
-              )
-            }
-          }).catch((error : any) => {
-              console.log(error)
-              Toast.show("Login failed. Possible network error!");
-            }
-          );
-
-          
-        }}
+                .then((response) => response.json())
+                .then(async (data : any) => {
+                  if(data.error) {
+                    Toast.show(data.error);
+                  } else {
+                    let token = data;
+                    await setToken(token)
+                    navigation.dispatch(
+                      CommonActions.reset({
+                        index: 0,
+                        routes: [{ name: 'Root' }],
+                      })
+                    )
+                  }
+                }).catch((error : any) => {
+                    console.log(error)
+                    Toast.show("Login failed. Possible network error!");
+                  }
+                );
+            });
+          }}
         >
         {({ 
           handleSubmit, 

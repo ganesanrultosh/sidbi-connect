@@ -17,6 +17,7 @@ async function forgotPassword(request: { username: string }) {
 function loginUser(credentials: {
   username: string;
   password: string;
+  saltkey: string;
 }) {
   return fetch(`${apiEndpoint}/auth/authenticate`, {
     method: "POST",
@@ -37,6 +38,15 @@ async function signupUser(signupInput: Partner) {
   })
 }
 
+async function randomKeys(key: string) {
+  return fetch(`${apiEndpoint}/auth/randomKeys/${key}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  })
+}
+
 async function setUserPassword(credentials: {
   password: string;
   matchingPassword: string;
@@ -51,4 +61,4 @@ async function setUserPassword(credentials: {
   });
 }
 
-export { forgotPassword, loginUser, signupUser, setUserPassword };
+export { forgotPassword, loginUser, signupUser, setUserPassword, randomKeys };

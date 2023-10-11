@@ -9,8 +9,9 @@ import CustomInput from "../components/CustomInput";
 import CustomCheckBox from "../components/CustomCheckBox";
 import { PartnerRegistrationProps, PartnerRegistrationRouteProps } from "./NavigationProps";
 import { signupUser } from "../services/authService";
+import encrypt from "../components/Authentication/passwordUtil";
 
-const Register = (props:PartnerRegistrationProps) => {
+const Register = (props: PartnerRegistrationProps) => {
 
   const navigation = useNavigation();
   const route = useRoute<PartnerRegistrationRouteProps>();
@@ -20,9 +21,10 @@ const Register = (props:PartnerRegistrationProps) => {
   const styles = StyleSheet.create(
     {
       surface: { width: "90%", margin: 20, padding: 20 },
-      headerText: { 
-            color: `${theme.colors.onBackground}`,
-            fontSize: 20, fontWeight: "bold", marginBottom: 20 },
+      headerText: {
+        color: `${theme.colors.onBackground}`,
+        fontSize: 20, fontWeight: "bold", marginBottom: 20
+      },
       scrollView: { padding: 5 },
       registerButton: { alignSelf: "flex-start", display: "flex", margin: 10 }
     }
@@ -34,26 +36,26 @@ const Register = (props:PartnerRegistrationProps) => {
     password: yup
       .string()
       .required('Password is required')
-      .matches(/\w*[a-z]\w*/,  "Password must have a small letter")
-      .matches(/\w*[A-Z]\w*/,  "Password must have a capital letter")
+      .matches(/\w*[a-z]\w*/, "Password must have a small letter")
+      .matches(/\w*[A-Z]\w*/, "Password must have a capital letter")
       .matches(/\d/, "Password must have a number")
       .matches(/[!@#$%^&*()\-_"=+{}; :,<.>]/, "Password must have a special character")
       .min(8, ({ min }) => `Password must be at least ${min} characters`)
-      ,
+    ,
     confirmPassword: yup.string()
       .oneOf([yup.ref('password'), undefined], 'Passwords must match'),
     termsAccepted: yup.boolean().isTrue('Please read and accept the terms and condition')
   })
 
-  const initialValue = { 
-    pan: '', 
-    username: '', 
-    category: '', 
-    subCategory: '', 
+  const initialValue = {
+    pan: '',
+    username: '',
+    category: '',
+    subCategory: '',
     keyPerson: '',
-    mobileNo: '', 
-    pinCode: undefined, 
-    city: '', 
+    mobileNo: '',
+    pinCode: undefined,
+    city: '',
     state: '',
     address: '',
     password: '',
@@ -66,19 +68,24 @@ const Register = (props:PartnerRegistrationProps) => {
     validationSchema={registrationValidationSchema}
     initialValues={initialValue}
     onSubmit={async (values) => {
-      await signupUser(values as Partner)
+
+      let encryptedPassword = await encrypt(values.password);
+      console.log("encryptedPassword", encryptedPassword)
+      let partnerToCreate = { ...values, password: encryptedPassword.password, saltKey: encryptedPassword.key } as Partner
+      console.log('Partner to create', partnerToCreate)
+      await signupUser(partnerToCreate)
         .then((response) => response.json())
-        .then(async (data : any) => {
-          if(data.error) {
+        .then((data: any) => {
+          if (data.error) {
             Toast.show(data.error);
           } else {
             Toast.show('Registration sucessfully submitted.', { duration: Toast.durations.LONG })
             navigation.navigate('Login' as never)
           }
-        }).catch((error : any) => {
-            console.log(error)
-            Toast.show(error, { duration: Toast.durations.LONG })
-          }
+        }).catch((error: any) => {
+          console.log(error)
+          Toast.show(error, { duration: Toast.durations.LONG })
+        }
         );
       console.log("Register", values)
     }}
@@ -111,11 +118,11 @@ const Register = (props:PartnerRegistrationProps) => {
           rightText={"I/We accept the Terms and Conditions"}
         />
       </ScrollView>
-      <Button 
-        style={styles.registerButton} 
-        onPress={(e: any) => handleSubmit(e)} 
+      <Button
+        style={styles.registerButton}
+        onPress={(e: any) => handleSubmit(e)}
         mode="contained">
-          Register
+        Register
       </Button>
     </Surface>)}
   </Formik>
