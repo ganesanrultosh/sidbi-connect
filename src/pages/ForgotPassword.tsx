@@ -80,7 +80,6 @@ const ForgotPassword = () => {
       handleSubmit,
       isValid
     }) => (<View style={styles.containerView}>
-      <Text style={styles.headerText}>SIDBI Connect</Text>
       <Surface elevation={4} style={styles.surface}>
         <Formik
           validationSchema={userIdValidationSchema}

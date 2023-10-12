@@ -90,21 +90,42 @@ function Navigation(): JSX.Element {
           },
           headerBackTitleVisible: false
         }}>
-          <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
-          <Stack.Screen name="RegisterBasicInfo" component={RegisterBasicInfo} options={{
-            title: 'Registration'
-          }} />
+          <Stack.Screen 
+            name="Login" 
+            component={Login} 
+            options={{headerShown: false}} />
+          <Stack.Screen 
+            name="RegisterBasicInfo" 
+            component={RegisterBasicInfo} 
+            options={{title: 'Registration'}} />
           <Stack.Screen
             name="RegisterContactInfo"
             component={RegisterContactInfo}
             options={{ title: 'Registration' }}
           />
-          <Stack.Screen name="Register" component={Register} options={{ title: 'Registration' }} />
-          <Stack.Screen name="LeadBasicInfo" component={LeadBasicInfo} options={{ title: 'Lead Generation' }} />
-          <Stack.Screen name="LeadContactInfo" component={LeadContactInfo} options={{ title: 'Lead Generation' }} />
-          <Stack.Screen name="Leads" component={Leads} />
-          <Stack.Screen name="LeadSubmission" component={LeadSubmission} options={{ title: 'Lead Generation' }} />
-          <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+          <Stack.Screen 
+            name="Register" 
+            component={Register} 
+            options={{ title: 'Registration' }} />
+          <Stack.Screen 
+            name="LeadBasicInfo" 
+            component={LeadBasicInfo} 
+            options={{ title: 'Lead Generation' }} />
+          <Stack.Screen 
+            name="LeadContactInfo" 
+            component={LeadContactInfo} 
+            options={{ title: 'Lead Generation' }} />
+          <Stack.Screen 
+            name="Leads" 
+            component={Leads} />
+          <Stack.Screen 
+            name="LeadSubmission" 
+            component={LeadSubmission} 
+            options={{ title: 'Lead Generation' }} />
+          <Stack.Screen 
+            name="ForgotPassword" 
+            component={ForgotPassword} 
+            options={{ title: 'Forgot Password' }} />
         </Stack.Group>
         <Stack.Group screenOptions={{
           headerShown: false

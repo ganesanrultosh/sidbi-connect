@@ -1,6 +1,6 @@
 import { useNavigation, CommonActions } from "@react-navigation/native";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet, Text, View, Image } from "react-native"
 import { Button, Surface, useTheme } from "react-native-paper";
 import { Field, Formik } from "formik";
 import * as yup from 'yup';
@@ -14,59 +14,69 @@ import encrypt from "../components/Authentication/passwordUtil";
 
 const Login = () => {
   const navigation = useNavigation();
-  const {setToken} = useToken();
+  const { setToken } = useToken();
 
   const theme = useTheme();
 
   const styles = StyleSheet.create({
-    loginContainer: { 
-      width: "90%", 
-      alignContent: "center", 
-      alignItems: "center", 
-      alignSelf: "center" 
+    loginContainer: {
+      paddingTop: 20,
+      width: "100%",
+      height: "100%",
+      alignContent: "center",
+      alignItems: "center",
+      alignSelf: "center",
+      backgroundColor: "#F5F7F9"
     },
-    headerText: { 
+    headerText: {
       color: `${theme.colors.onBackground}`,
-      fontWeight: "bold", 
-      fontSize: 20, 
-      marginTop: 120, 
-      alignSelf: "center" 
+      fontWeight: "bold",
+      fontSize: 20,
+      alignSelf: "center",
+      height: 80,
+      width: 120,
+      padding: 5
     },
-    loginSurface: { 
-      width: "95%", 
-      margin: 50, 
-      padding: 20 
+    loginSurface: {
+      width: "95%",
+      margin: 30,
+      padding: 20
     },
-    scenarioQuestion: { 
-      fontWeight: "bold", 
-      margin: 5, 
-      alignSelf: "center" 
+    scenarioQuestion: {
+      fontWeight: "bold",
+      margin: 5,
+      alignSelf: "center"
     },
-    scenarioContent: { 
-      margin: 5, 
-      marginBottom: 15, 
-      alignSelf: "center" 
+    scenarioContent: {
+      margin: 5,
+      marginBottom: 15,
+      alignSelf: "center"
     },
-    emailInput: { 
-      margin: 3 
+    emailInput: {
+      margin: 3
     },
-    passwordInput: { 
-      margin: 3 
+    passwordInput: {
+      margin: 3
     },
-    signinButton: { 
-      margin: 10 
+    signinButton: {
+      margin: 10
     },
-    passwordButton: { 
-      margin: 10 
+    passwordButton: {
+      margin: 10
     },
-    registrationSurface: { 
-      width: "95%", 
-      margin: 0, 
-      padding: 20 
+    registrationSurface: {
+      width: "95%",
+      margin: 0,
+      padding: 20
     },
-    registerButton: { 
-      margin: 10 
-    }
+    registerButton: {
+      margin: 10
+    },
+    sidbiImageStyle: {
+      marginTop: 10,
+      height: 60,
+      resizeMode:'contain'
+    },
   });
 
   const loginValidationSchema = yup.object().shape({
@@ -80,7 +90,12 @@ const Login = () => {
   })
 
   return <View style={styles.loginContainer}>
-    <Text style={styles.headerText}>SIDBI Connect</Text>
+        <Image
+          style={styles.sidbiImageStyle}
+          source={require('../images/sidbi.png')}
+        />
+
+
     <Surface elevation={4} style={styles.loginSurface}>
       <Text style={styles.scenarioQuestion}>Already a partner?</Text>
       <Text style={styles.scenarioContent}>Sign in to continue</Text>
@@ -88,16 +103,16 @@ const Login = () => {
         validationSchema={loginValidationSchema}
         initialValues={{ email: '', password: '' }}
         onSubmit={async (values) => {
-            await encrypt(values.password)
-              .then(async (encryptedPassword : {password: string, key: string}) => {
-                await loginUser({
-                  username: values.email,
-                  password: encryptedPassword.password,
-                  saltkey: encryptedPassword.key
-                })
+          await encrypt(values.password)
+            .then(async (encryptedPassword: { password: string, key: string }) => {
+              await loginUser({
+                username: values.email,
+                password: encryptedPassword.password,
+                saltkey: encryptedPassword.key
+              })
                 .then((response) => response.json())
-                .then(async (data : any) => {
-                  if(data.error) {
+                .then(async (data: any) => {
+                  if (data.error) {
                     Toast.show(data.error);
                   } else {
                     let token = data;
@@ -109,18 +124,18 @@ const Login = () => {
                       })
                     )
                   }
-                }).catch((error : any) => {
-                    console.log(error)
-                    Toast.show("Login failed. Possible network error!");
-                  }
+                }).catch((error: any) => {
+                  console.log(error)
+                  Toast.show("Login failed. Possible network error!");
+                }
                 );
             });
-          }}
-        >
-        {({ 
-          handleSubmit, 
+        }}
+      >
+        {({
+          handleSubmit,
           isValid
-         }) => (
+        }) => (
           <>
             <Field
               component={CustomInput}
@@ -135,14 +150,14 @@ const Login = () => {
               secureTextEntry
             />
             <Button
-              onPress={(e:any) => handleSubmit(e)}
+              onPress={(e: any) => handleSubmit(e)}
               mode="contained"
-              style={styles.signinButton} 
+              style={styles.signinButton}
               disabled={!isValid}
-              >
+            >
               Sign in
             </Button>
-        </>)}
+          </>)}
       </Formik>
       <Button
         onPress={() => {

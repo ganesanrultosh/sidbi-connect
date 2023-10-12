@@ -26,8 +26,8 @@ const CustomRadioGroup = (props: any) => {
                 <View key={`v2-${item.label}`} style={{ flex: 1, alignSelf: 'center' }}>
                   <Text>{item.label}</Text>
                 </View>
-                <View key={`v3-${item.label}`} style={{ flex: 1 }}>
-                  <RadioButton value={item.value} />
+                <View key={`v3-${item.label}`} style={{ flex: 1, alignItems: "center" }}>
+                  <RadioButton.Android value={item.value} />
                 </View>
               </View>
             })
