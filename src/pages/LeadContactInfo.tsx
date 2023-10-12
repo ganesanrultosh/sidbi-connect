@@ -83,7 +83,7 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
   }, [master])
 
   const contactInfoValidationSchema = yup.object().shape({
-    email: yup
+    emailId: yup
       .string()
       .email("Enter a valid email")
       .required('Email is required'),
@@ -132,7 +132,7 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
         <Text style={styles.header}>Contact Information</Text>
         <Field
           component={CustomInput}
-          name="email"
+          name="emailId"
           label="Email (*)"
         />
         <Field

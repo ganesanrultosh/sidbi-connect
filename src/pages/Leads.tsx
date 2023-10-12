@@ -1,19 +1,31 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { Linking } from 'react-native'
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Surface } from "react-native-paper";
 import { useListLeadsQuery } from "../slices/leadSlice";
 import { withTheme } from 'react-native-paper';
+import { me } from "../services/authService";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 const Leads = () => {
+
+  const [partnerId, setPartnerId] = useState<number>();
 
   const {
     data: leads,
     isFetching,
     isError,
     error
-  } = useListLeadsQuery(1);
+  } = useListLeadsQuery(partnerId || skipToken);
+
+  useEffect(() => {
+    me()
+    .then((response) => response.json())
+    .then((partner : Partner) => {
+      setPartnerId(partner.id)
+    });
+  }, [])
 
   let statusDomain = [{
     label: 'Pending',
@@ -30,7 +42,7 @@ const Leads = () => {
   }];
 
   const getBgColor = (status: string | undefined) => {
-    if(status === "RATING") {
+    if(status === "NEW") {
       return "#FFFDF7"
     } else if(status === "DOCUMENT") {
       return "#FEF6F0"
@@ -40,7 +52,7 @@ const Leads = () => {
   }
   
   const getColor = (status: string | undefined) => {
-    if(status === "RATING") {
+    if(status === "NEW") {
       return "#ffcd3d"
     } else if(status === "DOCUMENT") {
       return "#d88b5d"
@@ -50,7 +62,7 @@ const Leads = () => {
   }
 
   const getStatus = (status: string | undefined) => {
-    if(status === "RATING") {
+    if(status === "NEW") {
       return "Rating in progress"
     } else if(status === "DOCUMENT") {
       return "Pending documentat"
@@ -65,7 +77,7 @@ const Leads = () => {
     <View>
 
       {
-        (!isFetching && !leads || leads?.length == 0) &&
+        (!error && !isFetching && !leads || leads?.length == 0) &&
         <Surface
           elevation={4}
           style={{ margin: 10, padding: 10, width: "95%", backgroundColor: "#FFFFED" }}>
@@ -81,7 +93,7 @@ const Leads = () => {
         (error) && <Surface
           elevation={4}
           style={{ margin: 10, padding: 10, width: "95%", backgroundColor: "#FFFFED" }}>
-          <Text style={{ color: "red" }}>Error fetching leads!</Text></Surface>
+          <Text style={{ color: "red" }}>Error fetching leads! {JSON.stringify(error)}</Text></Surface>
       }
       {leads?.map(lead => {
         console.log(lead)

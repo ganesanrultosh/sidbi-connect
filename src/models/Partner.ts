@@ -1,7 +1,8 @@
 interface Partner {
+    id: number | undefined,
     username: string | undefined;
     password: string | undefined;
-    mobileNo: string | undefined;
+    partnerMobileNo: string | undefined;
     pan: string | undefined;
     keyPerson: string | undefined;
     address: string | undefined;

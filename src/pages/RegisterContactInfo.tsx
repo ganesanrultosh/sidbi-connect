@@ -30,7 +30,7 @@ const RegisterContactInfo = (props: PartnerRegistrationContactProps) => {
       .string()
       .email("Enter a valid email")
       .required('Email is required'),
-    mobileNo: yup
+    partnerMobileNo: yup
       .string()
       .matches(/^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/, "Enter a valid phone number")
       .required('Phone number is required'),
@@ -93,7 +93,7 @@ const RegisterContactInfo = (props: PartnerRegistrationContactProps) => {
         />
         <Field
           component={CustomInput}
-          name="mobileNo"
+          name="partnerMobileNo"
           label="Phone No (*)"
         />
         <Field

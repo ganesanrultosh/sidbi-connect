@@ -1,16 +1,20 @@
 import Config from 'react-native-config';
+import useToken from '../components/Authentication/useToken';
 
 const apiEndpoint = Config.REACT_APP_API_ENDPOINT;
 
 console.log("End point: ", apiEndpoint);
 
-async function forgotPassword(request: { username: string }) {
-  return fetch(`${apiEndpoint}/auth/forgotpassword`, {
-    method: "POST",
+const { getToken } = useToken()
+
+async function me() {
+  const token = await getToken()
+  return fetch(`${apiEndpoint}/api/users/me`, {
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
     },
-    body: JSON.stringify(request),
   });
 }
 
@@ -25,6 +29,16 @@ function loginUser(credentials: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(credentials),
+  });
+}
+
+async function forgotPassword(request: { username: string }) {
+  return fetch(`${apiEndpoint}/auth/forgotpassword`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(request),
   });
 }
 
@@ -61,4 +75,4 @@ async function setUserPassword(credentials: {
   });
 }
 
-export { forgotPassword, loginUser, signupUser, setUserPassword, randomKeys };
+export { me, loginUser, forgotPassword, signupUser, setUserPassword, randomKeys };
