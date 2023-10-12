@@ -11,9 +11,9 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		3226E1D40674F2F52E09E2AA /* libPods-sidbiConnect-sidbiConnectTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 575B0097CA632D3C6638C64B /* libPods-sidbiConnect-sidbiConnectTests.a */; };
-		5C0979937C26647D356B854C /* libPods-sidbiConnect.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AAD2C4BBB66A704D0DC339AE /* libPods-sidbiConnect.a */; };
+		2E91612F785C77C5DA50D3F5 /* libPods-sidbiConnect-sidbiConnectTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DEA5FAF12D7C55DD090C35 /* libPods-sidbiConnect-sidbiConnectTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		BCCBBA9896825CB37FC837DD /* libPods-sidbiConnect.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3128D2AF444E5A2E5134FFF /* libPods-sidbiConnect.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,19 +30,19 @@
 		00E356EE1AD99517003FC87E /* sidbiConnectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = sidbiConnectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* sidbiConnectTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = sidbiConnectTests.m; sourceTree = "<group>"; };
+		05DEA5FAF12D7C55DD090C35 /* libPods-sidbiConnect-sidbiConnectTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-sidbiConnect-sidbiConnectTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		115C4C7A5DE652C8609CC9AA /* Pods-sidbiConnect-sidbiConnectTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sidbiConnect-sidbiConnectTests.release.xcconfig"; path = "Target Support Files/Pods-sidbiConnect-sidbiConnectTests/Pods-sidbiConnect-sidbiConnectTests.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* sidbiConnect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = sidbiConnect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = sidbiConnect/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = sidbiConnect/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = sidbiConnect/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = sidbiConnect/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = sidbiConnect/main.m; sourceTree = "<group>"; };
-		575B0097CA632D3C6638C64B /* libPods-sidbiConnect-sidbiConnectTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-sidbiConnect-sidbiConnectTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5B8A68CEA3163BE168A14CF1 /* Pods-sidbiConnect-sidbiConnectTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sidbiConnect-sidbiConnectTests.debug.xcconfig"; path = "Target Support Files/Pods-sidbiConnect-sidbiConnectTests/Pods-sidbiConnect-sidbiConnectTests.debug.xcconfig"; sourceTree = "<group>"; };
-		71A6130C4F0473AAE6F0C077 /* Pods-sidbiConnect-sidbiConnectTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sidbiConnect-sidbiConnectTests.release.xcconfig"; path = "Target Support Files/Pods-sidbiConnect-sidbiConnectTests/Pods-sidbiConnect-sidbiConnectTests.release.xcconfig"; sourceTree = "<group>"; };
+		35B7492163342FE69C5841E6 /* Pods-sidbiConnect.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sidbiConnect.release.xcconfig"; path = "Target Support Files/Pods-sidbiConnect/Pods-sidbiConnect.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = sidbiConnect/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		836D0955E12E2B818E7EA8BA /* Pods-sidbiConnect.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sidbiConnect.debug.xcconfig"; path = "Target Support Files/Pods-sidbiConnect/Pods-sidbiConnect.debug.xcconfig"; sourceTree = "<group>"; };
-		8C8A6ED8ADE9A5DD632FE94D /* Pods-sidbiConnect.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sidbiConnect.release.xcconfig"; path = "Target Support Files/Pods-sidbiConnect/Pods-sidbiConnect.release.xcconfig"; sourceTree = "<group>"; };
-		AAD2C4BBB66A704D0DC339AE /* libPods-sidbiConnect.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-sidbiConnect.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		85C0685CCA4BA59C9135C574 /* Pods-sidbiConnect.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sidbiConnect.debug.xcconfig"; path = "Target Support Files/Pods-sidbiConnect/Pods-sidbiConnect.debug.xcconfig"; sourceTree = "<group>"; };
+		B3128D2AF444E5A2E5134FFF /* libPods-sidbiConnect.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-sidbiConnect.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D64F96AD7CD44AC44EE059DF /* Pods-sidbiConnect-sidbiConnectTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sidbiConnect-sidbiConnectTests.debug.xcconfig"; path = "Target Support Files/Pods-sidbiConnect-sidbiConnectTests/Pods-sidbiConnect-sidbiConnectTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -51,7 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3226E1D40674F2F52E09E2AA /* libPods-sidbiConnect-sidbiConnectTests.a in Frameworks */,
+				2E91612F785C77C5DA50D3F5 /* libPods-sidbiConnect-sidbiConnectTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,7 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5C0979937C26647D356B854C /* libPods-sidbiConnect.a in Frameworks */,
+				BCCBBA9896825CB37FC837DD /* libPods-sidbiConnect.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,8 +100,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				AAD2C4BBB66A704D0DC339AE /* libPods-sidbiConnect.a */,
-				575B0097CA632D3C6638C64B /* libPods-sidbiConnect-sidbiConnectTests.a */,
+				B3128D2AF444E5A2E5134FFF /* libPods-sidbiConnect.a */,
+				05DEA5FAF12D7C55DD090C35 /* libPods-sidbiConnect-sidbiConnectTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -140,10 +140,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				836D0955E12E2B818E7EA8BA /* Pods-sidbiConnect.debug.xcconfig */,
-				8C8A6ED8ADE9A5DD632FE94D /* Pods-sidbiConnect.release.xcconfig */,
-				5B8A68CEA3163BE168A14CF1 /* Pods-sidbiConnect-sidbiConnectTests.debug.xcconfig */,
-				71A6130C4F0473AAE6F0C077 /* Pods-sidbiConnect-sidbiConnectTests.release.xcconfig */,
+				85C0685CCA4BA59C9135C574 /* Pods-sidbiConnect.debug.xcconfig */,
+				35B7492163342FE69C5841E6 /* Pods-sidbiConnect.release.xcconfig */,
+				D64F96AD7CD44AC44EE059DF /* Pods-sidbiConnect-sidbiConnectTests.debug.xcconfig */,
+				115C4C7A5DE652C8609CC9AA /* Pods-sidbiConnect-sidbiConnectTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -155,12 +155,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "sidbiConnectTests" */;
 			buildPhases = (
-				2A5D7A131DE3FE94815FB4B8 /* [CP] Check Pods Manifest.lock */,
+				094618E485AAF1403272756D /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				FB69373234FB8455EE139D4E /* [CP] Embed Pods Frameworks */,
-				E851626169E2079F5DAF12B5 /* [CP] Copy Pods Resources */,
+				428B7419267747FF80E46BB2 /* [CP] Embed Pods Frameworks */,
+				98BFCA9E06CF9541173E9FA6 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -176,14 +176,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "sidbiConnect" */;
 			buildPhases = (
-				ECAD66AE578BE28D18D81B1F /* [CP] Check Pods Manifest.lock */,
+				875D1BEE90D1313CB65F9E91 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				493045D452E2CD74A7BF4737 /* [CP] Embed Pods Frameworks */,
-				73E3E220766DEE27FA556747 /* [CP] Copy Pods Resources */,
+				A5E083870EBA866BFC35A198 /* [CP] Embed Pods Frameworks */,
+				BAEE27AB724B97AEE7A0633E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -266,7 +266,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		2A5D7A131DE3FE94815FB4B8 /* [CP] Check Pods Manifest.lock */ = {
+		094618E485AAF1403272756D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -288,58 +288,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		493045D452E2CD74A7BF4737 /* [CP] Embed Pods Frameworks */ = {
+		428B7419267747FF80E46BB2 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect/Pods-sidbiConnect-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect-sidbiConnectTests/Pods-sidbiConnect-sidbiConnectTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect/Pods-sidbiConnect-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect-sidbiConnectTests/Pods-sidbiConnect-sidbiConnectTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect/Pods-sidbiConnect-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect-sidbiConnectTests/Pods-sidbiConnect-sidbiConnectTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		73E3E220766DEE27FA556747 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect/Pods-sidbiConnect-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect/Pods-sidbiConnect-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect/Pods-sidbiConnect-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E851626169E2079F5DAF12B5 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect-sidbiConnectTests/Pods-sidbiConnect-sidbiConnectTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect-sidbiConnectTests/Pods-sidbiConnect-sidbiConnectTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect-sidbiConnectTests/Pods-sidbiConnect-sidbiConnectTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		ECAD66AE578BE28D18D81B1F /* [CP] Check Pods Manifest.lock */ = {
+		875D1BEE90D1313CB65F9E91 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -361,21 +327,55 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		FB69373234FB8455EE139D4E /* [CP] Embed Pods Frameworks */ = {
+		98BFCA9E06CF9541173E9FA6 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect-sidbiConnectTests/Pods-sidbiConnect-sidbiConnectTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect-sidbiConnectTests/Pods-sidbiConnect-sidbiConnectTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect-sidbiConnectTests/Pods-sidbiConnect-sidbiConnectTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect-sidbiConnectTests/Pods-sidbiConnect-sidbiConnectTests-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect-sidbiConnectTests/Pods-sidbiConnect-sidbiConnectTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect-sidbiConnectTests/Pods-sidbiConnect-sidbiConnectTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A5E083870EBA866BFC35A198 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect/Pods-sidbiConnect-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect/Pods-sidbiConnect-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect/Pods-sidbiConnect-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BAEE27AB724B97AEE7A0633E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect/Pods-sidbiConnect-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect/Pods-sidbiConnect-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-sidbiConnect/Pods-sidbiConnect-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -430,7 +430,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5B8A68CEA3163BE168A14CF1 /* Pods-sidbiConnect-sidbiConnectTests.debug.xcconfig */;
+			baseConfigurationReference = D64F96AD7CD44AC44EE059DF /* Pods-sidbiConnect-sidbiConnectTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -457,7 +457,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 71A6130C4F0473AAE6F0C077 /* Pods-sidbiConnect-sidbiConnectTests.release.xcconfig */;
+			baseConfigurationReference = 115C4C7A5DE652C8609CC9AA /* Pods-sidbiConnect-sidbiConnectTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -481,7 +481,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 836D0955E12E2B818E7EA8BA /* Pods-sidbiConnect.debug.xcconfig */;
+			baseConfigurationReference = 85C0685CCA4BA59C9135C574 /* Pods-sidbiConnect.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
@@ -512,7 +512,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8C8A6ED8ADE9A5DD632FE94D /* Pods-sidbiConnect.release.xcconfig */;
+			baseConfigurationReference = 35B7492163342FE69C5841E6 /* Pods-sidbiConnect.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
@@ -580,6 +580,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -606,6 +607,13 @@
 					"-DFOLLY_NO_CONFIG",
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-Wl",
+					"-ld_classic",
+					" ",
+					"-Wl -ld_classic ",
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
@@ -648,6 +656,10 @@
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION,
+				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -671,6 +683,13 @@
 					"-DFOLLY_NO_CONFIG",
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-Wl",
+					"-ld_classic",
+					" ",
+					"-Wl -ld_classic ",
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
