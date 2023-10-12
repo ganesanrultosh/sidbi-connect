@@ -71,7 +71,11 @@ const Register = (props: PartnerRegistrationProps) => {
 
       let encryptedPassword = await encrypt(values.password);
       console.log("encryptedPassword", encryptedPassword)
-      let partnerToCreate = { ...values, password: encryptedPassword.password, saltKey: encryptedPassword.key } as Partner
+      let partnerToCreate = { 
+        ...values, 
+        password: encryptedPassword.password, 
+        confirmPassword: "",
+        saltKey: encryptedPassword.key } as Partner
       console.log('Partner to create', partnerToCreate)
       await signupUser(partnerToCreate)
         .then((response) => response.json())
@@ -79,7 +83,9 @@ const Register = (props: PartnerRegistrationProps) => {
           if (data.error) {
             Toast.show(data.error);
           } else {
-            Toast.show('Registration sucessfully submitted.', { duration: Toast.durations.LONG })
+            Toast.show(
+              'Registration sucessfully submitted.', 
+              { duration: Toast.durations.LONG })
             navigation.navigate('Login' as never)
           }
         }).catch((error: any) => {

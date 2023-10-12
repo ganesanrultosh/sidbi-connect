@@ -61,10 +61,10 @@ function Navigation(): JSX.Element {
 
   const navigatinTheme = {
     ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: 'red'
-  },
+    colors: {
+      ...DefaultTheme.colors,
+      background: 'red'
+    },
   }
 
   const headerFormat = {
@@ -79,31 +79,38 @@ function Navigation(): JSX.Element {
 
   return <Provider theme={theme}><RootSiblingParent>
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{
-        headerStyle: {
-          backgroundColor: "#2F5596",
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        }
-      }}>
-        <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
-        <Stack.Screen name="RegisterBasicInfo" component={RegisterBasicInfo} options={{
-          title: 'Registration'
-        }} />
-        <Stack.Screen
-          name="RegisterContactInfo"
-          component={RegisterContactInfo}
-          options={{ title: 'Registration' }}
-        />
-        <Stack.Screen name="Register" component={Register} options={{ title: 'Registration' }} />
-        <Stack.Screen name="Root" component={Root} options={{ headerShown: false }} />
-        <Stack.Screen name="LeadBasicInfo" component={LeadBasicInfo} options={{ title: 'Lead Generation' }}/>
-        <Stack.Screen name="LeadContactInfo" component={LeadContactInfo} options={{ title: 'Lead Generation' }} />
-        <Stack.Screen name="Leads" component={Leads} />
-        <Stack.Screen name="LeadSubmission" component={LeadSubmission} options={{ title: 'Lead Generation' }} />
-        <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+      <Stack.Navigator>
+        <Stack.Group screenOptions={{
+          headerStyle: {
+            backgroundColor: "#2F5596",
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          headerBackTitleVisible: false
+        }}>
+          <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
+          <Stack.Screen name="RegisterBasicInfo" component={RegisterBasicInfo} options={{
+            title: 'Registration'
+          }} />
+          <Stack.Screen
+            name="RegisterContactInfo"
+            component={RegisterContactInfo}
+            options={{ title: 'Registration' }}
+          />
+          <Stack.Screen name="Register" component={Register} options={{ title: 'Registration' }} />
+          <Stack.Screen name="LeadBasicInfo" component={LeadBasicInfo} options={{ title: 'Lead Generation' }} />
+          <Stack.Screen name="LeadContactInfo" component={LeadContactInfo} options={{ title: 'Lead Generation' }} />
+          <Stack.Screen name="Leads" component={Leads} />
+          <Stack.Screen name="LeadSubmission" component={LeadSubmission} options={{ title: 'Lead Generation' }} />
+          <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+        </Stack.Group>
+        <Stack.Group screenOptions={{
+          headerShown: false
+        }}>
+          <Stack.Screen name="Root" component={Root} options={{ headerShown: false }} />
+        </Stack.Group>
       </Stack.Navigator>
     </NavigationContainer>
   </RootSiblingParent>

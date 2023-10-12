@@ -21,7 +21,11 @@ const Root = () => {
           },
           
         }} />
-      <Drawer.Screen name="SignOut" component={Login} options={{ headerShown: false }} />
+      <Drawer.Screen name="SignOut" component={Login} options={{
+      headerShown: false,
+      headerShadowVisible: false,
+      headerLeftLabelVisible: false
+    }}/>
     </Drawer.Navigator>
   );
 }

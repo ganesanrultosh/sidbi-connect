@@ -89,6 +89,7 @@ const RegisterContactInfo = (props: PartnerRegistrationContactProps) => {
           component={CustomInput}
           name="username"
           label="Email (*)"
+          autoCapitalize='none'
         />
         <Field
           component={CustomInput}

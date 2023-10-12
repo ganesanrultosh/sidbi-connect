@@ -65,7 +65,7 @@ const Leads = () => {
     <View>
 
       {
-        (!leads || leads.length == 0) &&
+        (!isFetching && !leads || leads?.length == 0) &&
         <Surface
           elevation={4}
           style={{ margin: 10, padding: 10, width: "95%", backgroundColor: "#FFFFED" }}>

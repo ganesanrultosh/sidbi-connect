@@ -26,11 +26,16 @@ const OngoingLeads = () => {
     let keysHandled = Object.keys(leads).length;
 
     if (Object.keys(leads).length === 0) {
-      return <View style={{ alignContent: "center", alignItems: "center", alignSelf: "center" }}>
+      return <View style={{ 
+        alignContent: "center", 
+        alignItems: "center", 
+        alignSelf: "center", 
+        flexDirection:'row' }}>
         <Text style={{
           alignSelf: "center",
-          textAlign: "center"
-        }}>
+          textAlign: "center",
+          flex: 1, flexWrap: 'wrap'        
+        }} numberOfLines={3}>
           No ongoing leads found. Please create a new lead by clicking "Lead Generation" icon above.
         </Text>
       </View>
@@ -101,7 +106,17 @@ const OngoingLeads = () => {
     </Surface>
   }
 
-  return <View>
+  if (Object.keys(leads).length === 0) {
+    return <View style={{ paddingHorizontal: 25,
+      flexDirection:'row' }}>
+      <Text style={{
+        flex: 1, flexWrap: 'wrap'        
+      }} numberOfLines={3}>
+        No ongoing leads found. Please create a new lead by clicking "Lead Generation" icon above.
+      </Text>
+    </View>
+  } else {
+    return <View>
     {
       <ScrollView
       horizontal={true}
@@ -113,6 +128,7 @@ const OngoingLeads = () => {
       </ScrollView>
     }
   </View>
+  }
 }
 
 export default OngoingLeads;

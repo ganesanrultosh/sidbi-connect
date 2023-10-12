@@ -1,10 +1,6 @@
 import { randomKeys } from "../../services/authService"
 import uuid from 'react-native-uuid';
-// import { sha256 } from 'react-native-sha256';
-
-const sha256 = async (password : string) : Promise<string> => {
-  return "hash";
-}
+import { sha256 } from 'react-native-sha256';
 
 const encrypt = async (password: string) : Promise<{password: string, key: string}> => {
   let encryptedValue = {password: "", key: ""};

@@ -29,7 +29,7 @@ const Login = () => {
       color: `${theme.colors.onBackground}`,
       fontWeight: "bold", 
       fontSize: 20, 
-      marginTop: 50, 
+      marginTop: 120, 
       alignSelf: "center" 
     },
     loginSurface: { 
@@ -126,6 +126,7 @@ const Login = () => {
               component={CustomInput}
               name="email"
               label="Email (*)"
+              autoCapitalize='none'
             />
             <Field
               component={CustomInput}

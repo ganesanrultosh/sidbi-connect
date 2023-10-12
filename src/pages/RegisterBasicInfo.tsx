@@ -91,7 +91,8 @@ const RegisterBasicInfo = () => {
     address: '',
     password: '',
     confirmPassword: '',
-    termsAccepted: false
+    termsAccepted: false,
+    saltKey: ''
   };
 
   return <Formik
