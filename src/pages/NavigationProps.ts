@@ -13,3 +13,5 @@ export type LeadContactInfoProps = NativeStackScreenProps<RootStackParamList, 'L
 export type LeadContactInfoRouteProps = RouteProp<RootStackParamList, 'LeadContactInfo'>;
 export type LeadSubmissionProps = NativeStackScreenProps<RootStackParamList, 'LeadSubmission'>;
 export type LeadSubmissionRouteProps = RouteProp<RootStackParamList, 'LeadSubmission'>;
+export type LeadConsentProps = NativeStackScreenProps<RootStackParamList, 'LeadConsent'>;
+export type LeadConsentRouteProps = RouteProp<RootStackParamList, 'LeadConsent'>;

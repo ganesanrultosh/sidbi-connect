@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {Button, Surface, useTheme} from 'react-native-paper';
 import {Field, Formik} from 'formik';
@@ -21,12 +28,14 @@ import {deleteLead, saveLead} from '../slices/leadCacheSlice';
 import {useAppDispatch, useAppSelector} from '../app/hooks';
 import Moment from 'moment';
 import {me} from '../services/authService';
+import {CountDownTimer} from '../components/CountDownTimer';
 
 const LeadSubmission = (props: LeadSubmissionProps) => {
   const navigation = useNavigation();
   const theme = useTheme();
   const styles = StyleSheet.create({
     surface: {width: '93%', margin: 15, padding: 20},
+    registerButton: {alignSelf: 'flex-start', display: 'flex', margin: 10},
     header: {
       color: `${theme.colors.onBackground}`,
       fontSize: 20,
@@ -35,7 +44,52 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
     },
     actionContainer: {flexDirection: 'row', alignContent: 'center'},
     buttonContainer: {flex: 2, alignSelf: 'flex-start'},
-    button: {alignSelf: 'flex-start', display: 'flex', marginTop: 10},
+    button: {
+      alignSelf: 'flex-start',
+      display: 'flex',
+      marginTop: 10,
+    },
+    buttonTermsAccept: {
+      borderRadius: 20,
+      padding: 10,
+      elevation: 2,
+    },
+    centeredView: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 22,
+    },
+    modalView: {
+      margin: 20,
+      backgroundColor: 'white',
+      borderRadius: 20,
+      padding: 35,
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
+    },
+    buttonOpen: {
+      backgroundColor: '#F194FF',
+    },
+    buttonClose: {
+      backgroundColor: `${theme.colors.primary}`,
+    },
+    textStyle: {
+      color: 'white',
+      fontWeight: 'bold',
+      textAlign: 'center',
+    },
+    modalText: {
+      marginBottom: 15,
+      textAlign: 'center',
+    },
   });
 
   const dispatch = useAppDispatch();
@@ -47,6 +101,8 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
   const [addLead, result] = useAddLeadMutation();
   const [branches, setBranches] = useState<any>();
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [termsViewed, setTermsViewed] = useState(false);
   const [concentSent, setConcentSent] = useState(false);
   const [resendConsent, setResendConsent] = useState(false);
 
@@ -69,7 +125,24 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
         }
       : ({...leadDefaultValue} as Lead);
 
-  console.log('Submission', initialValues);
+  const sendConsentOtp = async (values: any) => {
+    setResendConsent(false);
+    sendOtp({
+      mobileNo: values.partnerMobileNo,
+      emailId: values.username,
+    })
+      .then(response => response?.json())
+      .then(async (data: any) => {
+        Toast.show('Consent sent sucessfully!');
+        setTimeout(() => {
+          setResendConsent(true);
+        }, 180000);
+        setConcentSent(true);
+      })
+      .catch(error => {
+        Toast.show('Unable to sent consent!');
+      });
+  };
 
   const {
     data: master,
@@ -119,179 +192,128 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
       .isTrue('Customer should have 3 yrs bank statement'),
     gstRegime: yup.boolean().isTrue('Customer should be registered under GST'),
     applicationFillingBy: yup.string().required('Filled by is required'),
-    otp: yup
-      .string()
-      .required('OTP is required.')
-      .min(4, ({min}) => `OTP should be ${min} characters`)
-      .max(4, ({max}) => `OTP should be ${max} characters`),
-    termsAgreed: yup.boolean().isTrue('Please read and accept the terms'),
   });
 
   return (
-    <Formik
-      validationSchema={submissionValidationSchema}
-      initialValues={initialValues}
-      onSubmit={async (values, isValid) => {
-        me()
-          .then(response => response.json())
-          .then(async (partner: Partner) => {
-            if (partner.id) {
-              let lead = {
-                ...leadInfo,
-                ...values,
-                parentId: partner.id,
-                bankStatement: values.bankStatement ? 'Y' : 'N',
-                gstRegime: values.gstRegime ? 'Y' : 'N',
-                itrFiling: values.itrFiling ? 'Y' : 'N',
-                dateOfIncorp: Moment(values.dateOfIncorp).format('YYYY-MM-DD'),
-              };
-              console.log(lead)
-              if (isValid) {
-                console.log('Lead Submission', lead);
-                await addLead(lead as Lead)
-                  .unwrap()
-                  .then(() => {
-                    Toast.show('Lead submitted sucessfully!');
-                    dispatch(deleteLead(initialValues.pan));
-                    navigation.navigate('Home');
-                  })
-                  .catch(error => {
-                    console.log('Error: ', error, result);
-                    if (error.data.error) {
-                      Toast.show(error.data.error);
-                    } else {
-                      Toast.show('Error submitting lead!');
-                    }
-                  });
-              } else {
-                console.log('Saving', lead);
-                dispatch(saveLead(lead));
-              }
-            }
-          });
-      }}>
-      {({values, handleSubmit, isValid}) => (
-        <Surface elevation={4} style={styles.surface}>
-          <ScrollView>
-            <Text style={styles.header}>Submission</Text>
-            <Field
-              component={CustomDropDown}
-              name="branchName"
-              label="Branch (*)"
-              enableReinitialize
-              list={branches}
-            />
-            <Field
-              component={CustomerDataPicker}
-              name="dateOfIncorp"
-              label="Date of incorporation"
-              value={
-                values.dateOfIncorp
-                  ? Moment(values.dateOfIncorp, 'YYYY-MM-DD HH:MM').toDate()
-                  : undefined
-              }
-            />
-            <Field
-              component={CustomSwitch}
-              name="itrFiling"
-              label="Does the customer have Min 3 years of Income tax return filing?"
-              enableReinitialize
-            />
-            <Field
-              component={CustomSwitch}
-              name="bankStatement"
-              label="Does the customer have most recent 12 months (till last month) bank statement?"
-            />
-            <Field
-              component={CustomSwitch}
-              name="gstRegime"
-              label="Is the customer registered under GST?"
-            />
-            <View
-              style={{
-                marginTop: 10,
-                borderBlockColor: 'black',
-                borderWidth: 1,
-                padding: 10,
-                borderRadius: 10,
-                backgroundColor: `${theme.colors.background}`,
-              }}>
+    <ScrollView>
+      <Formik
+        validationSchema={submissionValidationSchema}
+        initialValues={initialValues}
+        onSubmit={(values, isValid) => {
+          let currentValues = {
+            ...leadInfo,
+            ...values,
+            dateOfIncorp: values.dateOfIncorp
+              ? String(Moment(values.dateOfIncorp).format('YYYY-MM-DD HH:MM'))
+              : undefined,
+          } as Lead;
+          console.log('Navigating to consent', currentValues);
+          saveLeadToStore(values)
+          navigation.navigate('LeadConsent', {lead: currentValues});
+        }}>
+        {({values, handleSubmit, isValid}) => (
+          <Surface elevation={4} style={styles.surface}>
+            <ScrollView>
+              <Text style={styles.header}>Submission</Text>
               <Field
-                component={CustomRadioGroup}
-                name="applicationFillingBy"
-                header={'Who will be filling the online loan application?'}
-                radioList={filledByList}
+                component={CustomDropDown}
+                name="branchName"
+                label="Branch (*)"
+                enableReinitialize
+                list={branches}
               />
-              {concentSent && (
-                <>
-                  <Field component={CustomInput} name="otp" label="OTP (*)" />
-                  {!resendConsent && (
-                    <Text>
-                      If you have not got the OTP, You can retry after 3 mins
-                    </Text>
-                  )}
-                </>
-              )}
-              {(!concentSent || resendConsent) && (
-                <Button
-                  mode="contained-tonal"
-                  style={{width: '50%', alignSelf: 'center', marginTop: 10}}
-                  onPress={async () => {
-                    setResendConsent(false);
-                    sendOtp(
-                        {
-                          mobileNo: initialValues.mobileNo,
-                          emailId: initialValues.email,
-                        }
-                      )
-                      .then(response => response?.json())
-                      .then(async (data: any) => {
-                        setTimeout(() => {
-                          setResendConsent(true);
-                        }, 180000);
-                        setConcentSent(true);
-                      });
-                  }}>
-                  {resendConsent ? 'Resend OTP' : 'Get consent'}
-                </Button>
-              )}
-            </View>
-            <Field
-              component={CustomCheckBox}
-              name="termsAgreed"
-              rightText={'I/We accept the Terms and Conditions'}
-            />
-            <View style={styles.actionContainer}>
-              <View style={styles.buttonContainer}>
-                <Button
-                  mode="contained"
-                  style={styles.button}
-                  onPress={(e: any) => saveLeadToStore(values)}>
-                  Save
-                </Button>
+              <Field
+                component={CustomerDataPicker}
+                name="dateOfIncorp"
+                label="Date of incorporation"
+                value={
+                  values.dateOfIncorp
+                    ? Moment(values.dateOfIncorp, 'YYYY-MM-DD HH:MM').toDate()
+                    : undefined
+                }
+              />
+              <Field
+                component={CustomSwitch}
+                name="itrFiling"
+                label="Does the customer have Min 3 years of Income tax return filing?"
+                enableReinitialize
+              />
+              <Field
+                component={CustomSwitch}
+                name="bankStatement"
+                label="Does the customer have most recent 12 months (till last month) bank statement?"
+              />
+              <Field
+                component={CustomSwitch}
+                name="gstRegime"
+                label="Is the customer registered under GST?"
+              />
+              <View
+                style={{
+                  marginTop: 10,
+                  borderBlockColor: 'black',
+                  borderWidth: 1,
+                  padding: 10,
+                  borderRadius: 10,
+                  backgroundColor: `${theme.colors.background}`,
+                }}>
+                <Field
+                  component={CustomRadioGroup}
+                  name="applicationFillingBy"
+                  header={'Who will be filling the online loan application?'}
+                  radioList={filledByList}
+                />
               </View>
-              <View style={styles.buttonContainer}>
-                <Button
-                  mode="contained"
-                  style={styles.button}
-                  disabled={!isValid}
-                  onPress={(e: any) => handleSubmit(e)}>
-                  Submit
-                </Button>
+              <View style={styles.actionContainer}>
+                {!concentSent && (
+                  <Button
+                    mode="contained"
+                    style={styles.registerButton}
+                    disabled={!isValid}
+                    onPress={() => handleSubmit()}>
+                    Get Customer Consent
+                  </Button>
+                )}
+                {
+                  !(
+                    <View style={styles.buttonContainer}>
+                      <Button
+                        mode="contained"
+                        style={styles.registerButton}
+                        onPress={(e: any) => saveLeadToStore(values)}>
+                        Save
+                      </Button>
+                    </View>
+                  )
+                }
+                {concentSent && (
+                  <View style={styles.buttonContainer}>
+                    <Button
+                      mode="contained"
+                      style={styles.button}
+                      disabled={!isValid}
+                      onPress={(e: any) => handleSubmit(e)}>
+                      Submit
+                    </Button>
+                  </View>
+                )}
+                <View style={styles.buttonContainer}>
+                  <Button
+                    mode="outlined"
+                    style={styles.button}
+                    onPress={() => {
+                      saveLeadToStore(values)
+                      navigation.navigate('Home' as never)
+                    }}>
+                    Cancel
+                  </Button>
+                </View>
               </View>
-              <View style={styles.buttonContainer}>
-                <Button
-                  mode="outlined"
-                  style={styles.button}
-                  onPress={() => navigation.navigate('Home' as never)}>
-                  Cancel
-                </Button>
-              </View>
-            </View>
-          </ScrollView>
-        </Surface>
-      )}
-    </Formik>
+            </ScrollView>
+          </Surface>
+        )}
+      </Formik>
+    </ScrollView>
   );
 };
 

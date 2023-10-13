@@ -21,6 +21,7 @@ import {
 import {signupUser} from '../services/authService';
 import encrypt from '../components/Authentication/passwordUtil';
 import {sendOtp} from '../services/concentService';
+import { CountDownTimer } from '../components/CountDownTimer';
 
 const Register = (props: PartnerRegistrationProps) => {
   const navigation = useNavigation();
@@ -77,7 +78,7 @@ const Register = (props: PartnerRegistrationProps) => {
     },
     modalText: {
       marginBottom: 15,
-      textAlign: 'center',
+      textAlign: 'justify',
     },
   });
 
@@ -131,21 +132,21 @@ const Register = (props: PartnerRegistrationProps) => {
   };
 
   const sendConsentOtp = async (values : any) => {
-      setResendConsent(false);
-      sendOtp({
-        mobileNo: values.partnerMobileNo,
-        emailId: values.username,
-      })
-        .then(response => response?.json())
-        .then(async (data: any) => {
-          Toast.show("Consent sent sucessfully!")
-          setTimeout(() => {
-            setResendConsent(true);
-          }, 180000);
-          setConcentSent(true);
-        }).catch((error) => {
-          Toast.show("Unable to sent consent!")
-        });
+    setResendConsent(false);
+    sendOtp({
+      mobileNo: values.partnerMobileNo,
+      emailId: values.username,
+    })
+      .then(response => response?.json())
+      .then(async (data: any) => {
+        Toast.show("OTP sent sucessfully!")
+        setTimeout(() => {
+          setResendConsent(true);
+        }, 180000);
+        setConcentSent(true);
+      }).catch((error) => {
+        Toast.show("Unable to sent OTP, at this time!")
+      });
   }
 
   return (
@@ -223,22 +224,28 @@ const Register = (props: PartnerRegistrationProps) => {
             </ScrollView>
             {values.termsAccepted && (
               <>
-                {concentSent && (
+                {values.termsAccepted && (
                   <>
-                    <Field component={CustomInput} name="otp" label="OTP (*)" />
-                    <Text>
-                      If you have not got the OTP, You can retry after 3 mins&nbsp;&nbsp;
-                      {resendConsent && <Text
-                        style={{
-                          marginLeft: 10,
-                          padding: 10,
-                          textDecorationLine: 'underline',
-                          color: 'red'
-                        }}
-                        onPress={() => sendConsentOtp(values)}>
-                        Resend Consent OTP
-                      </Text>}
-                    </Text>
+                    {concentSent && (
+                      <>
+                        <Field component={CustomInput} name="otp" label="OTP (*)" />
+                        <Text>
+                          OTP is sent to your email and mobile{`\n`}
+                          {!resendConsent && <CountDownTimer initialValue={180}></CountDownTimer>}
+                          {resendConsent && <><Text
+                            style={{
+                              marginLeft: 10,
+                              padding: 10,
+                              textDecorationLine: 'underline',
+                              color: 'red'
+                            }}
+                            onPress={() => sendConsentOtp(values)}>
+                            Resend Consent OTP
+                          </Text></>}
+                          
+                        </Text>
+                      </>
+                    )}
                   </>
                 )}
 
@@ -246,7 +253,7 @@ const Register = (props: PartnerRegistrationProps) => {
                   mode="contained"
                   style={styles.registerButton}
                   onPress={() => sendConsentOtp(values)}>
-                  Send Consent OTP
+                  Send OTP
                 </Button>
                 }
 
@@ -273,25 +280,9 @@ const Register = (props: PartnerRegistrationProps) => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris
-              eros magna, dictum et dapibus a, porta pretium nibh. Nulla
-              facilisi. Nunc aliquet tincidunt dapibus. Suspendisse efficitur
-              feugiat mattis. Nullam tempus nisl in libero auctor, in dapibus
-              eros ultrices. Curabitur quis ex laoreet, porta eros a, egestas
-              ligula. Mauris vitae ultricies elit, quis finibus lorem. Donec
-              eget urna accumsan, varius magna tristique, varius tortor. Fusce
-              massa tellus, consectetur ut finibus at, pharetra vitae erat.
-              Vivamus at magna quis lectus elementum viverra. Donec maximus
-              massa sed ex egestas rhoncus sed quis arcu. Integer semper leo ac
-              diam varius, quis luctus arcu accumsan. Ut auctor eros eget orci
-              facilisis, a varius metus suscipit. Curabitur blandit cursus
-              blandit. Vivamus in condimentum risus. Nullam luctus ligula sed
-              nunc sollicitudin, ac venenatis nibh posuere. Quisque consequat
-              massa est, non mattis augue elementum sed. Cras efficitur, nisl
-              quis molestie euismod, nibh libero maximus dolor, at laoreet neque
-              arcu in libero. Sed eget vulputate ex, posuere fringilla tellus.
-              Suspendisse dignissim lorem a justo volutpat convallis. Phasellus
-              blandit viverra semper.
+              I/We hereby declare and confirm that information submitted by me/us on Online Application Portal for the purpose of customer lead/application submission is true and accurate to the best of my/our knowledge and belief. I/We take full responsibility for the accuracy and authenticity of the information provided.{`\n\n`}
+              I/we further affirm that the customer is aware of the fact that that their information is being provided by me/us and has authorised me/us to provide this information on its behalf.{`\n\n`}
+              I/We also understand that, I/We will not be entitled to receive any payment or monetary compensation from SIDBI for submitting this customer lead/application to SIDBI through the Portal.
             </Text>
             <Pressable
               style={[styles.button, styles.buttonClose]}
@@ -299,7 +290,7 @@ const Register = (props: PartnerRegistrationProps) => {
                 setModalVisible(!modalVisible);
                 setTermsViewed(true);
               }}>
-              <Text style={styles.textStyle}>Ok</Text>
+              <Text style={styles.textStyle}>Close</Text>
             </Pressable>
           </View>
         </View>

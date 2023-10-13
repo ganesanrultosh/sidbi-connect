@@ -25,6 +25,6 @@ export interface Lead extends Child {
   proposalStatus?: string;
 }
 
-export const leadDefaultValue = {
-  dateCreated: Moment(new Date()).format("YYYY-MM-DD")
+export const leadDefaultValue : Lead = {
+  dateCreated: String(Moment(new Date()).format("YYYY-MM-DD"))
  }

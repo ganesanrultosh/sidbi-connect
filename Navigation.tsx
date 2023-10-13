@@ -15,6 +15,7 @@ import ForgotPassword from './src/pages/ForgotPassword';
 import Leads from './src/pages/Leads';
 import Root from './src/pages/Root';
 import { Lead } from './src/models/Lead';
+import LeadConcent from './src/pages/LeadConcent';
 
 declare global {
   namespace ReactNavigation {
@@ -33,6 +34,7 @@ export type RootStackParamList = {
   LeadBasicInfo: { lead: Lead | undefined };
   LeadContactInfo: { lead: Lead | undefined };
   LeadSubmission: { lead: Lead | undefined };
+  LeadConsent: { lead: Lead | undefined };
   Leads: undefined;
   ForgotPassword: undefined;
 };
@@ -122,6 +124,10 @@ function Navigation(): JSX.Element {
             name="LeadSubmission" 
             component={LeadSubmission} 
             options={{ title: 'Lead Generation' }} />
+          <Stack.Screen 
+            name="LeadConsent" 
+            component={LeadConcent} 
+            options={{ title: 'Lead Consent' }} />
           <Stack.Screen 
             name="ForgotPassword" 
             component={ForgotPassword} 
