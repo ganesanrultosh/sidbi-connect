@@ -4,13 +4,8 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {Button, Surface, useTheme} from 'react-native-paper';
 import {Field, Formik} from 'formik';
 import * as yup from 'yup';
-import CustomDropDown from '../components/CustomDropDown';
-import CustomRadioGroup from '../components/CustomRadioGroup';
-import CustomerDataPicker from '../components/CustomerDataPicker';
-import CustomSwitch from '../components/CustomSwitch';
 import CustomInput from '../components/CustomInput';
-import CustomCheckBox from '../components/CustomCheckBox';
-import {LeadConsentProps, LeadConsentRouteProps, LeadSubmissionProps, LeadSubmissionRouteProps} from './NavigationProps';
+import {LeadConsentProps, LeadConsentRouteProps} from './NavigationProps';
 import {useAddLeadMutation} from '../slices/leadSlice';
 import {Lead, leadDefaultValue} from '../models/Lead';
 import Toast from 'react-native-root-toast';
@@ -90,23 +85,11 @@ const LeadConcent = (props: LeadConsentProps) => {
   const {leads} = useAppSelector(state => state.persistedLeads);
   const [leadInfo, setLeadInfo] = useState(leadDefaultValue);
   const [addLead, result] = useAddLeadMutation();
-  const [branches, setBranches] = useState<any>();
 
   const [modalVisible, setModalVisible] = useState(false);
   const [termsViewed, setTermsViewed] = useState(false);
   const [concentSent, setConcentSent] = useState(false);
   const [resendConsent, setResendConsent] = useState(false);
-
-  let filledByList = [
-    {
-      label: 'Partner',
-      value: 'TPE',
-    },
-    {
-      label: 'Customer',
-      value: 'customer',
-    },
-  ];
 
   const initialValues =
     lead?.pan && leads[lead?.pan]
@@ -139,19 +122,6 @@ const LeadConcent = (props: LeadConsentProps) => {
     error: masterError,
     isLoading: isMasterLoading,
   } = useGetMasterQuery(initialValues.pinCode || skipToken);
-
-  useEffect(() => {
-    if (!isMasterLoading && master) {
-      let branchList: any = [];
-      master.branchCodes?.map(value => {
-        branchList.push({
-          label: value,
-          value,
-        });
-      });
-      if (branchList.length > 0) setBranches(branchList);
-    }
-  }, [master]);
 
   const saveLeadToStore = (values: Lead) => {
     me()

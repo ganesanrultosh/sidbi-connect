@@ -109,7 +109,7 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
   let filledByList = [
     {
       label: 'Partner',
-      value: 'TPE',
+      value: 'partner',
     },
     {
       label: 'Customer',

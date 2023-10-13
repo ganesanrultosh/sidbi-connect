@@ -1,0 +1,24 @@
+Thank you for completing the Registration
+
+Your registration details are as under:
+
+Name of Applicant Enterprise: Test Lead Customer
+
+Email Address: ganeshr@sidbi.in
+
+Mobile Number: 9962547304
+
+Please Know: Your E-mail id is your user ID
+
+Your Default Password is : test@123
+
+
+Note: Kindly download annexures available in Online Loan Application portal home page as the same are required to be filled and uploaded to complete the Online Application Submission Process.Instructions for submitting Online Loan Application through the module:
+1) Login to Online Loan Application portal with your E-mail Address and password.
+2) Click on New Application and Enter details.
+3) Attach requisite Annexures and check list.
+4) Submit the application.
+
+Please Click <https://onlineloanappl.sidbi.in/> here to Login into Online Loan Application.
+
+This is an auto-generated mail from SIDBI- Online loan Application.
