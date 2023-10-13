@@ -16,7 +16,7 @@ import {Lead, leadDefaultValue} from '../models/Lead';
 import Toast from 'react-native-root-toast';
 import {useGetMasterQuery} from '../slices/masterSlice';
 import {skipToken} from '@reduxjs/toolkit/query';
-import {sendConsent} from '../services/concentService';
+import {sendOtp} from '../services/concentService';
 import {deleteLead, saveLead} from '../slices/leadCacheSlice';
 import {useAppDispatch, useAppSelector} from '../app/hooks';
 import Moment from 'moment';
@@ -44,13 +44,10 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
   const {lead} = route.params;
   const {leads} = useAppSelector(state => state.persistedLeads);
   const [leadInfo, setLeadInfo] = useState(leadDefaultValue);
-
-  const [concentSent, setConcentSent] = useState(false);
-
   const [addLead, result] = useAddLeadMutation();
-
   const [branches, setBranches] = useState<any>();
 
+  const [concentSent, setConcentSent] = useState(false);
   const [resendConsent, setResendConsent] = useState(false);
 
   let filledByList = [
@@ -241,7 +238,12 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
                   style={{width: '50%', alignSelf: 'center', marginTop: 10}}
                   onPress={async () => {
                     setResendConsent(false);
-                    sendConsent({mobileNo: initialValues.mobileNo})
+                    sendOtp(
+                        {
+                          mobileNo: initialValues.mobileNo,
+                          emailId: initialValues.email,
+                        }
+                      )
                       .then(response => response?.json())
                       .then(async (data: any) => {
                         setTimeout(() => {

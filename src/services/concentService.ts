@@ -7,7 +7,11 @@ console.log("End point: ", apiEndpoint);
 
 const { getToken } = useToken()
 
-async function sendConsent(request: { mobileNo: string | undefined }) {
+async function sendOtp(
+  request: { 
+    mobileNo: string | undefined,
+    emailId: string | undefined
+  }) {
   if(request.mobileNo) {
     const token = await getToken()
     return fetch(`${apiEndpoint}/api/${request.mobileNo}/otp/generate`, {
@@ -16,8 +20,9 @@ async function sendConsent(request: { mobileNo: string | undefined }) {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json",
       },
+      // body: JSON.stringify(request)
     });
   }
   
 }
-export { sendConsent };
+export { sendOtp };

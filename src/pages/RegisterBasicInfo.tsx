@@ -38,8 +38,8 @@ const RegisterBasicInfo = () => {
     label: 'Original Equipment Manufactures',
     value: 'Original Equipment Manufactures',
   }, {
-    label: 'Charted Accounts',
-    value: 'Charted Accounts',
+    label: 'Chartered Accounts',
+    value: 'Chartered Accounts',
   }, {
     label: 'Consultants',
     value: 'Consultants',
@@ -78,13 +78,14 @@ const RegisterBasicInfo = () => {
   })
 
   const initialValue = { 
+    id: undefined,
     pan: '', 
     username: '', 
     name: '',
     category: '', 
     subCategory: '', 
     keyPerson: '',
-    mobileNo: '', 
+    partnerMobileNo: '', 
     pinCode: undefined, 
     city: '', 
     state: '',
