@@ -22,7 +22,7 @@ export interface Lead extends Child {
   customerConcent?: string;
   otp?: string;
   dateCreated?: string;
-  proposalStatus?: string;
+  leadStatus?: string;
 }
 
 export const leadDefaultValue : Lead = {

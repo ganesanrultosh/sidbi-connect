@@ -80,7 +80,7 @@ const OngoingLeads = () => {
         marginTop: 10
       }}>
         <Text style={{ color: "black", fontSize: 15, textAlignVertical: "top", verticalAlign: "top" }}>{lead?.mobileNo}</Text>
-        <FontAwesome6 name={'phone'} solid style={{ paddingLeft: 10, textAlignVertical: "bottom" }} onPress={() => { Linking.openURL(`tel:9962510481`) }} />
+        <FontAwesome6 name={'phone'} solid style={{ paddingLeft: 10, textAlignVertical: "bottom" }} onPress={() => { Linking.openURL(`tel:${lead?.mobileNo}`) }} />
       </View>}
       <View style={{ flexDirection: 'row', alignContent: 'center' }}>
         <View style={{ flex: 1, alignSelf: 'center' }}>

@@ -36,10 +36,10 @@ const LeadBasicInfo = (props : LeadBasicInfoProps) => {
 
   let loanTypeDomain = [{
     label: 'Machinery Loan',
-    value: 'Machinery Loan',
+    value: 'ML',
   }, {
     label: 'Project Loan',
-    value: 'Project Loan',
+    value: 'PL',
   }];
 
   let customerValueList = [{
