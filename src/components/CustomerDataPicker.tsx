@@ -1,9 +1,9 @@
 // CustomInput.js
-import React from 'react'
+import moment from 'moment';
+import React, { useState } from 'react'
 import { Text, StyleSheet, View } from 'react-native'
 import { RadioButton, TextInput, useTheme } from 'react-native-paper'
 import { DatePickerInput } from 'react-native-paper-dates';
-
 
 const CustomerDataPicker = (props: any) => {
 
@@ -15,15 +15,21 @@ const CustomerDataPicker = (props: any) => {
     ...inputProps
   } = props
 
+  const [dateValue, setDateValue] = useState(moment(value).toDate() || new Date());
+
   const hasError = errors[name] && touched[name]
 
   return (
     <View style={{marginBottom: 10}}>
         <View style={styles.datePicker}>
           <DatePickerInput
-            locale='en-In'
-            value={value}
-            onChange={(d) => setFieldValue(name, d)}
+            selected={dateValue}
+            value={dateValue}
+            onChange={(date) => {
+              let dateToSet = date ? date : new Date();
+              setDateValue(dateToSet);
+              setFieldValue(name, dateToSet);
+            }}
             inputMode="start"
             mode="outlined"
             {...inputProps}

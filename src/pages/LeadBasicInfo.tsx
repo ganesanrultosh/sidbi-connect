@@ -29,7 +29,7 @@ const LeadBasicInfo = (props : LeadBasicInfoProps) => {
     radioGroupEnclosure: { marginTop: 10, borderBlockColor: "black", borderWidth: 1, padding: 10, borderRadius: 3 }
   })
 
-  const disptach = useAppDispatch();
+  const dispatch = useAppDispatch();
   const route = useRoute<LeadBasicInfoRouteProps>();
   const { lead } = route.params;
   const { leads } = useAppSelector(state => state.persistedLeads);
@@ -83,7 +83,7 @@ const LeadBasicInfo = (props : LeadBasicInfoProps) => {
     initialValues={leadInfo}
     onSubmit={values => {
       let currentValues = {...leadInfo, ...values} as Lead
-      disptach(saveLead(currentValues));
+      dispatch(saveLead(currentValues));
       setLeadInfo(currentValues)
       navigation.navigate(
         'LeadContactInfo',

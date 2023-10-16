@@ -144,23 +144,6 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
     }
   }, [master]);
 
-  const saveLeadToStore = (values: Lead) => {
-    me()
-      .then(response => response.json())
-      .then((partner: Partner) => {
-        if (partner.id) {
-          let lead = {
-            ...leadInfo,
-            ...values,
-            dateOfIncorp: Moment(values.dateOfIncorp).format('YYYY-MM-DD'),
-            parentId: partner.id ? partner.id : 0,
-          };
-          setLeadInfo(lead);
-          dispatch(saveLead(lead));
-        }
-      });
-  };
-
   const submissionValidationSchema = yup.object().shape({
     branchName: yup.string().required('Branch is required.'),
     dateOfIncorp: yup.string().required('Date of incorporation required'),
@@ -182,10 +165,9 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
             ...leadInfo,
             ...values,
             dateOfIncorp: Moment(values.dateOfIncorp).format('YYYY-MM-DD'),
-          } as Lead;
-          console.log('Navigating to consent', currentValues);
-          saveLeadToStore(values)
-          // navigation.navigate('LeadConsent', {lead: currentValues});
+          };
+          dispatch(saveLead(currentValues));
+          setLeadInfo(currentValues)      
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
@@ -208,7 +190,7 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
                 component={CustomerDataPicker}
                 name="dateOfIncorp"
                 label="Date of incorporation"
-                value={values.dateOfIncorp ? Moment(values.dateOfIncorp) : undefined}
+                // value=values.dateOfIncorp ? Moment(values.dateOfIncorp, "YYYY-MM-DD").toDate() : undefined}
               />
               <Field
                 component={CustomSwitch}
@@ -252,39 +234,19 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
                     Get Customer Consent
                   </Button>
                 )}
-                {
-                  !(
-                    <View style={styles.buttonContainer}>
-                      <Button
-                        mode="contained"
-                        style={styles.registerButton}
-                        onPress={(e: any) => saveLeadToStore(values)}>
-                        Save
-                      </Button>
-                    </View>
-                  )
-                }
-                {concentSent && (
-                  <View style={styles.buttonContainer}>
-                    <Button
-                      mode="contained"
-                      style={styles.button}
-                      disabled={!isValid}
-                      onPress={(e: any) => handleSubmit(e)}>
-                      Submit
-                    </Button>
-                  </View>
-                )}
                 <View style={styles.buttonContainer}>
                   <Button
                     mode="outlined"
                     style={styles.button}
                     onPress={() => {
-                      saveLeadToStore(values)
-                      CommonActions.reset({
-                        index: 0,
-                        routes: [{name: 'Root'}],
-                      })
+                      let currentValues = {
+                        ...leadInfo,
+                        ...values,
+                        dateOfIncorp: values.dateOfIncorp?.toLocaleString()
+                      };
+                      dispatch(saveLead(currentValues));
+                      setLeadInfo(currentValues);
+                      navigation.navigate("Root");
                     }}>
                     Cancel
                   </Button>
