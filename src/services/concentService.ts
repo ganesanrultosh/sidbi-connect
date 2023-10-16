@@ -14,15 +14,36 @@ async function sendOtp(
   }) {
   if(request.mobileNo) {
     const token = await getToken()
-    return fetch(`${apiEndpoint}/api/${request.mobileNo}/otp/generate`, {
+    return fetch(`${apiEndpoint}/auth/otp/generate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(request)
+    });
+  }
+  
+}
+async function sendConsent(
+  request: { 
+    partnerId: number | undefined,
+    entityName: string | undefined,
+    pan: string | undefined,
+    loanAmount: number | undefined,
+    emailId: string | undefined,
+    mobileNo: string | undefined
+  }) {
+  if(request.mobileNo) {
+    const token = await getToken()
+    return fetch(`${apiEndpoint}/api/partners/${request.partnerId}/sendConsent`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      // body: JSON.stringify(request)
+      body: JSON.stringify(request)
     });
   }
   
 }
-export { sendOtp };
+export { sendOtp, sendConsent };

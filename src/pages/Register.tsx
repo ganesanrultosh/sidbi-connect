@@ -177,7 +177,7 @@ const Register = (props: PartnerRegistrationProps) => {
               }
             })
             .catch((error: any) => {
-              console.log(error);
+              console.log("Error", error);
               Toast.show(error, {duration: Toast.durations.LONG});
             });
           console.log('Register', values);

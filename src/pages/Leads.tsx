@@ -116,6 +116,7 @@ const Leads = () => {
         console.log(lead)
         return <Surface
           elevation={4}
+          key={`surface-${lead.id}`}
           style={{ margin: 10, padding: 15, width: "95%", backgroundColor: `${getBgColor(lead.leadStatus)}` }}><View style={{ flexDirection: 'row', alignContent: 'center' }}>
             <View style={{ flex: 5, alignSelf: 'flex-start' }}>
               <Text style={{ fontWeight: "bold", color: "black", fontSize: 18 }}>{lead.entityName}</Text>

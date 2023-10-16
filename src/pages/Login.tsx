@@ -172,7 +172,7 @@ const Login = () => {
                     }
                   })
                   .catch((error: any) => {
-                    console.log(error);
+                    console.log("Error", error);
                     Toast.show('Login failed. Possible network error!');
                   });
               },

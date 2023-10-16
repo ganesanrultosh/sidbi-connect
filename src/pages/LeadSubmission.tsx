@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {CommonActions, useNavigation, useRoute} from '@react-navigation/native';
 import {Button, Surface, useTheme} from 'react-native-paper';
 import {Field, Formik} from 'formik';
 import * as yup from 'yup';
@@ -23,7 +23,7 @@ import {Lead, leadDefaultValue} from '../models/Lead';
 import Toast from 'react-native-root-toast';
 import {useGetMasterQuery} from '../slices/masterSlice';
 import {skipToken} from '@reduxjs/toolkit/query';
-import {sendOtp} from '../services/concentService';
+import {sendConsent, sendOtp} from '../services/concentService';
 import {deleteLead, saveLead} from '../slices/leadCacheSlice';
 import {useAppDispatch, useAppSelector} from '../app/hooks';
 import Moment from 'moment';
@@ -125,30 +125,11 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
         }
       : ({...leadDefaultValue} as Lead);
 
-  const sendConsentOtp = async (values: any) => {
-    setResendConsent(false);
-    sendOtp({
-      mobileNo: values.partnerMobileNo,
-      emailId: values.username,
-    })
-      .then(response => response?.json())
-      .then(async (data: any) => {
-        Toast.show('Consent sent sucessfully!');
-        setTimeout(() => {
-          setResendConsent(true);
-        }, 180000);
-        setConcentSent(true);
-      })
-      .catch(error => {
-        Toast.show('Unable to sent consent!');
-      });
-  };
-
   const {
     data: master,
     error: masterError,
     isLoading: isMasterLoading,
-  } = useGetMasterQuery(initialValues.pinCode || skipToken);
+  } = useGetMasterQuery(initialValues.pincode || skipToken);
 
   useEffect(() => {
     if (!isMasterLoading && master) {
@@ -171,12 +152,9 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
           let lead = {
             ...leadInfo,
             ...values,
+            dateOfIncorp: Moment(values.dateOfIncorp).format('YYYY-MM-DD'),
             parentId: partner.id ? partner.id : 0,
-            dateOfIncorp: values.dateOfIncorp
-              ? Moment(values.dateOfIncorp).format('YYYY-MM-DD HH:MM')
-              : undefined,
           };
-          console.log('Saving', lead);
           setLeadInfo(lead);
           dispatch(saveLead(lead));
         }
@@ -186,11 +164,11 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
   const submissionValidationSchema = yup.object().shape({
     branchName: yup.string().required('Branch is required.'),
     dateOfIncorp: yup.string().required('Date of incorporation required'),
-    itrFiling: yup.boolean().isTrue('Customer should have 3 yrs IT Returns'),
-    bankStatement: yup
+    itrFilingLocal: yup.boolean().isTrue('Customer should have 3 yrs IT Returns'),
+    bankStatementLocal: yup
       .boolean()
       .isTrue('Customer should have 3 yrs bank statement'),
-    gstRegime: yup.boolean().isTrue('Customer should be registered under GST'),
+    gstRegimeLocal: yup.boolean().isTrue('Customer should be registered under GST'),
     applicationFillingBy: yup.string().required('Filled by is required'),
   });
 
@@ -203,13 +181,17 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
           let currentValues = {
             ...leadInfo,
             ...values,
-            dateOfIncorp: values.dateOfIncorp
-              ? String(Moment(values.dateOfIncorp).format('YYYY-MM-DD HH:MM'))
-              : undefined,
+            dateOfIncorp: Moment(values.dateOfIncorp).format('YYYY-MM-DD'),
           } as Lead;
           console.log('Navigating to consent', currentValues);
           saveLeadToStore(values)
-          navigation.navigate('LeadConsent', {lead: currentValues});
+          // navigation.navigate('LeadConsent', {lead: currentValues});
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'LeadConsent', params: {lead: currentValues}}],
+            }),
+          );
         }}>
         {({values, handleSubmit, isValid}) => (
           <Surface elevation={4} style={styles.surface}>
@@ -226,26 +208,22 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
                 component={CustomerDataPicker}
                 name="dateOfIncorp"
                 label="Date of incorporation"
-                value={
-                  values.dateOfIncorp
-                    ? Moment(values.dateOfIncorp, 'YYYY-MM-DD HH:MM').toDate()
-                    : undefined
-                }
+                value={values.dateOfIncorp ? Moment(values.dateOfIncorp) : undefined}
               />
               <Field
                 component={CustomSwitch}
-                name="itrFiling"
+                name="itrFilingLocal"
                 label="Does the customer have Min 3 years of Income tax return filing?"
                 enableReinitialize
               />
               <Field
                 component={CustomSwitch}
-                name="bankStatement"
+                name="bankStatementLocal"
                 label="Does the customer have most recent 12 months (till last month) bank statement?"
               />
               <Field
                 component={CustomSwitch}
-                name="gstRegime"
+                name="gstRegimeLocal"
                 label="Is the customer registered under GST?"
               />
               <View
@@ -303,7 +281,10 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
                     style={styles.button}
                     onPress={() => {
                       saveLeadToStore(values)
-                      navigation.navigate('Home' as never)
+                      CommonActions.reset({
+                        index: 0,
+                        routes: [{name: 'Root'}],
+                      })
                     }}>
                     Cancel
                   </Button>

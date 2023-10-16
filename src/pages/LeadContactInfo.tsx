@@ -91,7 +91,7 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
       .string()
       .matches(/^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/, "Enter a valid phone number")
       .required('Phone number is required'),
-    pinCode: yup
+    pincode: yup
       .string()
       .matches(/^[1-9][0-9]{5}$/, "Enter a valid pincode")
       .required('Pincode is required'),
@@ -101,7 +101,7 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
     state: yup
       .string()
       .required('State is required'),
-    address: yup
+    officeAddress: yup
       .string()
       .required("Address is required")
   })
@@ -142,12 +142,11 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
         />
         <Field
           component={CustomInput}
-          name="pinCode"
+          name="pincode"
           label="Pincode (*)"
           validateOnChange={true}
           onChange = {(value: any) => {
             if(/^[1-9][0-9]{5}$/.test(value)) {
-              console.log(value)
               setPinCode(value)
               setRefreshList(true)
             }
@@ -190,7 +189,7 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
         /></>}
         <Field
           component={CustomInput}
-          name="address"
+          name="officeAddress"
           label="Address Details (*)"
           multiline={true}
           numberOfLines={4}

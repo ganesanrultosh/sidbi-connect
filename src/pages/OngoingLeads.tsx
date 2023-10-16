@@ -63,6 +63,7 @@ const OngoingLeads = () => {
 
   function getLeadSurface(lead: Lead) {
     return <Surface
+      key={`${lead.id}`}
       elevation={2}
       style={{ 
         margin: 10, 

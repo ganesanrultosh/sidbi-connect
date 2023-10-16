@@ -11,7 +11,7 @@ import {Lead, leadDefaultValue} from '../models/Lead';
 import Toast from 'react-native-root-toast';
 import {useGetMasterQuery} from '../slices/masterSlice';
 import {skipToken} from '@reduxjs/toolkit/query';
-import {sendOtp} from '../services/concentService';
+import {sendConsent, sendOtp} from '../services/concentService';
 import {deleteLead, saveLead} from '../slices/leadCacheSlice';
 import {useAppDispatch, useAppSelector} from '../app/hooks';
 import Moment from 'moment';
@@ -99,29 +99,49 @@ const LeadConcent = (props: LeadConsentProps) => {
         }
       : ({...leadDefaultValue} as Lead);
 
-  const sendConsentOtp = async (values : any) => {
-    setResendConsent(false);
-    sendOtp({
-      mobileNo: values.partnerMobileNo,
-      emailId: values.username,
-    })
-      .then(response => response?.json())
-      .then(async (data: any) => {
-        Toast.show("Consent sent sucessfully!")
-        setTimeout(() => {
-          setResendConsent(true);
-        }, 180000);
-        setConcentSent(true);
-      }).catch((error) => {
-        Toast.show("Unable to sent consent!")
-      });
-    }
+      const sendConsentOtp = async (values: any) => {
+        setResendConsent(false);
+        me()
+          .then(response => response.json())
+          .then((partner: Partner) => {
+            console.log("partner", partner);
+            if(partner.id) {
+              console.log("Concent", {
+                partnerId: partner.id,
+                entityName: lead?.entityName,
+                pan: lead?.pan,
+                loanAmount: lead?.loanAmount,
+                emailId: lead?.emailId,
+                mobileNo: lead?.mobileNo,
+              })
+              sendConsent({
+                partnerId: partner.id,
+                entityName: lead?.entityName,
+                pan: lead?.pan,
+                loanAmount: lead?.loanAmount,
+                emailId: lead?.emailId,
+                mobileNo: lead?.mobileNo,
+              })
+                .then(response => response?.json())
+                .then(async (data: any) => {
+                  Toast.show('Consent sent sucessfully!');
+                  setTimeout(() => {
+                    setResendConsent(true);
+                  }, 180000);
+                  setConcentSent(true);
+                })
+                .catch(error => {
+                  Toast.show('Unable to sent consent!');
+                });
+            }
+          });
+      }
 
   const {
     data: master,
     error: masterError,
     isLoading: isMasterLoading,
-  } = useGetMasterQuery(initialValues.pinCode || skipToken);
+  } = useGetMasterQuery(initialValues.pincode || skipToken);
 
   const saveLeadToStore = (values: Lead) => {
     me()
@@ -132,9 +152,6 @@ const LeadConcent = (props: LeadConsentProps) => {
             ...leadInfo,
             ...values,
             parentId: partner.id ? partner.id : 0,
-            dateOfIncorp: values.dateOfIncorp
-              ? String(Moment(values.dateOfIncorp).format('YYYY-MM-DD HH:MM'))
-              : undefined,
           };
           console.log('Saving', lead);
           setLeadInfo(lead);
@@ -161,16 +178,24 @@ const LeadConcent = (props: LeadConsentProps) => {
           .then(response => response.json())
           .then(async (partner: Partner) => {
             if (partner.id) {
+              console.log("Lead Consent", leadInfo);
+              console.log("Lead Consent", values)
               let lead = {
                 ...leadInfo,
                 ...values,
                 parentId: partner.id,
-                bankStatement: values.bankStatement ? 'Y' : 'N',
-                gstRegime: values.gstRegime ? 'Y' : 'N',
-                itrFiling: values.itrFiling ? 'Y' : 'N',
+                bankStatement: values.bankStatementLocal ? "Y" : "N",
+                gstRegime: values.gstRegimeLocal ? "Y" : "N",
+                itrFiling: values.itrFilingLocal ? "Y" : "N",
                 dateOfIncorp: Moment(values.dateOfIncorp).format('YYYY-MM-DD'),
               };
-              console.log(lead)
+
+              //Clean up local variables
+              delete lead.bankStatementLocal
+              delete lead.gstRegimeLocal
+              delete lead.itrFilingLocal
+
+              console.log("lead consent submission", lead)
               if (isValid) {
                 console.log('Lead Submission', lead);
                 await addLead(lead as Lead)
@@ -178,7 +203,7 @@ const LeadConcent = (props: LeadConsentProps) => {
                   .then(() => {
                     Toast.show('Lead submitted sucessfully!');
                     dispatch(deleteLead(initialValues.pan));
-                    navigation.navigate('Home');
+                    navigation.navigate('Root' as never)
                   })
                   .catch(error => {
                     console.log('Error: ', error, result);
@@ -275,7 +300,7 @@ const LeadConcent = (props: LeadConsentProps) => {
                 <Button
                   mode="outlined"
                   style={styles.button}
-                  onPress={() => navigation.navigate('Home' as never)}>
+                  onPress={() => navigation.navigate('Root' as never)}>
                   Cancel
                 </Button>
               </View>
