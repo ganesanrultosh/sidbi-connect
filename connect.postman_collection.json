@@ -1,0 +1,441 @@
+{
+	"info": {
+		"_postman_id": "ea90eeda-2d8a-48be-8e0f-1795b8267b68",
+		"name": "connect",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "validate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.environment.set(\"mytoken\", jsonData.currentUser);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"ganesanotptesting@rultosh.in\",\r\n    \"password\": \"fzsrj69bi{{salt2}}{{sha256password}}{{salt1}}5o9svidgjytwt\",\r\n    \"saltkey\": \"{{saltKey}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connect-endpoint}}/auth/authenticate",
+							"host": [
+								"{{connect-endpoint}}"
+							],
+							"path": [
+								"auth",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"ganesanpartner@partner.in\",\r\n    \"password\": \"fzsrj69bi{{salt2}}{{sha256password}}{{salt1}}5o9svidgjytwt\",\r\n    \"saltKey\": \"{{saltKey}}\",\r\n    \"partnerMobileNo\": \"8939758416\",\r\n    \"pan\": \"ALQPG9479R\",\r\n    \"keyPerson\": \"Ganesan\",\r\n    \"address\": \"Address\",\r\n    \"city\": \"chennai\",\r\n    \"state\": \"Tamil Nadu\",\r\n    \"pinCode\": \"600119\",\r\n    \"category\": \"entity\",\r\n    \"subCategory\": \"consultants\",\r\n    \"otp\": \"8939\",\r\n    \"termsAccepted\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connect-endpoint}}/auth/signup",
+							"host": [
+								"{{connect-endpoint}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "randomKeys",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"get salts\", function() {\r",
+									"    var salt = JSON.parse(responseBody);\r",
+									"    pm.collectionVariables.set('salt1', salt.salt1)\r",
+									"    pm.collectionVariables.set('salt2', salt.salt2)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{connect-endpoint}}/auth/randomKeys/{{saltKey}}",
+							"host": [
+								"{{connect-endpoint}}"
+							],
+							"path": [
+								"auth",
+								"randomKeys",
+								"{{saltKey}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"get partner details\", function() {\r",
+									"    var partner = JSON.parse(responseBody);\r",
+									"    pm.collectionVariables.set('partnerId', partner.id)\r",
+									"    pm.collectionVariables.set('partnerMobileNo', partner.partnerMobileNo)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{mytoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{connect-endpoint}}/api/users/me",
+							"host": [
+								"{{connect-endpoint}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "registrationOtp",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"emailId\": \"ganesan@rultosh.in\",\r\n    \"mobileNo\": \"8939758416\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connect-endpoint}}/auth/otp/generate",
+							"host": [
+								"{{connect-endpoint}}"
+							],
+							"path": [
+								"auth",
+								"otp",
+								"generate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "validation",
+			"item": [
+				{
+					"name": "pan",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{connect-endpoint}}/open/pan/ALQPG9479C/validate",
+							"host": [
+								"{{connect-endpoint}}"
+							],
+							"path": [
+								"open",
+								"pan",
+								"ALQPG9479C",
+								"validate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "master",
+			"item": [
+				{
+					"name": "master",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{connect-endpoint}}/open/master/600119",
+							"host": [
+								"{{connect-endpoint}}"
+							],
+							"path": [
+								"open",
+								"master",
+								"600119"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "lead",
+			"item": [
+				{
+					"name": "consent",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{mytoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"entityName\": \"Rultosh EduFun Private Limited.\",\r\n    \"pan\": \"ALQPG9479C\",\r\n    \"loanAmount\": 100,\r\n    \"emailId\": \"ganesancustomer@customer.in\",\r\n    \"mobileNo\": \"9380584995\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connect-endpoint}}/api/partners/{{partnerId}}/sendConsent",
+							"host": [
+								"{{connect-endpoint}}"
+							],
+							"path": [
+								"api",
+								"partners",
+								"{{partnerId}}",
+								"sendConsent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "leads",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{mytoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"parentId\": 51,\r\n    \"entityName\": \"Ga.nesan\",\r\n    \"pan\": \"ALQPG9479P\",\r\n    \"loanAmount\": 100,\r\n    \"loanType\": \"PL\",\r\n    \"customerType\": \"new\",\r\n    \"itrFiling\": \"Y\",\r\n    \"bankStatement\": \"Y\",\r\n    \"gstRegime\": \"Y\",\r\n    \"mobileNo\": \"8939758416\",\r\n    \"emailId\": \"ganesanpp@rultosh.in\",\r\n    \"officeAddress\": \"Address\",\r\n    \"city\": \"Chennai\",\r\n    \"state\": \"Tamil Nadu\",\r\n    \"pincode\": 600119,\r\n    \"dateOfIncorp\": \"2023-01-01\",\r\n    \"applicationFillingBy\": \"customer\",\r\n    \"branchName\": \"CHN1\",\r\n    \"customerConsent\": \"Y\",\r\n    \"otp\": \"8939\",\r\n    \"termsAgreed\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connect-endpoint}}/api/partners/{{partnerId}}/leads",
+							"host": [
+								"{{connect-endpoint}}"
+							],
+							"path": [
+								"api",
+								"partners",
+								"{{partnerId}}",
+								"leads"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "leads",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{mytoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"entityName\": \"Ganesan\",\r\n    \"pan\": \"ALQP9479C\",\r\n    \"loanAmount\": 100,\r\n    \"loanType\": \"Loan Type\",\r\n    \"customerType\": \"Customer Type\",\r\n    \"itrFiling\": \"Y\",\r\n    \"bankStatement\": \"Y\",\r\n    \"gstRegime\": \"Y\",\r\n    \"mobileNo\": \"8939758416\",\r\n    \"emailId\": \"ganesan@rultosh.in\",\r\n    \"officeAddress\": \"Address\",\r\n    \"city\": \"Chennai\",\r\n    \"state\": \"Tamil Nadu\",\r\n    \"pincode\": 600119,\r\n    \"dateOfIncorp\": \"2023-01-01\",\r\n    \"applicationFillingBy\": \"Customer\",\r\n    \"branchName\": \"CHN1\",\r\n    \"customerConsent\": \"Y\",\r\n    \"otp\": \"8939\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{connect-endpoint}}/api/partners/{{partnerId}}/leads",
+							"host": [
+								"{{connect-endpoint}}"
+							],
+							"path": [
+								"api",
+								"partners",
+								"{{partnerId}}",
+								"leads"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "mytoken",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "salt1",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "salt2",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "saltKey",
+			"value": "011198e4-fe51-4784-842b-3900eeb6786e",
+			"type": "default"
+		},
+		{
+			"key": "sha256password",
+			"value": "98dbdbde823c80d8dd410b493992693a10ab065cdc6f8012d5387cb5fe729119",
+			"type": "default"
+		},
+		{
+			"key": "partnerMobileNo",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "partnerId",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
