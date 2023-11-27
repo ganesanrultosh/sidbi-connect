@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { Surface } from "react-native-paper";
 import { Lead } from "../models/Lead";
 
@@ -8,7 +8,8 @@ const HomeNavIcons = () => {
 
   const navigation = useNavigation();
 
-  return <Surface elevation={0} style={{
+  return <View>
+  <ScrollView horizontal={true}><Surface elevation={0} style={{
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -36,6 +37,21 @@ const HomeNavIcons = () => {
       style={{ margin: 10 }}
     >
       <TouchableOpacity style={styles.buttonFacebookStyle} activeOpacity={0.5} onPress={() => {
+        navigation.navigate(
+          'SiteVisitCustomerSearch')
+      }}>
+        <Image
+          source={require('../images/sitevisit.png')}
+          style={styles.buttonImageIconStyle}
+        />
+        <Text style={styles.buttonTextStyle}> Site Visits </Text>
+      </TouchableOpacity>
+    </Surface>
+    <Surface
+      elevation={2}
+      style={{ margin: 10 }}
+    >
+      <TouchableOpacity style={styles.buttonFacebookStyle} activeOpacity={0.5} onPress={() => {
         navigation.navigate('Leads' as never)
       }}>
         <Image
@@ -45,7 +61,7 @@ const HomeNavIcons = () => {
         <Text style={styles.buttonTextStyle}> View Leads </Text>
       </TouchableOpacity>
     </Surface>
-  </Surface>
+  </Surface></ScrollView></View>
 
 }
 

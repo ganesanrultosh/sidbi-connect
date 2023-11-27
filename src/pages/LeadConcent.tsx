@@ -202,6 +202,7 @@ const LeadConcent = (props: LeadConsentProps) => {
                   .unwrap()
                   .then(() => {
                     Toast.show('Lead submitted sucessfully!');
+                    //Remove lead from local store once the lead submission is sucessfull
                     dispatch(deleteLead(initialValues.pan));
                     navigation.navigate('Root' as never)
                   })

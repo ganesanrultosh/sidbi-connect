@@ -47,20 +47,6 @@ export const leadLocalStoreSlice = createSlice({
           }
         }
       },
-    // saveLead: (state: {leads: string[]}, 
-    //   action: PayloadAction<Lead>) => {
-    //     console.log("Saving lead", action.payload)
-    //     if(action.payload.pan) {
-    //       if(!state.leads) state.leads = [];
-    //       state.leads.push(action.payload.pan)
-    //     }
-    //   },
-    // deleteLead: (state: {leads: string[]}, 
-    //   action: PayloadAction<string>) => {
-    //     if(action.payload) {
-          
-    //     }
-    //   },
     },
   },
 );

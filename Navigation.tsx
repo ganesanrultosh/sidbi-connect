@@ -16,6 +16,8 @@ import Leads from './src/pages/Leads';
 import Root from './src/pages/Root';
 import { Lead } from './src/models/Lead';
 import LeadConcent from './src/pages/LeadConcent';
+import SiteVisitCustomerSearch from './src/pages/SiteVisitCustomerSearch';
+import VisitTypeSelection from './src/pages/VisitTypeSelection';
 
 declare global {
   namespace ReactNavigation {
@@ -37,6 +39,8 @@ export type RootStackParamList = {
   LeadConsent: { lead: Lead | undefined };
   Leads: undefined;
   ForgotPassword: undefined;
+  SiteVisitCustomerSearch: undefined;
+  VisitTypeSelection: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -132,6 +136,15 @@ function Navigation(): JSX.Element {
             name="ForgotPassword" 
             component={ForgotPassword} 
             options={{ title: 'Forgot Password' }} />
+          <Stack.Screen
+            name="SiteVisitCustomerSearch"
+            component={SiteVisitCustomerSearch}
+            options={{title: "Select Customer"}}/>
+          <Stack.Screen
+            name="VisitTypeSelection"
+            component={VisitTypeSelection}
+            options={{title: "Select Visit Type"}}/>
+            
         </Stack.Group>
         <Stack.Group screenOptions={{
           headerShown: false
