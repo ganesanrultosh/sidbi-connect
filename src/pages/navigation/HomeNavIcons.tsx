@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { Surface } from "react-native-paper";
-import { Lead } from "../models/Lead";
+import { Lead } from "../../models/partner/Lead";
 
 const HomeNavIcons = () => {
 
@@ -26,7 +26,7 @@ const HomeNavIcons = () => {
           {lead: {} as Lead})
       }}>
         <Image
-          source={require('../images/LeadGenerationIcon.png')}
+          source={require('../../images/LeadGenerationIcon.png')}
           style={styles.buttonImageIconStyle}
         />
         <Text style={styles.buttonTextStyle}> Lead Generation </Text>
@@ -41,7 +41,7 @@ const HomeNavIcons = () => {
           'SiteVisitCustomerSearch')
       }}>
         <Image
-          source={require('../images/sitevisit.png')}
+          source={require('../../images/sitevisit.png')}
           style={styles.buttonImageIconStyle}
         />
         <Text style={styles.buttonTextStyle}> Site Visits </Text>
@@ -55,7 +55,7 @@ const HomeNavIcons = () => {
         navigation.navigate('Leads' as never)
       }}>
         <Image
-          source={require('../images/ViewLeadsIcon.png')}
+          source={require('../../images/ViewLeadsIcon.png')}
           style={styles.buttonImageIconStyle}
         />
         <Text style={styles.buttonTextStyle}> View Leads </Text>

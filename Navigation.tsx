@@ -2,22 +2,22 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Login from './src/pages/Login';
-import RegisterBasicInfo from './src/pages/RegisterBasicInfo';
-import RegisterContactInfo from './src/pages/RegisterContactInfo';
-import Register from './src/pages/Register';
+import Login from './src/pages/authentication/Login';
+import RegisterBasicInfo from './src/pages/partner/RegisterBasicInfo';
+import RegisterContactInfo from './src/pages/partner/RegisterContactInfo';
+import Register from './src/pages/partner/Register';
 import { RootSiblingParent } from 'react-native-root-siblings';
-import LeadBasicInfo from './src/pages/LeadBasicInfo';
+import LeadBasicInfo from './src/pages/partner/LeadBasicInfo';
 import { DefaultTheme, MD3LightTheme, Provider } from 'react-native-paper';
-import LeadContactInfo from './src/pages/LeadContactInfo';
-import LeadSubmission from './src/pages/LeadSubmission';
-import ForgotPassword from './src/pages/ForgotPassword';
-import Leads from './src/pages/Leads';
-import Root from './src/pages/Root';
-import { Lead } from './src/models/Lead';
-import LeadConcent from './src/pages/LeadConcent';
-import SiteVisitCustomerSearch from './src/pages/SiteVisitCustomerSearch';
-import VisitTypeSelection from './src/pages/VisitTypeSelection';
+import LeadContactInfo from './src/pages/partner/LeadContactInfo';
+import LeadSubmission from './src/pages/partner/LeadSubmission';
+import ForgotPassword from './src/pages/authentication/ForgotPassword';
+import Leads from './src/pages/partner/Leads';
+import Root from './src/pages/navigation/Root';
+import { Lead } from './src/models/partner/Lead';
+import LeadConcent from './src/pages/partner/LeadConcent';
+import SiteVisitCustomerSearch from './src/pages/visit/SiteVisitCustomerSearch';
+import VisitTypeSelection from './src/pages/visit/VisitTypeSelection';
 
 declare global {
   namespace ReactNavigation {
@@ -41,6 +41,7 @@ export type RootStackParamList = {
   ForgotPassword: undefined;
   SiteVisitCustomerSearch: undefined;
   VisitTypeSelection: undefined;
+  VisitReport: {reportId: number | undefined}
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

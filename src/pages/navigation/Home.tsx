@@ -1,11 +1,9 @@
-import OngoingLeads from "./OngoingLeads";
-import OngoingLeadsHeader from "./OngoingLeadsHeader";
+import OngoingLeads from "../partner/OngoingLeads";
+import OngoingLeadsHeader from "../partner/OngoingLeadsHeader";
 import { ScrollView, View } from "react-native";
 import Footer from "./Footer";
 import React from "react";
 import HomeNavIcons from "./HomeNavIcons";
-import Feed from "./Feed";
-import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Surface } from "react-native-paper";
 
 const Home = () => {

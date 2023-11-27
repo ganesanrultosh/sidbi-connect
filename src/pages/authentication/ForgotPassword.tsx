@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native"
 import { Button, Surface } from "react-native-paper";
 import Toast from "react-native-root-toast";
-import CustomInput from "../components/CustomInput";
+import CustomInput from "../../components/CustomInput";
 
 const ForgotPassword = () => {
   const navigation = useNavigation();

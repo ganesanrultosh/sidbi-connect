@@ -4,8 +4,8 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { Button, Surface, useTheme } from "react-native-paper";
 import { Field, Formik } from "formik";
 import * as yup from 'yup';
-import CustomInput from "../components/CustomInput";
-import CustomDropDown from "../components/CustomDropDown";
+import CustomInput from "../../components/CustomInput";
+import CustomDropDown from "../../components/CustomDropDown";
 
 const RegisterBasicInfo = () => {
 

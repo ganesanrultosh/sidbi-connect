@@ -1,9 +1,8 @@
 import React from "react"
 import { Text, View } from "react-native"
 
-import _reports from "../../reports.json"
-import ReportStructure from "../models/reportStructure/reportStructure"
-import Report from "../models/reportStructure/report"
+import _reports from "../../../reports.json"
+import ReportStructure from "../../models/visit/reportStructure/reportStructure"
 import { Surface } from "react-native-paper"
 
 const VisitTypeSelection = () => {

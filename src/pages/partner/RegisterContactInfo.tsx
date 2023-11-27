@@ -1,44 +1,32 @@
+import React, { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, Text } from "react-native"
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { Button, Surface, useTheme } from "react-native-paper";
 import { Field, Formik } from "formik";
 import * as yup from 'yup';
-import CustomInput from "../components/CustomInput";
-import { ScrollView, StyleSheet, Text } from "react-native";
-import React, { useEffect, useState } from "react";
-import { Button, Surface, useTheme } from "react-native-paper";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { LeadContactInfoProps, LeadContactInfoRouteProps } from "./NavigationProps";
-import { Lead, leadDefaultValue } from "../models/Lead";
-import CustomDropDownEditable from "../components/CustomDropDownEditable";
-import { useGetMasterQuery } from "../slices/masterSlice";
+import CustomInput from "../../components/CustomInput";
+import { PartnerRegistrationContactProps, PartnerRegistrationContactRouteProps } from "../navigation/NavigationProps";
 import { skipToken } from "@reduxjs/toolkit/query";
-import { saveLead } from "../slices/leadCacheSlice";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useGetMasterQuery } from "../../slices/masterSlice";
+import CustomDropDownEditable from "../../components/CustomDropDownEditable";
 
-const LeadContactInfo = (props : LeadContactInfoProps ) => {
+const RegisterContactInfo = (props: PartnerRegistrationContactProps) => {
+
   const navigation = useNavigation();
-  const disptach = useAppDispatch();
+  const route = useRoute<PartnerRegistrationContactRouteProps>();
 
   const theme = useTheme();
-  
+
   const styles = StyleSheet.create({
     contactInfoSurface: { width: "90%", margin: 20, padding: 20 },
     header: { 
-      color: `${theme.colors.onBackground}`,
-      fontSize: 20, fontWeight: "bold", marginBottom: 20 },
+        color: `${theme.colors.onBackground}`,
+        fontSize: 20, fontWeight: "bold", marginBottom: 20 },
     scrollView: { padding: 5 },
-    continueButton: { alignSelf: "flex-end", display: "flex", margin: 10 }
   })
   
 
-  const route = useRoute<LeadContactInfoRouteProps>();
-  const { lead } = route.params;
-  const { leads } = useAppSelector(state => state.persistedLeads);
-
-  const initialValues = lead?.pan && leads[lead?.pan] ? {
-    ...leadDefaultValue,
-    ...leads[lead?.pan].lead
-  } : {...leadDefaultValue}
-
-  const [leadInfo, setLeadInfo] = useState<Lead>(initialValues)
+  const { partner } = route.params;
 
   const [pincode, setPinCode] = useState<number>()
   const [states, setStates] = useState<any>()
@@ -67,7 +55,7 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
       })
       setStates(stateList);
       let cityList : any = [];
-      master.cities && master.cities?.map((value) => {
+      master.cities && master.cities?.map((value: any) => {
         cityList.push({
           label: value,
           value
@@ -83,15 +71,15 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
   }, [master])
 
   const contactInfoValidationSchema = yup.object().shape({
-    emailId: yup
+    username: yup
       .string()
       .email("Enter a valid email")
       .required('Email is required'),
-    mobileNo: yup
+    partnerMobileNo: yup
       .string()
       .matches(/^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/, "Enter a valid phone number")
       .required('Phone number is required'),
-    pincode: yup
+    pinCode: yup
       .string()
       .matches(/^[1-9][0-9]{5}$/, "Enter a valid pincode")
       .required('Pincode is required'),
@@ -101,23 +89,35 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
     state: yup
       .string()
       .required('State is required'),
-    officeAddress: yup
+    address: yup
       .string()
       .required("Address is required")
   })
 
+  const initialValue = { 
+    pan: '', 
+    username: '', 
+    category: '', 
+    subCategory: '', 
+    keyPerson: '',
+    mobileNo: '', 
+    pinCode: undefined, 
+    city: '', 
+    state: '',
+    address: '',
+    password: '',
+    confirmPassword: '',
+    termsAccepted: false,
+    ...partner
+  };
+
   return <Formik
     validationSchema={contactInfoValidationSchema}
-    initialValues={initialValues}
-    onSubmit={(values, form) => {
-      let currentValues = {...leadInfo, ...values} as Lead
-      form.validateForm()
-      console.log("Navigating to submission", currentValues)
-      disptach(saveLead(currentValues));
-      setLeadInfo(currentValues)
+    initialValues={initialValue}
+    onSubmit={values => {
       navigation.navigate(
-        'LeadSubmission',
-        {lead: currentValues})
+        'Register',
+        {partner: values as Partner})
     }}
   >
     {({
@@ -132,26 +132,29 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
         <Text style={styles.header}>Contact Information</Text>
         <Field
           component={CustomInput}
-          name="emailId"
+          name="username"
           label="Email (*)"
+          autoCapitalize='none'
         />
         <Field
           component={CustomInput}
-          name="mobileNo"
+          name="partnerMobileNo"
           label="Phone No (*)"
         />
         <Field
           component={CustomInput}
-          name="pincode"
+          name="pinCode"
           label="Pincode (*)"
           validateOnChange={true}
           onChange = {(value: any) => {
             if(/^[1-9][0-9]{5}$/.test(value)) {
+              console.log(value)
               setPinCode(value)
               setRefreshList(true)
             }
           } }
         />
+        {isMasterLoading && <Text>Loading city and state ...</Text>}
         {masterError && 
           <><Text style={{color: 'red'}}>City & State not found for the pin code.</Text>
           <Field
@@ -189,7 +192,7 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
         /></>}
         <Field
           component={CustomInput}
-          name="officeAddress"
+          name="address"
           label="Address Details (*)"
           multiline={true}
           numberOfLines={4}
@@ -197,7 +200,7 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
       </ScrollView>
       <Button 
         mode="contained" 
-        style={styles.continueButton} 
+        style={{ alignSelf: "flex-end", display: "flex", margin: 10 }} 
         disabled={!isValid}
         onPress={(e:any) => handleSubmit(e)}>
           Continue
@@ -206,5 +209,4 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
   </Formik>
 }
 
-
-export default LeadContactInfo;
+export default RegisterContactInfo;

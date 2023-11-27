@@ -1,11 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { crudApiTemplateWithParent } from "../app/api";
-import { Child, RequestWithParentId } from "../models/baseModels";
+import { Child, RequestWithParentId } from "../models/partner/baseModels";
 import useToken from "../components/Authentication/useToken";
-import { Lead } from "../models/Lead";
+import { Lead } from "../models/partner/Lead";
 
 import Config from "react-native-config";
-const apiEndpoint = `${Config.REACT_APP_API_ENDPOINT}/api`;
+const apiEndpoint = `${Config.REACT_APP_CONNECT_API_ENDPOINT}/api`;
 
 console.log(apiEndpoint);
 

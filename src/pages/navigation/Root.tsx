@@ -1,8 +1,8 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Home from "./Home";
 import React from "react";
-import Login from "./Login";
-import { RootStackParamList } from "../../Navigation";
+import Login from "../authentication/Login";
+import { RootStackParamList } from "../../../Navigation";
 
 const Root = () => {
 

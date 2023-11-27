@@ -2,10 +2,10 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { crudApiTemplate } from "../app/api";
 
 import Config from "react-native-config";
-import { Master } from "../models/Master";
-const apiEndpoint = `${Config.REACT_APP_API_ENDPOINT}/open`;
+import { Master } from "../models/partner/Master";
+const apiEndpoint = `${Config.REACT_APP_CONNECT_API_ENDPOINT}/open`;
 
-console.log(apiEndpoint);
+console.log("Api Endpoint:", apiEndpoint);
 
 // Entity name in plural
 const entity = "master";

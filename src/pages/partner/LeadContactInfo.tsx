@@ -1,32 +1,44 @@
-import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text } from "react-native"
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { Button, Surface, useTheme } from "react-native-paper";
 import { Field, Formik } from "formik";
 import * as yup from 'yup';
-import CustomInput from "../components/CustomInput";
-import { PartnerRegistrationContactProps, PartnerRegistrationContactRouteProps } from "./NavigationProps";
+import CustomInput from "../../components/CustomInput";
+import { ScrollView, StyleSheet, Text } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Button, Surface, useTheme } from "react-native-paper";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { LeadContactInfoProps, LeadContactInfoRouteProps } from "../navigation/NavigationProps";
+import { Lead, leadDefaultValue } from "../../models/partner/Lead";
+import CustomDropDownEditable from "../../components/CustomDropDownEditable";
+import { useGetMasterQuery } from "../../slices/masterSlice";
 import { skipToken } from "@reduxjs/toolkit/query";
-import { useGetMasterQuery } from "../slices/masterSlice";
-import CustomDropDownEditable from "../components/CustomDropDownEditable";
+import { saveLead } from "../../slices/leadCacheSlice";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
-const RegisterContactInfo = (props: PartnerRegistrationContactProps) => {
-
+const LeadContactInfo = (props : LeadContactInfoProps ) => {
   const navigation = useNavigation();
-  const route = useRoute<PartnerRegistrationContactRouteProps>();
+  const disptach = useAppDispatch();
 
   const theme = useTheme();
-
+  
   const styles = StyleSheet.create({
     contactInfoSurface: { width: "90%", margin: 20, padding: 20 },
     header: { 
-        color: `${theme.colors.onBackground}`,
-        fontSize: 20, fontWeight: "bold", marginBottom: 20 },
+      color: `${theme.colors.onBackground}`,
+      fontSize: 20, fontWeight: "bold", marginBottom: 20 },
     scrollView: { padding: 5 },
+    continueButton: { alignSelf: "flex-end", display: "flex", margin: 10 }
   })
   
 
-  const { partner } = route.params;
+  const route = useRoute<LeadContactInfoRouteProps>();
+  const { lead } = route.params;
+  const { leads } = useAppSelector(state => state.persistedLeads);
+
+  const initialValues = lead?.pan && leads[lead?.pan] ? {
+    ...leadDefaultValue,
+    ...leads[lead?.pan].lead
+  } : {...leadDefaultValue}
+
+  const [leadInfo, setLeadInfo] = useState<Lead>(initialValues)
 
   const [pincode, setPinCode] = useState<number>()
   const [states, setStates] = useState<any>()
@@ -55,7 +67,7 @@ const RegisterContactInfo = (props: PartnerRegistrationContactProps) => {
       })
       setStates(stateList);
       let cityList : any = [];
-      master.cities && master.cities?.map((value) => {
+      master.cities && master.cities?.map((value: any) => {
         cityList.push({
           label: value,
           value
@@ -71,15 +83,15 @@ const RegisterContactInfo = (props: PartnerRegistrationContactProps) => {
   }, [master])
 
   const contactInfoValidationSchema = yup.object().shape({
-    username: yup
+    emailId: yup
       .string()
       .email("Enter a valid email")
       .required('Email is required'),
-    partnerMobileNo: yup
+    mobileNo: yup
       .string()
       .matches(/^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/, "Enter a valid phone number")
       .required('Phone number is required'),
-    pinCode: yup
+    pincode: yup
       .string()
       .matches(/^[1-9][0-9]{5}$/, "Enter a valid pincode")
       .required('Pincode is required'),
@@ -89,35 +101,23 @@ const RegisterContactInfo = (props: PartnerRegistrationContactProps) => {
     state: yup
       .string()
       .required('State is required'),
-    address: yup
+    officeAddress: yup
       .string()
       .required("Address is required")
   })
 
-  const initialValue = { 
-    pan: '', 
-    username: '', 
-    category: '', 
-    subCategory: '', 
-    keyPerson: '',
-    mobileNo: '', 
-    pinCode: undefined, 
-    city: '', 
-    state: '',
-    address: '',
-    password: '',
-    confirmPassword: '',
-    termsAccepted: false,
-    ...partner
-  };
-
   return <Formik
     validationSchema={contactInfoValidationSchema}
-    initialValues={initialValue}
-    onSubmit={values => {
+    initialValues={initialValues}
+    onSubmit={(values, form) => {
+      let currentValues = {...leadInfo, ...values} as Lead
+      form.validateForm()
+      console.log("Navigating to submission", currentValues)
+      disptach(saveLead(currentValues));
+      setLeadInfo(currentValues)
       navigation.navigate(
-        'Register',
-        {partner: values as Partner})
+        'LeadSubmission',
+        {lead: currentValues})
     }}
   >
     {({
@@ -132,29 +132,26 @@ const RegisterContactInfo = (props: PartnerRegistrationContactProps) => {
         <Text style={styles.header}>Contact Information</Text>
         <Field
           component={CustomInput}
-          name="username"
+          name="emailId"
           label="Email (*)"
-          autoCapitalize='none'
         />
         <Field
           component={CustomInput}
-          name="partnerMobileNo"
+          name="mobileNo"
           label="Phone No (*)"
         />
         <Field
           component={CustomInput}
-          name="pinCode"
+          name="pincode"
           label="Pincode (*)"
           validateOnChange={true}
           onChange = {(value: any) => {
             if(/^[1-9][0-9]{5}$/.test(value)) {
-              console.log(value)
               setPinCode(value)
               setRefreshList(true)
             }
           } }
         />
-        {isMasterLoading && <Text>Loading city and state ...</Text>}
         {masterError && 
           <><Text style={{color: 'red'}}>City & State not found for the pin code.</Text>
           <Field
@@ -192,7 +189,7 @@ const RegisterContactInfo = (props: PartnerRegistrationContactProps) => {
         /></>}
         <Field
           component={CustomInput}
-          name="address"
+          name="officeAddress"
           label="Address Details (*)"
           multiline={true}
           numberOfLines={4}
@@ -200,7 +197,7 @@ const RegisterContactInfo = (props: PartnerRegistrationContactProps) => {
       </ScrollView>
       <Button 
         mode="contained" 
-        style={{ alignSelf: "flex-end", display: "flex", margin: 10 }} 
+        style={styles.continueButton} 
         disabled={!isValid}
         onPress={(e:any) => handleSubmit(e)}>
           Continue
@@ -209,4 +206,5 @@ const RegisterContactInfo = (props: PartnerRegistrationContactProps) => {
   </Formik>
 }
 
-export default RegisterContactInfo;
+
+export default LeadContactInfo;

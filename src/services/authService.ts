@@ -1,7 +1,7 @@
 import Config from 'react-native-config';
 import useToken from '../components/Authentication/useToken';
 
-const apiEndpoint = Config.REACT_APP_API_ENDPOINT;
+const apiEndpoint = Config.REACT_APP_CONNECT_API_ENDPOINT;
 
 console.log("End point: ", apiEndpoint);
 

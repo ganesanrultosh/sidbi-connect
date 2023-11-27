@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native"
 import { Button, Surface } from "react-native-paper";
 import { Field, Formik } from "formik";
 import * as yup from 'yup';
-import CustomInput from "../components/CustomInput";
+import CustomInput from "../../components/CustomInput";
 import FontAwesome6 from "react-native-vector-icons/FontAwesome6";
 
 const OpenDrawer = () => {
@@ -14,4 +14,4 @@ const OpenDrawer = () => {
   }} />)
 }
 
-export default OpenDrawer;
+// export default OpenDrawer;

@@ -12,16 +12,16 @@ import Toast from 'react-native-root-toast';
 import {Button, Surface, useTheme} from 'react-native-paper';
 import {Field, Formik} from 'formik';
 import * as yup from 'yup';
-import CustomInput from '../components/CustomInput';
-import CustomCheckBox from '../components/CustomCheckBox';
+import CustomInput from '../../components/CustomInput';
+import CustomCheckBox from '../../components/CustomCheckBox';
 import {
   PartnerRegistrationProps,
   PartnerRegistrationRouteProps,
-} from './NavigationProps';
-import {signupUser} from '../services/authService';
-import encrypt from '../components/Authentication/passwordUtil';
-import {sendOtp} from '../services/concentService';
-import { CountDownTimer } from '../components/CountDownTimer';
+} from '../navigation/NavigationProps';
+import {signupUser} from '../../services/authService';
+import encrypt from '../../components/Authentication/passwordUtil';
+import {sendOtp} from '../../services/concentService';
+import { CountDownTimer } from '../../components/CountDownTimer';
 
 const Register = (props: PartnerRegistrationProps) => {
   const navigation = useNavigation();

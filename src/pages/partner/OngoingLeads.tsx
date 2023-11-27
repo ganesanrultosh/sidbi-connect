@@ -4,10 +4,10 @@ import { Linking } from 'react-native'
 import React, { useEffect } from "react";
 import { Button, Surface, useTheme } from "react-native-paper";
 import { RootState } from "@reduxjs/toolkit/query";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { Lead } from "../models/Lead";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { Lead } from "../../models/partner/Lead";
 import { useNavigation } from "@react-navigation/native";
-import { deleteLead } from "../slices/leadCacheSlice";
+import { deleteLead } from "../../slices/leadCacheSlice";
 
 const OngoingLeads = () => {
 

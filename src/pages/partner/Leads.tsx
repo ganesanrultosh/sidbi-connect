@@ -3,9 +3,8 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { Linking } from 'react-native'
 import React, { useEffect, useState } from "react";
 import { Surface } from "react-native-paper";
-import { useListLeadsQuery } from "../slices/leadSlice";
-import { withTheme } from 'react-native-paper';
-import { me } from "../services/authService";
+import { useListLeadsQuery } from "../../slices/leadSlice";
+import { me } from "../../services/authService";
 import { skipToken } from "@reduxjs/toolkit/query";
 
 const Leads = () => {

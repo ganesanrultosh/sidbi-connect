@@ -4,19 +4,19 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {Button, Surface, useTheme} from 'react-native-paper';
 import {Field, Formik} from 'formik';
 import * as yup from 'yup';
-import CustomInput from '../components/CustomInput';
-import {LeadConsentProps, LeadConsentRouteProps} from './NavigationProps';
-import {useAddLeadMutation} from '../slices/leadSlice';
-import {Lead, leadDefaultValue} from '../models/Lead';
+import CustomInput from '../../components/CustomInput';
+import {LeadConsentProps, LeadConsentRouteProps} from '../navigation/NavigationProps';
+import {useAddLeadMutation} from '../../slices/leadSlice';
+import {Lead, leadDefaultValue} from '../../models/partner/Lead';
 import Toast from 'react-native-root-toast';
-import {useGetMasterQuery} from '../slices/masterSlice';
+import {useGetMasterQuery} from '../../slices/masterSlice';
 import {skipToken} from '@reduxjs/toolkit/query';
-import {sendConsent, sendOtp} from '../services/concentService';
-import {deleteLead, saveLead} from '../slices/leadCacheSlice';
-import {useAppDispatch, useAppSelector} from '../app/hooks';
+import {sendConsent, sendOtp} from '../../services/concentService';
+import {deleteLead, saveLead} from '../../slices/leadCacheSlice';
+import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import Moment from 'moment';
-import {me} from '../services/authService';
-import { CountDownTimer } from '../components/CountDownTimer'
+import {me} from '../../services/authService';
+import { CountDownTimer } from '../../components/CountDownTimer'
 
 const LeadConcent = (props: LeadConsentProps) => {
   const navigation = useNavigation();

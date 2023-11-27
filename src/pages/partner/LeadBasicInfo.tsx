@@ -1,18 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native"
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Button, Surface, useTheme } from "react-native-paper";
-import Footer from "./Footer";
 import { Field, Formik } from "formik";
 import * as yup from 'yup';
-import CustomInput from "../components/CustomInput";
-import CustomDropDown from "../components/CustomDropDown";
-import CustomRadioGroup from "../components/CustomRadioGroup";
-import { Lead, leadDefaultValue } from "../models/Lead";
-import { saveLead } from "../slices/leadCacheSlice";
-import { useDispatch } from "react-redux";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { LeadBasicInfoProps, LeadBasicInfoRouteProps } from "./NavigationProps";
+import CustomInput from "../../components/CustomInput";
+import CustomDropDown from "../../components/CustomDropDown";
+import CustomRadioGroup from "../../components/CustomRadioGroup";
+import { Lead, leadDefaultValue } from "../../models/partner/Lead";
+import { saveLead } from "../../slices/leadCacheSlice";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { LeadBasicInfoProps, LeadBasicInfoRouteProps } from "../navigation/NavigationProps";
 
 const LeadBasicInfo = (props : LeadBasicInfoProps) => {
 

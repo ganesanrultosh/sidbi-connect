@@ -4,13 +4,13 @@ import {StyleSheet, Text, View, Image, Modal, Pressable} from 'react-native';
 import {Button, Surface, useTheme} from 'react-native-paper';
 import {Field, Formik} from 'formik';
 import * as yup from 'yup';
-import CustomInput from '../components/CustomInput';
-import {loginUser, randomKeys} from '../services/authService';
-import useToken from '../components/Authentication/useToken';
+import CustomInput from '../../components/CustomInput';
+import {loginUser, randomKeys} from '../../services/authService';
+import useToken from '../../components/Authentication/useToken';
 import Toast from 'react-native-root-toast';
 import uuid from 'react-native-uuid';
 import {sha256} from 'react-native-sha256';
-import encrypt from '../components/Authentication/passwordUtil';
+import encrypt from '../../components/Authentication/passwordUtil';
 
 const Login = () => {
   const navigation = useNavigation();
@@ -139,7 +139,7 @@ const Login = () => {
     <View style={styles.loginContainer}>
       <Image
         style={styles.sidbiImageStyle}
-        source={require('../images/sidbi.png')}
+        source={require('../../images/sidbi.png')}
       />
 
       <Surface elevation={4} style={styles.loginSurface}>

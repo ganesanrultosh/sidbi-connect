@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {
-  Modal,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,24 +9,18 @@ import {CommonActions, useNavigation, useRoute} from '@react-navigation/native';
 import {Button, Surface, useTheme} from 'react-native-paper';
 import {Field, Formik} from 'formik';
 import * as yup from 'yup';
-import CustomDropDown from '../components/CustomDropDown';
-import CustomRadioGroup from '../components/CustomRadioGroup';
-import CustomerDataPicker from '../components/CustomerDataPicker';
-import CustomSwitch from '../components/CustomSwitch';
-import CustomInput from '../components/CustomInput';
-import CustomCheckBox from '../components/CustomCheckBox';
-import {LeadSubmissionProps, LeadSubmissionRouteProps} from './NavigationProps';
-import {useAddLeadMutation} from '../slices/leadSlice';
-import {Lead, leadDefaultValue} from '../models/Lead';
-import Toast from 'react-native-root-toast';
-import {useGetMasterQuery} from '../slices/masterSlice';
+import CustomDropDown from '../../components/CustomDropDown';
+import CustomRadioGroup from '../../components/CustomRadioGroup';
+import CustomerDataPicker from '../../components/CustomerDataPicker';
+import CustomSwitch from '../../components/CustomSwitch';
+import {LeadSubmissionProps, LeadSubmissionRouteProps} from '../navigation/NavigationProps';
+import {useAddLeadMutation} from '../../slices/leadSlice';
+import {Lead, leadDefaultValue} from '../../models/partner/Lead';
+import {useGetMasterQuery} from '../../slices/masterSlice';
 import {skipToken} from '@reduxjs/toolkit/query';
-import {sendConsent, sendOtp} from '../services/concentService';
-import {deleteLead, saveLead} from '../slices/leadCacheSlice';
-import {useAppDispatch, useAppSelector} from '../app/hooks';
+import {saveLead} from '../../slices/leadCacheSlice';
+import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import Moment from 'moment';
-import {me} from '../services/authService';
-import {CountDownTimer} from '../components/CountDownTimer';
 
 const LeadSubmission = (props: LeadSubmissionProps) => {
   const navigation = useNavigation();
@@ -134,7 +126,7 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
   useEffect(() => {
     if (!isMasterLoading && master) {
       let branchList: any = [];
-      master.branchCodes?.map(value => {
+      master.branchCodes?.map((value: any) => {
         branchList.push({
           label: value,
           value,

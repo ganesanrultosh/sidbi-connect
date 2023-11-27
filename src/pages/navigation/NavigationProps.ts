@@ -1,6 +1,6 @@
 import { RouteProp } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../Navigation";
+import { RootStackParamList } from "../../../Navigation";
 
 export type PartnerRegistrationProps = NativeStackScreenProps<RootStackParamList, 'Register'>;
 export type PartnerRegistrationRouteProps = RouteProp<RootStackParamList, 'Register'>;

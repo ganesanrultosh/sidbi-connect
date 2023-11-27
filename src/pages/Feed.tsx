@@ -5,4 +5,4 @@ const Feed = () => {
   return <Text>Feed</Text>
 }
 
-export default Feed;
+// export default Feed;
