@@ -151,6 +151,7 @@ const Login = () => {
           onSubmit={async values => {
             await encrypt(values.password).then(
               async (encryptedPassword: {password: string; key: string}) => {
+                console.log('loginUser getting called')
                 await loginUser({
                   username: values.email,
                   password: encryptedPassword.password,
@@ -159,6 +160,7 @@ const Login = () => {
                   .then(response => response.json())
                   .then(async (data: any) => {
                     if (data.error) {
+                      console.log(data)
                       Toast.show(data.error);
                     } else {
                       let token = data;

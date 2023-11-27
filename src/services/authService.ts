@@ -23,6 +23,7 @@ function loginUser(credentials: {
   password: string;
   saltkey: string;
 }) {
+  console.log('loginUser')
   return fetch(`${apiEndpoint}/auth/authenticate`, {
     method: "POST",
     headers: {

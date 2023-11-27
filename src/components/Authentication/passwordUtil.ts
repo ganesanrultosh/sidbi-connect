@@ -13,7 +13,11 @@ const encrypt = async (password: string) : Promise<{password: string, key: strin
             password: `${Math.random().toString(36).slice(2, 8)}${data.salt2}${hash}${data.salt1}${Math.random().toString(36).slice(2, 8)}`, 
             key: data.key}
           console.log("encryptedValue", encryptedValue)
-        })});
+        }).catch((error) => {
+          console.log('encryption error', error)
+        })}).catch(error => {
+          console.log('randomkeys', error)
+        });
   return encryptedValue;
 }
 
