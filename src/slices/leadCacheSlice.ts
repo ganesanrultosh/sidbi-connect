@@ -1,6 +1,6 @@
 //leadLocalStoreSlice.js
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { Lead } from "../models/Lead";
+import { Lead } from "../models/partner/Lead";
 
 interface LeadLocalStore {
   leads: {

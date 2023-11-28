@@ -1,3 +1,5 @@
+import Group from "./group";
+
 interface Field {
   id: number | undefined | null,
   fieldId: number | undefined | null,
@@ -10,8 +12,8 @@ interface Field {
   fieldValue: string | undefined | null,
   fieldLength: number | undefined | null,
   key: string | undefined | null,
-  listofValues: string[] | undefined | null
-  // group: 
+  listofValues: string[] | undefined | null,
+  group: Group[]
 }
 
 export default Field;

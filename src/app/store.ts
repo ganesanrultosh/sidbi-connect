@@ -1,15 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { leadSlice } from "../slices/leadSlice";
 import { masterSlice } from "../slices/masterSlice";
-import { leadLocalStoreSlice } from "../slices/leadCacheSlice";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const persistLeadConfig = {
-  key: 'leads',
-  version: 1,
-  storage: AsyncStorage,
-  // blacklist: ['isSubmitting', 'isFetchingForm'],
-};
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   persistReducer,
@@ -19,18 +11,16 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
-  persistStore,
 } from 'redux-persist';
-
-const persistedReducer = persistReducer(
-  persistLeadConfig, 
-  leadLocalStoreSlice.reducer)
+import persistedLeadReducer from "./persistedLeadReducer";
+import persistedVisitReducer from "./persistedVisitReducer";
 
 export const store = configureStore({
   reducer: {
     [leadSlice.reducerPath]: leadSlice.reducer,
     [masterSlice.reducerPath]: masterSlice.reducer,
-    persistedLeads: persistedReducer,
+    persistedLeads: persistedLeadReducer,
+    persistedVisists: persistedVisitReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

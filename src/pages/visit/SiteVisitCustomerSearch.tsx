@@ -22,6 +22,8 @@ const customers = [
 const SiteVisitCustomerSearch = () => {
   const navigation = useNavigation();
   const [showCreate, setShowCreate] = useState(false);
+  const [pan, setPan] = useState("");
+  const [name, setName] = useState("")
   return (
     <View>
       <TextInput mode="outlined" placeholder="Search Name or PAN" />
@@ -30,8 +32,12 @@ const SiteVisitCustomerSearch = () => {
         {customers.map(item => {
           return (
             <TouchableOpacity
+              key={item.id}
               onPress={() => {
-                navigation.navigate('VisitTypeSelection');
+                navigation.navigate('VisitTypeSelection', {customer: {
+                  pan: pan,
+                  name: name
+                }});
               }}>
               <Text maxFontSizeMultiplier={1} numberOfLines={2}>
                 {item.customerName}
