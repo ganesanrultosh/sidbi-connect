@@ -22,8 +22,8 @@ const customers = [
 const SiteVisitCustomerSearch = () => {
   const navigation = useNavigation();
   const [showCreate, setShowCreate] = useState(false);
-  const [pan, setPan] = useState("");
-  const [name, setName] = useState("")
+  const [pan, setPan] = useState("ALQPG9479C");
+  const [name, setName] = useState("Ganesan")
   return (
     <View>
       <TextInput mode="outlined" placeholder="Search Name or PAN" />

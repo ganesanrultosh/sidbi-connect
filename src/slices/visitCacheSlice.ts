@@ -6,7 +6,7 @@ import VisitFieldUpdateContext from '../models/visit/VisitFieldUpdateContext';
 interface VisitLocalStore {
   visits: {
     [key: string]: { //Key is PAN + REPORT ID
-      visit: Visit | undefined;
+      visit: Visit;
       error: string | undefined;
     };
   };
@@ -26,47 +26,65 @@ export const visitLocalStoreSlice = createSlice({
   name: 'visitsLocalStore',
   initialState,
   reducers: {
+    submitVisit: (
+      state: VisitLocalStore,
+      action: PayloadAction<VisitFieldUpdateContext>,
+    ) => {
+      console.log("Visit Local Store: ", action.payload)
+      if (action.payload.pan && action.payload.reportId) {
+        let visitKey = action.payload.pan + action.payload.reportId;
+        console.log('visitKey', action.payload)
+        if (state.visits[visitKey]) {
+          let visit = state.visits[visitKey].visit;
+          console.log('visit found', JSON.stringify(visit))
+        }
+      }
+    },
     saveFieldValue: (
       state: VisitLocalStore,
       action: PayloadAction<VisitFieldUpdateContext>,
     ) => {
+      
       if (action.payload.pan && action.payload.reportId) {
-        let visitKey = action.payload.pan && action.payload.reportId;
-        if (state.visits[visitKey]) {
-          let visit = state.visits[visitKey].visit;
-          if (visit && visit.report.pages) {
-            let page = visit.report.pages[action.payload.page];
-            if (page && page.segments) {
-              let segment = page.segments[action.payload.segment];
-              if (segment && segment.fields) {
+        let visitKey = action.payload.pan + action.payload.reportId;
+        console.log('save field value', action)
+        if (state.visits[visitKey] && 
+            state.visits[visitKey].visit && state.visits[visitKey].visit?.report.pages &&
+            state.visits[visitKey].visit?.report.pages && 
+            state.visits[visitKey].visit?.report.pages[action.payload.page].segments &&
+            state.visits[visitKey].visit?.report
+              .pages[action.payload.page].segments[action.payload.segment]
+          ) {
                 if (
-                  action.payload.groupFieldIndex !== undefined &&
-                  action.payload.groupItemIndex !== undefined
+                  action.payload.groupFieldIndex !== -1 &&
+                  action.payload.groupItemIndex !== -1
                 ) {
-                  segment.fields[action.payload.fieldIndex].group[
-                    action.payload.groupItemIndex
-                  ].groupFields[action.payload.groupFieldIndex].fieldValue =
-                    action.payload.value;
+                  console.log('saving group field', action)
+                  state.visits[visitKey].visit.report
+                    .pages[action.payload.page]
+                    .segments[action.payload.segment]
+                    .fields[action.payload.fieldIndex].group[
+                      action.payload.groupItemIndex
+                    ]
+                    .groupFields[action.payload.groupFieldIndex]
+                    .fieldValue = action.payload.value;
                 } else {
-                  segment.fields[action.payload.fieldIndex].fieldValue =
-                    action.payload.value;
+                  state.visits[visitKey].visit.report
+                    .pages[action.payload.page]
+                    .segments[action.payload.segment]
+                    .fields[action.payload.fieldIndex].fieldValue = action.payload.value;
                 }
-              }
             }
-          }
-        }
       }
     },
     createVisit: (state: VisitLocalStore, action: PayloadAction<Visit>) => {
-      if (action.payload.customer.pan && action.payload.report.id) {
-        let visitKey = action.payload.customer.pan && action.payload.report.id;
+      if (action.payload.customer.pan && action.payload.report.reportId) {
+        let visitKey = action.payload.customer.pan + action.payload.report.reportId;
         if (!state.visits[visitKey]) {
           state.visits[visitKey] = {
             visit: action.payload,
             error: undefined,
           };
-        } else {
-          throw Error('Visit report already exists for the customer!');
         }
       }
     },
@@ -84,6 +102,6 @@ export const visitLocalStoreSlice = createSlice({
 });
 
 // Action creators are automatically generated for each case reducer function
-export const {createVisit, deleteVisit} = visitLocalStoreSlice.actions;
+export const {createVisit, deleteVisit, saveFieldValue, submitVisit} = visitLocalStoreSlice.actions;
 
 export default visitLocalStoreSlice.reducer;

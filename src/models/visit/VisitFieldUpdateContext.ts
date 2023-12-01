@@ -4,8 +4,8 @@ interface VisitFieldUpdateContext {
   page: number,
   segment: number,
   fieldIndex: number,
-  groupItemIndex: number | undefined,
-  groupFieldIndex: number | undefined,
+  groupItemIndex: number ,
+  groupFieldIndex: number ,
   value: any
 }
 

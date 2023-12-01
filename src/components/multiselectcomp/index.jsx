@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import MultiSelect from 'react-native-multiple-select';
 import uuid from 'react-native-uuid';
-import {useAppDispatch, useAppSelector} from '../../store/hooks';
-import { getDomainData } from '../../store/slices/visit';
+// import {useAppDispatch, useAppSelector} from '../../../hooks';
+// import { getDomainData } from '../../../slices/visit';
 
 // const items = [{
 //   id: '92iijs7yta',
@@ -39,8 +39,8 @@ import { getDomainData } from '../../store/slices/visit';
 
 const MultiSelectComp = ({domainValue, onChange}) => {
   const [selectedItems, setSelectedItems] = useState([]);
-  const disptach = useAppDispatch();
-  const {domainData: items} = useAppSelector(state => state.visit);
+  // const disptach = useAppDispatch();
+  // const {domainData: items} = useAppSelector(state => state.visit);
 
   // console.log('Domain Value', domainValue);
 
@@ -51,10 +51,10 @@ const MultiSelectComp = ({domainValue, onChange}) => {
 
   useEffect(() => {
     if(!items || !items[domainValue] || items[domainValue].length === 0) {
-      disptach(getDomainData({
-        domain: domainValue,
-        key: 'AADCM9831H'
-      }))
+      // disptach(getDomainData({
+      //   domain: domainValue,
+      //   key: 'AADCM9831H'
+      // }))
     }
   }, [])
 

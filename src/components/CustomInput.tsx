@@ -8,7 +8,6 @@ const CustomInput = (props : any) => {
   const {
     field: { name, onBlur, onChange, value },
     form: { errors, touched, setFieldTouched },
-    onChange: any,
     ...inputProps
   } = props
 
