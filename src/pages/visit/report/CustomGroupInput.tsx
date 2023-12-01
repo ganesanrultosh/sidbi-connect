@@ -2,23 +2,22 @@ import {Text, View} from 'react-native';
 import React from 'react';
 import Field from '../../../models/visit/reportStructure/field';
 import CustomTextInput from './CustomTextInput';
-import Visit from '../../../models/visit/visit';
 import VisitFieldUpdateContext from '../../../models/visit/VisitFieldUpdateContext';
-import { useDispatch } from 'react-redux';
-import { saveFieldValue } from '../../../slices/visitCacheSlice';
+import {useDispatch} from 'react-redux';
+import {saveFieldValue} from '../../../slices/visitCacheSlice';
 
 const CustomGroupInput: React.FC<{
   field: Field;
   visitFieldUpdateContext: VisitFieldUpdateContext;
 }> = ({field, visitFieldUpdateContext}) => {
-
   const dispatch = useDispatch();
 
-  const onChange = (value: any, visitFieldUpdateContext: VisitFieldUpdateContext) => {
-    dispatch(saveFieldValue(
-      {...visitFieldUpdateContext, value: value}
-    ))
-  }
+  const onChange = (
+    value: any,
+    visitFieldUpdateContext: VisitFieldUpdateContext,
+  ) => {
+    dispatch(saveFieldValue({...visitFieldUpdateContext, value: value}));
+  };
 
   return (
     <>
@@ -39,11 +38,13 @@ const CustomGroupInput: React.FC<{
                       groupFieldIndex: index,
                       groupItemIndex: gfIndex,
                     }}
-                    onChange={(value: any) => onChange(value, {
-                      ...visitFieldUpdateContext,
-                      groupFieldIndex: gfIndex,
-                      groupItemIndex: index,
-                    })}
+                    onChange={(value: any) =>
+                      onChange(value, {
+                        ...visitFieldUpdateContext,
+                        groupFieldIndex: gfIndex,
+                        groupItemIndex: index,
+                      })
+                    }
                   />
                 </>
               );
