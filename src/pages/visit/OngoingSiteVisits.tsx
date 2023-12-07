@@ -1,156 +1,152 @@
-import {Pressable, ScrollView, Text, View} from 'react-native';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import {Linking} from 'react-native';
+import {ScrollView, Text, View} from 'react-native';
+import React, {useEffect} from 'react';
 import {Button, Surface, useTheme} from 'react-native-paper';
-import React from 'react';
+import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import {useNavigation} from '@react-navigation/native';
+import Visit from '../../models/visit/visit';
+import { deleteVisit } from '../../slices/visitCacheSlice';
 
 const OngoingSiteVisits = () => {
   const theme = useTheme();
+  const navigation = useNavigation();
+  const dispatch = useAppDispatch();
 
-  return (
-    <View>
-      <ScrollView
-        horizontal={true}
-        decelerationRate={0}
-        snapToInterval={200} //your element width
-        snapToAlignment={'center'}>
-        <View>
-          <Surface elevation={4} style={{margin: 10, padding: 20, width: 200}}>
-            <Text style={{fontWeight: 'bold', color: 'black'}}>
-              Site: SOWBHAGYA GAR
-            </Text>
-            <Text style={{fontWeight: 'bold', fontSize: 12}}>
-              18th July, 2023
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                marginBottom: 3,
-                marginTop: 10,
-                alignItems: 'center',
-              }}>
-              <FontAwesome6
-                name={'location-pin'}
-                solid
-                style={{paddingRight: 10, textAlignVertical: 'bottom'}}
-                onPress={() => {
-                  Linking.openURL(
-                    'https://maps.google.com/?q=32A, North Usman Road, Bharathy Nagar, T. Nagar, Chennai, Tamil Nadu 600007',
-                  );
-                }}
-              />
-              <Text
-                style={{
-                  fontWeight: 'bold',
-                  color: 'black',
-                  textAlignVertical: 'center',
-                }}>
-                Address:
-              </Text>
-            </View>
-            <Text>
-              32A, North Usman Road, Bharathy Nagar, T. Nagar, Chennai, Tamil
-              Nadu 600007
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-                marginTop: 10,
-              }}>
-              <Text
-                style={{
-                  fontWeight: 'bold',
-                  color: 'black',
-                  textAlignVertical: 'top',
-                  verticalAlign: 'top',
-                }}>
-                9962510481
-              </Text>
-              <FontAwesome6
-                name={'phone'}
-                solid
-                style={{paddingLeft: 10, textAlignVertical: 'bottom'}}
-                onPress={() => {
-                  Linking.openURL(`tel:9962510481`);
-                }}
-              />
-            </View>
-            <Button style={{alignSelf: 'flex-end'}}>Continue</Button>
-          </Surface>
+  const {visits} = useAppSelector(state => state.persistedVisists);
+
+  useEffect(() => {
+    console.log('ongoing leads', visits);
+  }, [visits]);
+
+  function getCards(): React.ReactNode {
+    let keys: string[] = [];
+    let keysHandled = Object.keys(visits).length;
+
+    if (Object.keys(visits).length === 0) {
+      return (
+        <View
+          style={{
+            alignContent: 'center',
+            alignItems: 'center',
+            alignSelf: 'center',
+            flexDirection: 'row',
+          }}>
+          <Text
+            style={{
+              alignSelf: 'center',
+              textAlign: 'center',
+              flex: 1,
+              flexWrap: 'wrap',
+            }}
+            numberOfLines={3}>
+            No ongoing leads found. Please create a new lead by clicking "Lead
+            Generation" icon above.
+          </Text>
         </View>
-        <View>
-          <Surface elevation={4} style={{margin: 10, padding: 20, width: 200}}>
-            <Text style={{fontWeight: 'bold', color: 'black'}}>
-              Site: SOWBHAGYA GAR
-            </Text>
-            <Text style={{fontWeight: 'bold', fontSize: 12}}>
-              18th July, 2023
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                marginBottom: 3,
-                marginTop: 10,
-                alignItems: 'center',
+      );
+    } else {
+      return Object.keys(visits).map(key => {
+        keys.push(key);
+        if (
+          keys.length === 2 ||
+          keysHandled === 1 ||
+          Object.keys(visits).length === 2
+        ) {
+          keysHandled -= 2;
+          let twoCards = getTwoCards(keys);
+          keys = [];
+          return twoCards;
+        }
+      });
+    }
+  }
+
+  function getTwoCards(keys: string[]) {
+    console.log('Two cards', keys)
+    let visit1: Visit | undefined = visits[keys[0]].visit;
+    let visit2: Visit | undefined =
+      keys.length == 2 ? visits[keys[1]].visit : undefined;
+    return (
+      <View key={`${visit1.customer.pan + visit1.report.reportId + visit2?.customer.pan + visit2?.report.reportId}`}>
+        {visit1 && getLeadSurface(visit1)}
+        {visit2 && getLeadSurface(visit2)}
+      </View>
+    );
+  }
+
+  function getLeadSurface(visit: Visit) {
+    return (
+      <Surface
+        key={`${visit.customer.pan + visit.report.reportId}`}
+        elevation={2}
+        style={{
+          margin: 10,
+          padding: 10,
+          paddingHorizontal: 15,
+          width: 200,
+          minHeight: 150,
+        }}>
+        <Text
+          style={{fontWeight: 'bold', color: 'black', fontSize: 20, flex: 1}}
+          numberOfLines={1}>
+          {visit.customer?.name}
+        </Text>
+        <Text style={{fontWeight: 'bold', fontSize: 16, paddingVertical: 5}}>
+          {visit.report.reportTitle}
+        </Text>
+        <Text style={{fontWeight: 'bold', fontSize: 12}}>
+          {visit.dateCreated}
+        </Text>
+        <View style={{flexDirection: 'row', alignContent: 'center'}}>
+          <View style={{flex: 1, alignSelf: 'center'}}>
+            <Button
+              onPress={() => {
+                dispatch(deleteVisit(visit));
               }}>
-              <FontAwesome6
-                name={'location-pin'}
-                solid
-                style={{paddingRight: 10, textAlignVertical: 'bottom'}}
-                onPress={() => {
-                  Linking.openURL(
-                    'https://maps.google.com/?q=32A, North Usman Road, Bharathy Nagar, T. Nagar, Chennai, Tamil Nadu 600007',
-                  );
-                }}
-              />
-              <Text
-                style={{
-                  fontWeight: 'bold',
-                  color: 'black',
-                  textAlignVertical: 'center',
-                }}>
-                Address:
-              </Text>
-            </View>
-            <Text>
-              32A, North Usman Road, Bharathy Nagar, T. Nagar, Chennai, Tamil
-              Nadu 600007
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-                marginTop: 10,
-              }}>
-              <Text
-                style={{
-                  fontWeight: 'bold',
-                  color: 'black',
-                  textAlignVertical: 'top',
-                  verticalAlign: 'top',
-                }}>
-                9962510481
-              </Text>
-              <FontAwesome6
-                name={'phone'}
-                solid
-                style={{paddingLeft: 10, textAlignVertical: 'bottom'}}
-                onPress={() => {
-                  Linking.openURL(`tel:9962510481`);
-                }}
-              />
-            </View>
-            <Button style={{alignSelf: 'flex-end'}}>Continue</Button>
-          </Surface>
+              Delete
+            </Button>
+          </View>
+          <View style={{flex: 1}}>
+            <Button
+              onPress={() => {
+                navigation.navigate('VisitReport', {visit: visit}) }}>
+              Continue
+            </Button>
+          </View>
         </View>
-      </ScrollView>
-    </View>
-  );
+      </Surface>
+    );
+  }
+
+  if (Object.keys(visits).length === 0) {
+    return (
+      <View style={{paddingHorizontal: 25, flexDirection: 'row'}}>
+        <Text
+          style={{
+            flex: 1,
+            flexWrap: 'wrap',
+          }}
+          numberOfLines={3}>
+          No ongoing leads found. Please create a new lead by clicking "Lead
+          Generation" icon above.
+        </Text>
+      </View>
+    );
+  } else {
+    return (
+      <View>
+        {
+          <ScrollView
+            horizontal={true}
+            decelerationRate={0}
+            snapToInterval={200} //your element width
+            snapToAlignment={'center'}
+            style={{paddingHorizontal: 15}}>
+            {getCards()}
+          </ScrollView>
+        }
+      </View>
+    );
+  }
 };
 
 export default OngoingSiteVisits;

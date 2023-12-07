@@ -8,6 +8,7 @@ import Visit from '../../../models/visit/visit';
 import VisitFieldUpdateContext from '../../../models/visit/VisitFieldUpdateContext';
 import { useAppDispatch } from '../../../app/hooks';
 import { submitVisit } from '../../../slices/visitCacheSlice';
+import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
 
 const Form: React.FC<{
   navigation: any;
@@ -29,7 +30,7 @@ const Form: React.FC<{
       fontWeight: 'bold',
     },
     scrollView: {height: '88%', marginTop: 10},
-    continueButton: {alignSelf: 'center', display: 'flex'},
+    continueButton: {alignSelf: 'flex-start', display: 'flex'},
     radioGroupEnclosure: {
       marginTop: 10,
       borderBlockColor: 'black',
@@ -58,6 +59,7 @@ const Form: React.FC<{
           {page.segments?.map((item, index) => {
             return (
               <Section
+                key={`section-${index}`}
                 section={item}
                 visitFieldUpdateContext={{...visitFieldUpdateContext, segment: index}}></Section>
             );
@@ -72,13 +74,18 @@ const Form: React.FC<{
             alignItems: 'center',
             marginTop: 10,
           }}>
-          <View key={`FORM-buttons-back`} style={{flex: 1}}>
-            <Button
+          <View key={`FORM-buttons-back`} 
+            style={{flex: 1, alignItems: 'flex-end'}}>
+            {pageNumber !== undefined && pageNumber > 0 && <Button
               mode="outlined"
-              style={styles.continueButton}
+              style={{alignSelf: 'flex-start', display: 'flex'}}
               onPress={(e: any) => navigation.goBack()}>
               Back
-            </Button>
+            </Button>}
+          </View>
+          <View key={`FORM-buttons-camera`} 
+            style={{flex: 1, alignItems: 'center'}}>
+            <FontAwesome6Icon name="camera-retro" size={30} color={`${theme.colors.tertiary}`}/>
           </View>
           <View
             key={`FORM-buttons-next`}
@@ -87,7 +94,7 @@ const Form: React.FC<{
             }}>
             <Button
               mode="contained"
-              style={styles.continueButton}
+              style={{alignSelf: 'flex-end', display: 'flex'}}
               onPress={(e: any) => {
                 if (
                   pageNumber !== undefined &&

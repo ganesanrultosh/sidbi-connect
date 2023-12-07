@@ -15,6 +15,8 @@ import {useDispatch} from 'react-redux';
 import {createVisit, visitLocalStoreSlice} from '../../slices/visitCacheSlice';
 import {useAppSelector} from '../../app/hooks';
 import {TouchableOpacity} from 'react-native';
+import moment from 'moment';
+import Visit from '../../models/visit/visit';
 
 const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
   const reportStructure = _reports as ReportStructure;
@@ -37,31 +39,32 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
             if (reportToCreate) {
               let visitKey = customer.pan + report.reportId;
               if (visits[visitKey]) {
-                // Toast.show(`${report.reportTitle} already exists for this customer`)
+                Toast.show(`${report.reportTitle} already exists for this customer`)
                 // dispatch(
                 //   createVisit({
                 //     customer: customer,
                 //     report: reportToCreate,
                 //   }),
                 // );
-                navigation.navigate('VisitReport', {
-                  visit: {
-                    customer: customer,
-                    report: reportToCreate,
-                  },
-                });
+                // navigation.navigate('VisitReport', {
+                //   visit: {
+                //     customer: customer,
+                //     report: reportToCreate,
+                //     status: 'created'
+                //   },
+                // });
               } else {
+                let newVisit: Visit = {
+                  customer: customer,
+                  report: reportToCreate,
+                  status: 'created',
+                  dateCreated: moment(new Date()).format('DD-MM-YYYY')
+                };
                 dispatch(
-                  createVisit({
-                    customer: customer,
-                    report: reportToCreate,
-                  }),
+                  createVisit(newVisit),
                 );
                 navigation.navigate('VisitReport', {
-                  visit: {
-                    customer: customer,
-                    report: reportToCreate,
-                  },
+                  visit: newVisit,
                 });
               }
             } else {

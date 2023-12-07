@@ -19,6 +19,7 @@ const Section: React.FC<{
       {section.fields?.map((field, index) => {
         return (
           <Input
+            key={`${index}-field-input`}
             field={field}
             visitFieldUpdateContext={{
               ...visitFieldUpdateContext,

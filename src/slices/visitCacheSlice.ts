@@ -90,11 +90,12 @@ export const visitLocalStoreSlice = createSlice({
     },
     deleteVisit: (
       state: VisitLocalStore,
-      action: PayloadAction<number | undefined>,
+      action: PayloadAction<Visit | undefined>,
     ) => {
       if (action.payload) {
-        if (state.visits[action.payload]) {
-          delete state.visits[action.payload];
+        let visitKey = action.payload.customer.pan + action.payload.report.reportId;
+        if (state.visits[visitKey]) {
+          delete state.visits[visitKey];
         }
       }
     },
