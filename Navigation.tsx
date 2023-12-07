@@ -21,6 +21,7 @@ import VisitTypeSelection from './src/pages/visit/VisitTypeSelection';
 import VisitReport from './src/pages/visit/VisitReport';
 import Customer from './src/models/visit/customer';
 import Visit from './src/models/visit/visit';
+import Gallery from './src/pages/visit/Gallery';
 
 declare global {
   namespace ReactNavigation {
@@ -44,7 +45,8 @@ export type RootStackParamList = {
   ForgotPassword: undefined;
   SiteVisitCustomerSearch: undefined;
   VisitTypeSelection: { customer: Customer | undefined};
-  VisitReport: {visit : Visit | undefined}
+  VisitReport: {visit : Visit | undefined};
+  Gallery: {visit : Visit | undefined};
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -152,6 +154,10 @@ function Navigation(): JSX.Element {
             name="VisitReport"
             component={VisitReport}
             options={{title: "Visit Report"}}/>
+          <Stack.Screen
+            name="Gallery"
+            component={Gallery}
+            options={{title: "Visit Images"}}/>
             
         </Stack.Group>
         <Stack.Group screenOptions={{

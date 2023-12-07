@@ -27,3 +27,6 @@ export type VisitReportRouteProps = RouteProp<RootStackParamList, 'VisitReport'>
 
 export type VisitTypeSelectionProps = NativeStackScreenProps<RootStackParamList, 'VisitTypeSelection'>;
 export type VisitTypeSelectionRouteProps = RouteProp<RootStackParamList, 'VisitTypeSelection'>;
+
+export type GalleryProps = NativeStackScreenProps<RootStackParamList, 'Gallery'>;
+export type GalleryRouteProps = RouteProp<RootStackParamList, 'Gallery'>;

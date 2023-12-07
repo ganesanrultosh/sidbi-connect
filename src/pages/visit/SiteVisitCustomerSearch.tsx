@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {useFormik} from 'formik';
 import React, {useState} from 'react';
-import {Text, TouchableOpacity, View, Modal, StyleSheet} from 'react-native';
+import {Text, TouchableOpacity, View, Modal, StyleSheet, GestureResponderEvent} from 'react-native';
 import {Button, Surface, TextInput, useTheme} from 'react-native-paper';
 import {tr} from 'react-native-paper-dates';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
@@ -219,7 +219,7 @@ const SiteVisitCustomerSearch = () => {
                   style={{flex: 1, alignItems: 'center'}}>
                   <Button
                     mode="contained"
-                    onPress={formik.handleSubmit}>
+                    onPress={formik.handleSubmit as unknown as (e: GestureResponderEvent) => void}>
                     Create
                   </Button>
                 </View>

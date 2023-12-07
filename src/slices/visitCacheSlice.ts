@@ -2,6 +2,7 @@
 import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import Visit from '../models/visit/visit';
 import VisitFieldUpdateContext from '../models/visit/VisitFieldUpdateContext';
+import Toast from 'react-native-root-toast';
 
 interface VisitLocalStore {
   visits: {
@@ -99,10 +100,39 @@ export const visitLocalStoreSlice = createSlice({
         }
       }
     },
+    addImage: (
+      state: VisitLocalStore,
+      action: PayloadAction<Visit>,
+    ) => {
+      let visitKey = action.payload.customer.pan + action.payload.report.reportId;
+      let visitContainingImage = action.payload;
+      if (state.visits[visitKey]) {
+        if(!state.visits[visitKey].visit.report.images) {
+          state.visits[visitKey].visit.report.images = [];
+        }
+        let image : Image = {index: undefined, image: undefined, coords: undefined};
+        image.index = state.visits[visitKey].visit.report.images?.length || 0;
+        image.image = visitContainingImage.report.images[0].image;
+        image.coords = visitContainingImage.report.images[0].coords;
+        state.visits[visitKey].visit.report.images.push(image);
+        Toast.show("Image saved sucessfully");
+      }
+    },
+    deleteImage: (
+      state: VisitLocalStore,
+      action: PayloadAction<Visit>,
+    ) => {
+      let visitKey = action.payload.customer.pan + action.payload.report.reportId;
+      if(visitKey && action.payload.report.images[0].index !== undefined) {
+        console.log('deleteImage', action.payload.report.images[0].index)
+        state.visits[visitKey].visit.report.images.splice(action.payload.report.images[0].index - 1, 1)
+        Toast.show("Image deleted sucessfully");
+      }
+    }
   },
 });
 
 // Action creators are automatically generated for each case reducer function
-export const {createVisit, deleteVisit, saveFieldValue, submitVisit} = visitLocalStoreSlice.actions;
+export const {createVisit, deleteVisit, saveFieldValue, submitVisit, addImage, deleteImage} = visitLocalStoreSlice.actions;
 
 export default visitLocalStoreSlice.reducer;

@@ -85,7 +85,13 @@ const Form: React.FC<{
           </View>
           <View key={`FORM-buttons-camera`} 
             style={{flex: 1, alignItems: 'center'}}>
-            <FontAwesome6Icon name="camera-retro" size={30} color={`${theme.colors.tertiary}`}/>
+            <FontAwesome6Icon 
+              name="image" 
+              size={35} 
+              onPress={() => {
+                navigation.navigate("Gallery", {visit: visit})
+              }}
+              color={`${theme.colors.tertiary}`}/>
           </View>
           <View
             key={`FORM-buttons-next`}
