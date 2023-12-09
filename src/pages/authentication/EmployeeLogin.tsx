@@ -14,7 +14,7 @@ import React, {useEffect, useState} from 'react';
 
 const EmployeeLogin = () => {
   const theme = useTheme();
-  const {setToken, getToken} = useToken();
+  const {setToken, getToken, setUserType} = useToken();
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const {mpin} = useAppSelector(state => state.persistedVisists);
@@ -46,8 +46,12 @@ const EmployeeLogin = () => {
 
   useEffect(() => {
     getToken().then(data => {
-      if(data) setLoggedIn(true)
-      else setLoggedIn(false)
+      console.log("Token", data)
+      if(data !== undefined && data !== null) setLoggedIn(true)
+      else {
+        setLoggedIn(false)
+        dispatch(setMPin(undefined))
+      }
     })
     
   })
@@ -81,7 +85,7 @@ const EmployeeLogin = () => {
   return (
     <Surface elevation={4} style={styles.registrationSurface}>
       <Text style={styles.scenarioQuestion}>SIDBI Employee </Text>
-      {!loggedIn && !mpin && !otpSent && (
+      {!loggedIn && !otpSent && (
         <Formik
           validationSchema={employeeMobileNoValidation}
           initialValues={{mobileNo: ''}}
@@ -125,7 +129,7 @@ const EmployeeLogin = () => {
           )}
         </Formik>
       )}
-      {!mpin && otpSent && (
+      {!loggedIn && otpSent && (
         <Formik
           validationSchema={employeeOtpValidation}
           initialValues={{otp: ''}}
@@ -215,12 +219,13 @@ const EmployeeLogin = () => {
           )}
         </Formik>
       )}
-      {mpin && (
+      {mpin && loggedIn && (
         <Formik
           validationSchema={mpinValidationSchema}
           initialValues={{mpin: ''}}
           onSubmit={async values => {
             if (mpin === values.mpin) {
+              setUserType("EMPLOYEE");
               navigation.dispatch(
                 CommonActions.reset({
                   index: 0,

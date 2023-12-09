@@ -63,6 +63,7 @@ const HomeNavIcons = () => {
               style={styles.buttonFacebookStyle}
               activeOpacity={0.5}
               onPress={() => {
+                console.log('userType', userType)
                 if (userType === 'EMPLOYEE') {
                   navigation.navigate('SiteVisitCustomerSearch');
                 } else {
