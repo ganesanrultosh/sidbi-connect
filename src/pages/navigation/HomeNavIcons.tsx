@@ -1,69 +1,108 @@
-import { useNavigation } from "@react-navigation/native";
-import React from "react";
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
-import { Surface } from "react-native-paper";
-import { Lead } from "../../models/partner/Lead";
+import {useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {Surface} from 'react-native-paper';
+import {Lead} from '../../models/partner/Lead';
+import useToken from '../../components/Authentication/useToken';
+import Toast from 'react-native-root-toast';
 
 const HomeNavIcons = () => {
-
   const navigation = useNavigation();
 
-  return <View>
-  <ScrollView horizontal={true}><Surface elevation={0} style={{
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 15,
-    paddingVertical: 10
-  }}>
-    <Surface
-      elevation={2}
-      style={{ margin: 10 }}
-    >
-      <TouchableOpacity style={styles.buttonFacebookStyle} activeOpacity={0.5} onPress={() => {
-        navigation.navigate(
-          'LeadBasicInfo',
-          {lead: {} as Lead})
-      }}>
-        <Image
-          source={require('../../images/LeadGenerationIcon.png')}
-          style={styles.buttonImageIconStyle}
-        />
-        <Text style={styles.buttonTextStyle}> Lead Generation </Text>
-      </TouchableOpacity>
-    </Surface>
-    <Surface
-      elevation={2}
-      style={{ margin: 10 }}
-    >
-      <TouchableOpacity style={styles.buttonFacebookStyle} activeOpacity={0.5} onPress={() => {
-        navigation.navigate(
-          'SiteVisitCustomerSearch')
-      }}>
-        <Image
-          source={require('../../images/sitevisit.png')}
-          style={styles.buttonImageIconStyle}
-        />
-        <Text style={styles.buttonTextStyle}> Site Visits </Text>
-      </TouchableOpacity>
-    </Surface>
-    <Surface
-      elevation={2}
-      style={{ margin: 10 }}
-    >
-      <TouchableOpacity style={styles.buttonFacebookStyle} activeOpacity={0.5} onPress={() => {
-        navigation.navigate('Leads' as never)
-      }}>
-        <Image
-          source={require('../../images/ViewLeadsIcon.png')}
-          style={styles.buttonImageIconStyle}
-        />
-        <Text style={styles.buttonTextStyle}> View Leads </Text>
-      </TouchableOpacity>
-    </Surface>
-  </Surface></ScrollView></View>
+  const {getUserType} = useToken();
 
-}
+  const [userType, setUserType] = useState<string>();
+
+  useEffect(() => {
+    getUserType().then(data => {
+      setUserType(data);
+    });
+  });
+
+  return (
+    <View>
+      <ScrollView horizontal={true}>
+        <Surface
+          elevation={0}
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginVertical: 15,
+            paddingVertical: 10,
+          }}>
+          <Surface elevation={2} style={{margin: 10}}>
+            <TouchableOpacity
+              style={styles.buttonFacebookStyle}
+              activeOpacity={0.5}
+              onPress={() => {
+                if (userType === 'TPE') {
+                  navigation.navigate('LeadBasicInfo', {lead: {} as Lead});
+                } else {
+                  Toast.show(
+                    'Only facilitators are allowed to create leads at the moment.',
+                  );
+                }
+              }}>
+              <Image
+                source={require('../../images/LeadGenerationIcon.png')}
+                style={styles.buttonImageIconStyle}
+              />
+              <Text style={styles.buttonTextStyle}> Lead Generation </Text>
+            </TouchableOpacity>
+          </Surface>
+          <Surface elevation={2} style={{margin: 10}}>
+            <TouchableOpacity
+              style={styles.buttonFacebookStyle}
+              activeOpacity={0.5}
+              onPress={() => {
+                if (userType === 'EMPLOYEE') {
+                  navigation.navigate('SiteVisitCustomerSearch');
+                } else {
+                  Toast.show(
+                    'Only employees are allowed to perform site visit at the moment.',
+                  );
+                }
+              }}>
+              <Image
+                source={require('../../images/sitevisit.png')}
+                style={styles.buttonImageIconStyle}
+              />
+              <Text style={styles.buttonTextStyle}> Site Visits </Text>
+            </TouchableOpacity>
+          </Surface>
+          <Surface elevation={2} style={{margin: 10}}>
+            <TouchableOpacity
+              style={styles.buttonFacebookStyle}
+              activeOpacity={0.5}
+              onPress={() => {
+                if (userType === 'TPE') {
+                  navigation.navigate('Leads' as never);
+                } else {
+                  Toast.show(
+                    'Only facilitators are allowed to view leads at the moment.',
+                  );
+                }
+              }}>
+              <Image
+                source={require('../../images/ViewLeadsIcon.png')}
+                style={styles.buttonImageIconStyle}
+              />
+              <Text style={styles.buttonTextStyle}> View Leads </Text>
+            </TouchableOpacity>
+          </Surface>
+        </Surface>
+      </ScrollView>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -88,7 +127,7 @@ const styles = StyleSheet.create({
     // borderColor: '#fff',
     // borderRadius: 5,
     margin: 5,
-    width: 150
+    width: 150,
   },
   buttonImageIconStyle: {
     padding: 10,
@@ -100,7 +139,7 @@ const styles = StyleSheet.create({
   buttonTextStyle: {
     marginBottom: 4,
     marginLeft: 10,
-    fontSize: 18
+    fontSize: 18,
   },
   buttonIconSeparatorStyle: {
     backgroundColor: '#fff',

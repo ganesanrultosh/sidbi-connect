@@ -86,7 +86,7 @@ const Register = (props: PartnerRegistrationProps) => {
   const [concentSent, setConcentSent] = useState(false);
   const [resendConsent, setResendConsent] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [termsViewed, setTermsViewed] = useState(false);
+  const [termsViewed, setTermsViewed] = useState(true);
 
   const registrationValidationSchema = yup.object().shape({
     password: yup
@@ -170,7 +170,7 @@ const Register = (props: PartnerRegistrationProps) => {
               if (data.error) {
                 Toast.show(data.error);
               } else {
-                Toast.show('Registration sucessfully submitted.', {
+                Toast.show('Registration sucessful.', {
                   duration: Toast.durations.LONG,
                 });
                 navigation.navigate('Login' as never);
@@ -214,13 +214,13 @@ const Register = (props: PartnerRegistrationProps) => {
                   }
                 />
               )}
-              {!termsViewed && (
+              {/* {!termsViewed && (
                 <Button
                   onPress={() => setModalVisible(true)}
                   disabled={!values.password || !values.confirmPassword}>
                   View Terms and Conditions
                 </Button>
-              )}
+              )} */}
             </ScrollView>
             {values.termsAccepted && (
               <>

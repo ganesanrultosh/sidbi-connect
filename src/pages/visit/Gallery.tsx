@@ -203,7 +203,7 @@ const Gallery = (props: GalleryProps) => {
 
   return (
     <View style={{flex: 1}}>
-      {currentForm?.images && <ScrollView style={{height: '90%'}}>
+      {currentForm?.images && currentForm?.images.length > 0 && <ScrollView style={{height: '90%'}}>
         {currentForm?.images?.map(item => {
           keys.push(item);
           if (
@@ -218,7 +218,7 @@ const Gallery = (props: GalleryProps) => {
           }
         })}
       </ScrollView>}
-      {!currentForm?.images && 
+      {(!currentForm?.images || currentForm?.images.length === 0) && 
         <Text style={{flex: 1, margin: 20, fontSize: 20, fontWeight: "bold"}}>No images captured yet for this report.</Text>}
       <View style={{alignItems: 'center'}}>
         <Ionicons

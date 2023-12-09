@@ -5,6 +5,7 @@ import VisitFieldUpdateContext from '../models/visit/VisitFieldUpdateContext';
 import Toast from 'react-native-root-toast';
 
 interface VisitLocalStore {
+  mpin: string | undefined,
   visits: {
     [key: string]: { //Key is PAN + REPORT ID
       visit: Visit;
@@ -13,7 +14,7 @@ interface VisitLocalStore {
   };
 }
 
-const initialState: VisitLocalStore = {visits: {}};
+const initialState: VisitLocalStore = {mpin: undefined, visits: {}};
 
 export const getCachedVisits = createAsyncThunk(
   'visits/cachedVisits',
@@ -124,15 +125,21 @@ export const visitLocalStoreSlice = createSlice({
     ) => {
       let visitKey = action.payload.customer.pan + action.payload.report.reportId;
       if(visitKey && action.payload.report.images[0].index !== undefined) {
-        console.log('deleteImage', action.payload.report.images[0].index)
-        state.visits[visitKey].visit.report.images.splice(action.payload.report.images[0].index - 1, 1)
+        let index = state.visits[visitKey].visit.report.images.findIndex(image => image.index === action.payload.report.images[0].index)
+        state.visits[visitKey].visit.report.images.splice(index, 1)
         Toast.show("Image deleted sucessfully");
       }
+    },
+    setMPin: (
+      state:VisitLocalStore,
+      action: PayloadAction<string | undefined>,
+    ) => {
+      state.mpin = action.payload
     }
   },
 });
 
 // Action creators are automatically generated for each case reducer function
-export const {createVisit, deleteVisit, saveFieldValue, submitVisit, addImage, deleteImage} = visitLocalStoreSlice.actions;
+export const {createVisit, deleteVisit, saveFieldValue, submitVisit, addImage, deleteImage, setMPin} = visitLocalStoreSlice.actions;
 
 export default visitLocalStoreSlice.reducer;

@@ -100,7 +100,7 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
 
   let filledByList = [
     {
-      label: 'Partner',
+      label: 'Facilitator',
       value: 'Partner',
     },
     {
@@ -138,7 +138,7 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
 
   const submissionValidationSchema = yup.object().shape({
     branchName: yup.string().required('Branch is required.'),
-    dateOfIncorp: yup.string().required('Date of incorporation required'),
+    // dateOfIncorp: yup.string().required('Date of incorporation required'),
     itrFilingLocal: yup.boolean().isTrue('Customer should have 3 yrs IT Returns'),
     bankStatementLocal: yup
       .boolean()
@@ -156,7 +156,7 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
           let currentValues = {
             ...leadInfo,
             ...values,
-            dateOfIncorp: Moment(values.dateOfIncorp).format('YYYY-MM-DD'),
+            // dateOfIncorp: Moment(values.dateOfIncorp).format('YYYY-MM-DD'),
           };
           dispatch(saveLead(currentValues));
           setLeadInfo(currentValues)      
@@ -178,12 +178,12 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
                 enableReinitialize
                 list={branches}
               />
-              <Field
+              {/* <Field
                 component={CustomerDataPicker}
                 name="dateOfIncorp"
                 label="Date of incorporation"
                 // value=values.dateOfIncorp ? Moment(values.dateOfIncorp, "YYYY-MM-DD").toDate() : undefined}
-              />
+              /> */}
               <Field
                 component={CustomSwitch}
                 name="itrFilingLocal"
@@ -234,7 +234,7 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
                       let currentValues = {
                         ...leadInfo,
                         ...values,
-                        dateOfIncorp: values.dateOfIncorp?.toLocaleString()
+                        // dateOfIncorp: values.dateOfIncorp?.toLocaleString()
                       };
                       dispatch(saveLead(currentValues));
                       setLeadInfo(currentValues);

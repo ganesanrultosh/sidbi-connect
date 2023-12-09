@@ -1,7 +1,9 @@
 import Config from 'react-native-config';
 import useToken from '../components/Authentication/useToken';
+import encrypt from '../utils/encrypt';
 
 const apiEndpoint = Config.REACT_APP_CONNECT_API_ENDPOINT;
+const visitApiEndpoint = Config.REACT_APP_VISIT_API_ENDPOINT;
 
 console.log("End point: ", apiEndpoint);
 
@@ -30,6 +32,30 @@ function loginUser(credentials: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(credentials),
+  });
+}
+
+function generateOtp(mobileNo: string) {
+  console.log('loginUser')
+  return fetch(`${visitApiEndpoint}/auth/${mobileNo}/otp/generate`, {
+    method: "POST",
+  });
+}
+
+function loginEmployee(credentials: {
+  mobileNo: string,
+  otp: string
+}) {
+  console.log('loginEmployee')
+  return fetch(`${visitApiEndpoint}/auth/authenticate`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username: credentials.mobileNo,
+      password: encrypt(credentials.otp)
+    }),
   });
 }
 
@@ -76,4 +102,4 @@ async function setUserPassword(credentials: {
   });
 }
 
-export { me, loginUser, forgotPassword, signupUser, setUserPassword, randomKeys };
+export { me, loginUser, forgotPassword, signupUser, setUserPassword, randomKeys, generateOtp, loginEmployee };

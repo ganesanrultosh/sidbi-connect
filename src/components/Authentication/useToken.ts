@@ -12,7 +12,17 @@ export default function useToken() {
     }
   };
 
-  const setToken = async (userToken: { currentUser: string } | undefined) => {
+  const getUserType = async () => {
+    const tokenString = await EncryptedStorage.getItem(tokenKey);
+    if (tokenString !== undefined && tokenString !== "undefined") {
+      const userToken = tokenString && JSON.parse(tokenString);
+      return userToken && userToken?.userType;
+    } else {
+      EncryptedStorage.removeItem(tokenKey);
+    }
+  }
+
+  const setToken = async (userToken: { currentUser: string, userType: string } | undefined) => {
     if (!userToken) {
       await EncryptedStorage.removeItem(tokenKey);
     } else {
@@ -22,6 +32,7 @@ export default function useToken() {
 
   return {
     setToken,
+    getUserType,
     getToken
   };
 }

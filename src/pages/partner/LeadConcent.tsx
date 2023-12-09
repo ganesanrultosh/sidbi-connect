@@ -187,7 +187,7 @@ const LeadConcent = (props: LeadConsentProps) => {
                 bankStatement: values.bankStatementLocal ? "Y" : "N",
                 gstRegime: values.gstRegimeLocal ? "Y" : "N",
                 itrFiling: values.itrFilingLocal ? "Y" : "N",
-                dateOfIncorp: Moment(values.dateOfIncorp).format('YYYY-MM-DD'),
+                // dateOfIncorp: Moment(values.dateOfIncorp).format('YYYY-MM-DD'),
               };
 
               //Clean up local variables
@@ -225,29 +225,6 @@ const LeadConcent = (props: LeadConsentProps) => {
         <Surface elevation={4} style={styles.surface}>
           <ScrollView>
             <Text style={styles.header}>Customer Consent</Text>
-            {/* {termsViewed && (
-                <Field
-                  component={CustomCheckBox}
-                  name="termsAccepted"
-                  disabled={!termsViewed}
-                  rightText={
-                    <Text
-                      style={{
-                        textDecorationLine: 'underline',
-                      }}
-                      onPress={() => setModalVisible(true)}>
-                      I/We accept the Terms and Conditions
-                    </Text>
-                  }
-                />
-              )} */}
-            {/* {!termsViewed && (
-              <Button
-                onPress={() => setModalVisible(true)}
-                >
-                View Terms and Conditions
-              </Button>
-            )} */}
             {(
               <>
                 {concentSent && (

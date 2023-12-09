@@ -53,6 +53,7 @@ export const crudApiTemplateWithParent = (parent: string, entity: string) => {
     },
     addItem: (parentId: number, body: any, ) => {
       console.log(
+        'addItem',
         {
           url: `/${parent}/${parentId}/${entity}`,
           method: "POST",

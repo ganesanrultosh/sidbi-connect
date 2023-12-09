@@ -126,8 +126,7 @@ const OngoingSiteVisits = () => {
             flexWrap: 'wrap',
           }}
           numberOfLines={3}>
-          No ongoing leads found. Please create a new lead by clicking "Lead
-          Generation" icon above.
+          No ongoing visit report found. Please create a new visit report by clicking "Site Visits" icon above.
         </Text>
       </View>
     );

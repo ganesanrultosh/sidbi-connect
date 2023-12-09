@@ -19,7 +19,7 @@ export interface Lead extends Child {
   city?: string;
   state?: string;
   pincode?: number;
-  dateOfIncorp?: string;
+  // dateOfIncorp?: string;
   applicationFillingBy?: string;
   branchName?: string;
   customerConcent?: string;

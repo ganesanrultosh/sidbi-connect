@@ -68,12 +68,12 @@ const LeadBasicInfo = (props : LeadBasicInfoProps) => {
       .min(10, "Loan Amount should be atleast 10 Lakhs ₹")
       .max(100, "Loan Amount should not be more than 100 Lakhs ₹")
       .required('Loan amount is required.'),
-    loanType: yup
-      .string()
-      .required('Loan Type is required'),
-    customerType: yup
-      .string()
-      .required('Customer Type is required')
+    // loanType: yup
+    //   .string()
+    //   .required('Loan Type is required'),
+    // customerType: yup
+    //   .string()
+    //   .required('Customer Type is required')
   });
 
   return <Formik
@@ -112,14 +112,14 @@ const LeadBasicInfo = (props : LeadBasicInfoProps) => {
               name="loanAmount"
               label="Loan Amount (Lakhs ₹) (*)"
             />
-            <Field
+            {/* <Field
               component={CustomDropDown}
               name="loanType"
               label="Loan Type (*)"
               enableReinitialize
               list={loanTypeDomain}
-            />
-            <View style={styles.radioGroupEnclosure}>
+            /> */}
+            {/* <View style={styles.radioGroupEnclosure}>
               <Field
                 component={CustomRadioGroup}
                 name="customerType"
@@ -127,7 +127,7 @@ const LeadBasicInfo = (props : LeadBasicInfoProps) => {
                 header={"Customer Type"}
                 radioList={customerValueList}
               />
-            </View>
+            </View> */}
           </ScrollView>
           <Button
             mode="contained"
