@@ -10,6 +10,16 @@ export const crudApiTemplate = (entity: string) => {
         },
       };
     },
+    filterItem: (body: any) => {
+      return {
+        url: `/${entity}/filter`,
+        method: "POST",
+        body,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+    },
     addItem: (body: any, ) => ({
       url: `/${entity}`,
       method: "POST",

@@ -1,4 +1,5 @@
 interface Customer {
+  id: number | undefined,
   pan: string,
   name: string
 }

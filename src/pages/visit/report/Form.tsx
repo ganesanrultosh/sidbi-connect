@@ -6,9 +6,9 @@ import Section from './Section';
 import {Button, Surface, useTheme} from 'react-native-paper';
 import Visit from '../../../models/visit/visit';
 import VisitFieldUpdateContext from '../../../models/visit/VisitFieldUpdateContext';
-import { useAppDispatch } from '../../../app/hooks';
-import { submitVisit } from '../../../slices/visitCacheSlice';
+import {useAppDispatch, useAppSelector} from '../../../app/hooks';
 import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
+import VisitService, { postVisitTrigger } from '../../../services/visitService';
 
 const Form: React.FC<{
   navigation: any;
@@ -20,6 +20,7 @@ const Form: React.FC<{
 }> = ({visit, navigation, reportId, pageNumber, page, length}) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
+  const {visits} = useAppSelector(state => state.persistedVisists);
 
   const styles = StyleSheet.create({
     viewStyle: {flex: 1},
@@ -61,7 +62,10 @@ const Form: React.FC<{
               <Section
                 key={`section-${index}`}
                 section={item}
-                visitFieldUpdateContext={{...visitFieldUpdateContext, segment: index}}></Section>
+                visitFieldUpdateContext={{
+                  ...visitFieldUpdateContext,
+                  segment: index,
+                }}></Section>
             );
           })}
         </ScrollView>
@@ -74,24 +78,29 @@ const Form: React.FC<{
             alignItems: 'center',
             marginTop: 10,
           }}>
-          <View key={`FORM-buttons-back`} 
+          <View
+            key={`FORM-buttons-back`}
             style={{flex: 1, alignItems: 'flex-end'}}>
-            {pageNumber !== undefined && pageNumber > 0 && <Button
-              mode="outlined"
-              style={{alignSelf: 'flex-start', display: 'flex'}}
-              onPress={(e: any) => navigation.goBack()}>
-              Back
-            </Button>}
+            {pageNumber !== undefined && pageNumber > 0 && (
+              <Button
+                mode="outlined"
+                style={{alignSelf: 'flex-start', display: 'flex'}}
+                onPress={(e: any) => navigation.goBack()}>
+                Back
+              </Button>
+            )}
           </View>
-          <View key={`FORM-buttons-camera`} 
+          <View
+            key={`FORM-buttons-camera`}
             style={{flex: 1, alignItems: 'center'}}>
-            <FontAwesome6Icon 
-              name="image" 
-              size={35} 
+            <FontAwesome6Icon
+              name="image"
+              size={35}
               onPress={() => {
-                navigation.navigate("Gallery", {visit: visit})
+                navigation.navigate('Gallery', {visit: visit});
               }}
-              color={`${theme.colors.tertiary}`}/>
+              color={`${theme.colors.tertiary}`}
+            />
           </View>
           <View
             key={`FORM-buttons-next`}
@@ -111,7 +120,16 @@ const Form: React.FC<{
                   navigation.navigate(`${reportId}-${pageNumber + 1}`);
                 } else {
                   //Submit the visit
-                  dispatch(submitVisit(visitFieldUpdateContext))
+
+                  if (visit) {
+                    let visitToPost =
+                      visits[visit.customer.pan + visit.report.reportId];
+
+                    if (visitToPost) {
+                      dispatch(postVisitTrigger({visit: visitToPost.visit}))
+                      navigation.navigate('Home' as never)
+                    }
+                  }
                 }
               }}>
               {pageNumber !== undefined &&

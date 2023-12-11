@@ -17,6 +17,7 @@ import {useAppSelector} from '../../app/hooks';
 import {TouchableOpacity} from 'react-native';
 import moment from 'moment';
 import Visit from '../../models/visit/visit';
+import decrypt from '../../utils/decrypt';
 
 const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
   const reportStructure = _reports as ReportStructure;
@@ -40,19 +41,6 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
               let visitKey = customer.pan + report.reportId;
               if (visits[visitKey]) {
                 Toast.show(`${report.reportTitle} already exists for this customer`)
-                // dispatch(
-                //   createVisit({
-                //     customer: customer,
-                //     report: reportToCreate,
-                //   }),
-                // );
-                // navigation.navigate('VisitReport', {
-                //   visit: {
-                //     customer: customer,
-                //     report: reportToCreate,
-                //     status: 'created'
-                //   },
-                // });
               } else {
                 let newVisit: Visit = {
                   customer: customer,
@@ -78,7 +66,7 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
           key={report.reportId}
           elevation={2}
           style={{padding: 5, margin: 10, height: 100}}>
-          <Text style={{overflow: 'visible', margin: 20, textAlign: 'center'}}>
+          <Text style={{overflow: 'visible', margin: 20, textAlign: 'center', fontWeight: "bold"}}>
             {report.reportTitle}
           </Text>
         </Surface>
@@ -136,8 +124,8 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
       <Surface elevation={2} style={{marginHorizontal: 25, marginBottom: 10, padding: 10}}>
         <Text style={{fontWeight: "bold", paddingVertical: 5, textDecorationLine: "underline"}}>Customer Details:</Text>
         <Text>Name: <Text style={{fontWeight: "bold"}}>{customer?.name}</Text></Text>
-        <Text>PAN: <Text style={{fontWeight: "bold"}}>{customer?.pan}</Text></Text>
-        <Text style={{marginVertical: 10}}>Please select the visit report type to proceed!</Text>
+        <Text>PAN: <Text style={{fontWeight: "bold"}}>{decrypt(customer?.pan)}</Text></Text>
+        <Text style={{marginVertical: 10}}>Please select a visit report type to proceed!</Text>
       </Surface>
       {reportStructure?.reports && getCards(reportStructure?.reports)}
     </View>

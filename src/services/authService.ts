@@ -102,4 +102,15 @@ async function setUserPassword(credentials: {
   });
 }
 
-export { me, loginUser, forgotPassword, signupUser, setUserPassword, randomKeys, generateOtp, loginEmployee };
+async function profile () {
+  const token = await getToken()
+  return fetch(`${visitApiEndpoint}/api/users/me`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+  });
+}
+
+export { me, loginUser, forgotPassword, signupUser, setUserPassword, randomKeys, generateOtp, loginEmployee, profile };

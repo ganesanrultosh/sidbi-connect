@@ -14,11 +14,13 @@ import {
 } from 'redux-persist';
 import persistedLeadReducer from "./persistedLeadReducer";
 import persistedVisitReducer from "./persistedVisitReducer";
+import { customerSlice } from "../slices/customerSlice";
 
 export const store = configureStore({
   reducer: {
     [leadSlice.reducerPath]: leadSlice.reducer,
     [masterSlice.reducerPath]: masterSlice.reducer,
+    [customerSlice.reducerPath]: customerSlice.reducer,
     persistedLeads: persistedLeadReducer,
     persistedVisists: persistedVisitReducer,
   },
@@ -30,6 +32,7 @@ export const store = configureStore({
       immutableCheck: false,
     }).concat(leadSlice.middleware)
       .concat(masterSlice.middleware)
+      .concat(customerSlice.middleware)
 });
 
 export type AppDispatch = typeof store.dispatch;

@@ -1,10 +1,11 @@
 import {ScrollView, Text, View} from 'react-native';
 import React, {useEffect} from 'react';
-import {Button, Surface, useTheme} from 'react-native-paper';
+import {Button, Surface, Tooltip, useTheme} from 'react-native-paper';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {useNavigation} from '@react-navigation/native';
 import Visit from '../../models/visit/visit';
 import { deleteVisit } from '../../slices/visitCacheSlice';
+import decrypt from '../../utils/decrypt';
 
 const OngoingSiteVisits = () => {
   const theme = useTheme();
@@ -73,6 +74,35 @@ const OngoingSiteVisits = () => {
     );
   }
 
+  const getBgColor = (status: string | undefined) => {
+    if (status === 'created') {
+      return '#FFFDF7';
+    } else if (status === 'submitted') {
+      return '#FEF6F0';
+    } else if (status === 'synced') {
+      return '#d9ead3';
+    } else if (status === 'syncfailure') {
+      return '#FFFDF7';
+    // } else if (status === '4') {
+    //   return '#FEF6F0';
+    // } else if (status === '5') {
+    //   return '#F8F6F0';
+    }
+  };
+
+  const getStatus = (status: string) => {
+    switch(status) {
+      case "synced":
+        return "Visit synchronized."
+      case "submitted":
+        return "Yet to be synchronized"
+      case "syncfailure":
+        return "Syncronization failure"
+      default:
+        return ""
+    } 
+  }
+
   function getLeadSurface(visit: Visit) {
     return (
       <Surface
@@ -84,11 +114,15 @@ const OngoingSiteVisits = () => {
           paddingHorizontal: 15,
           width: 200,
           minHeight: 150,
+          backgroundColor: getBgColor(visit.status)
         }}>
         <Text
           style={{fontWeight: 'bold', color: 'black', fontSize: 20, flex: 1}}
           numberOfLines={1}>
           {visit.customer?.name}
+        </Text>
+        <Text style={{fontWeight: 'bold', fontSize: 14, paddingVertical: 5}}>
+          {decrypt(visit.customer.pan)}
         </Text>
         <Text style={{fontWeight: 'bold', fontSize: 16, paddingVertical: 5}}>
           {visit.report.reportTitle}
@@ -96,7 +130,7 @@ const OngoingSiteVisits = () => {
         <Text style={{fontWeight: 'bold', fontSize: 12}}>
           {visit.dateCreated}
         </Text>
-        <View style={{flexDirection: 'row', alignContent: 'center'}}>
+        {visit.status === 'created' && <View style={{flexDirection: 'row', alignContent: 'center'}}>
           <View style={{flex: 1, alignSelf: 'center'}}>
             <Button
               onPress={() => {
@@ -112,7 +146,14 @@ const OngoingSiteVisits = () => {
               Continue
             </Button>
           </View>
-        </View>
+        </View>}
+        {visit.status !== 'created' && <View style={{flexDirection: 'row', alignContent: 'center'}}>
+          <View style={{flex: 1, alignSelf: 'center', paddingVertical: 10}}>
+            <Tooltip title={visit.error || getStatus(visit.status)}>
+              <Text style={{fontWeight: "bold"}}>{getStatus(visit.status)}</Text>
+            </Tooltip>
+          </View>
+        </View>}
       </Surface>
     );
   }

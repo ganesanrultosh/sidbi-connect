@@ -5,7 +5,7 @@ interface Report {
   reportId: number | undefined | null,
   reportTitle: string | undefined | null,
   pages: Page[]
-  images: Image[]
+  images?: Image[]
 }
 
 export default Report;
