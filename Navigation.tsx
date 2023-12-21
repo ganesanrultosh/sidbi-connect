@@ -22,6 +22,8 @@ import VisitReport from './src/pages/visit/VisitReport';
 import Customer from './src/models/visit/customer';
 import Visit from './src/models/visit/visit';
 import Gallery from './src/pages/visit/Gallery';
+import EmployeeLogin from './src/pages/authentication/EmployeeLogin';
+import PartnerLogin from './src/pages/authentication/PartnerLogin';
 
 declare global {
   namespace ReactNavigation {
@@ -31,6 +33,8 @@ declare global {
 
 export type RootStackParamList = {
   Login: undefined;
+  EmployeeLogin: undefined;
+  PartnerLogin: undefined;
   RegisterBasicInfo: { partner: Partner | undefined };
   RegisterContactInfo: { partner: Partner | undefined };
   Register: { partner: Partner | undefined };
@@ -63,11 +67,11 @@ function Navigation(): JSX.Element {
       onBackground: "black",
       elevation: {
         ...MD3LightTheme.colors.elevation,
-        level0: "#FFFFFF",
-        level2: "#FAFAFA",
-        level4: "#FAFAFA"
+        level0: '#F5F7F9',
+        level2: '#F5F7F9',
+        level4: '#F5F7F9'
       },
-      background: "#FAFAFA"
+      background: '#F5F7F9'
     },
   };
 
@@ -91,7 +95,11 @@ function Navigation(): JSX.Element {
 
   return <Provider theme={theme}><RootSiblingParent>
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{
+          contentStyle:{
+            backgroundColor:'#F5F7F9'
+          }
+        }}>
         <Stack.Group screenOptions={{
           headerStyle: {
             backgroundColor: "#2F5596",
@@ -100,16 +108,20 @@ function Navigation(): JSX.Element {
           headerTitleStyle: {
             fontWeight: 'bold',
           },
-          headerBackTitleVisible: false
+          headerBackTitleVisible: false,
         }}>
           <Stack.Screen 
             name="Login" 
             component={Login} 
             options={{headerShown: false}} />
           <Stack.Screen 
-            name="RegisterBasicInfo" 
-            component={RegisterBasicInfo} 
-            options={{title: 'Registration'}} />
+            name="EmployeeLogin" 
+            component={EmployeeLogin} 
+            options={{title: 'Employee Login'}} />
+          <Stack.Screen 
+            name="PartnerLogin" 
+            component={PartnerLogin} 
+            options={{title: 'Partner Login'}} />
           <Stack.Screen
             name="RegisterContactInfo"
             component={RegisterContactInfo}
