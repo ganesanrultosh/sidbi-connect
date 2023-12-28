@@ -176,6 +176,7 @@ const OngoingLeads = () => {
         {
           <ScrollView
             horizontal={true}
+            showsHorizontalScrollIndicator={false}
             decelerationRate={0}
             snapToInterval={200} //your element width
             snapToAlignment={'center'}

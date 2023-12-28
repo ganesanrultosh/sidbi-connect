@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import MultiSelect from 'react-native-multiple-select';
 import uuid from 'react-native-uuid';
-// import {useAppDispatch, useAppSelector} from '../../../hooks';
-// import { getDomainData } from '../../../slices/visit';
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { getDomainData } from '../../slices/visitCacheSlice';
+import VisitService from '../../services/visitService';
 
 // const items = [{
 //   id: '92iijs7yta',
@@ -37,31 +38,44 @@ import uuid from 'react-native-uuid';
 
 
 
-const MultiSelectComp = ({domainValue, onChange}) => {
+const MultiSelectComp = ({visitFieldContext, domainValue, onChange}) => {
   const [selectedItems, setSelectedItems] = useState([]);
-  // const disptach = useAppDispatch();
-  // const {domainData: items} = useAppSelector(state => state.visit);
 
-  // console.log('Domain Value', domainValue);
+  console.log('Domain Value', domainValue);
 
   onSelectedItemsChange = selectedItems => {
     setSelectedItems(selectedItems);
     onChange && onChange(selectedItems);
   };
 
+  const [domainValues, setDomainValues] = useState([]);
+  const [status, setStatus] = useState("uninitialized");
+
   useEffect(() => {
-    if(!items || !items[domainValue] || items[domainValue].length === 0) {
-      // disptach(getDomainData({
-      //   domain: domainValue,
-      //   key: 'AADCM9831H'
-      // }))
+    if(domainValue && status === "uninitialized") {
+      setStatus("loading")
+      let key = 'ABECS7591N';
+      VisitService
+        .getDomainData({domain: domainValue, key})
+        .then(res => {
+          console.log('Get Domain Data Success', res.data)
+            setDomainValues(res.data);        
+            setStatus("success")
+          }
+        )
+        .catch((error) => {
+          console.log('Get Domain Data Error', error)
+          setStatus("error")
+          setDomainValues([])
+        })
     }
+    
   }, [])
 
-  return items && items[domainValue] ? (
+  return (
     <View style={{backgroundColor: '#EBF9F9', padding: 5, marginVertical: 5}}>
-      <MultiSelect
-        items={items[domainValue]}
+      {(domainValues && status === 'success' && domainValues.length > 0) && <><MultiSelect
+        items={domainValues}
         uniqueKey={`label`}
         onSelectedItemsChange={this.onSelectedItemsChange}
         selectedItems={selectedItems}
@@ -81,10 +95,10 @@ const MultiSelectComp = ({domainValue, onChange}) => {
         submitButtonColor="#rgba(108,78,212,0.88)"
         submitButtonText="Submit"
         tagContainerStyle={{flexBasis: '100%', backgroundColor: '#CBF9F9'}}
-      />
+      /></>}
+      {(status === 'loading') && <Text>Loading...</Text>}
+      {(status === 'error') && <Text>Error loading data</Text>}
     </View>
-  ) : (
-    <Text>Loading...</Text>
   );
 };
 

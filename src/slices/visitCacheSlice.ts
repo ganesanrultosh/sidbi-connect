@@ -4,6 +4,7 @@ import Visit from '../models/visit/visit';
 import VisitFieldUpdateContext from '../models/visit/VisitFieldUpdateContext';
 import Toast from 'react-native-root-toast';
 import VisitService from '../services/visitService';
+import { stat } from 'fs';
 
 interface VisitLocalStore {
   mpin: string | undefined;
@@ -208,6 +209,58 @@ export const visitLocalStoreSlice = createSlice({
             state.visits[visitKey].visit.error = message;
           }
         }
+      },
+    getDomainData(
+      state,
+      {
+        payload: {visitFieldUpdateContext, domain},
+      }: PayloadAction<{
+        visitFieldUpdateContext: VisitFieldUpdateContext;
+        domain: string;
+        // key: string;
+      }>,
+    ) {
+      let key = 'ABECS7591N';
+      console.log('getDomainData', key)
+      let visitKey =
+        visitFieldUpdateContext.pan + visitFieldUpdateContext.reportId;
+      if (visitKey) {
+        if (state.visits[visitKey] && state.visits[visitKey].visit) {
+          console.log('getDomainData', visitKey)
+          //Clear values
+          if(!state.visits[visitKey].visit.domainValues) state.visits[visitKey].visit.domainValues = {}
+          state.visits[visitKey].visit.domainValues[key] = {status: 'Loading', values: []}
+
+          //Try to get values
+
+          try {
+            VisitService
+            .getDomainData({domain, key})
+            .then(res => {
+              console.log('Get Domain Data Success', res.data)
+              // if(state && 
+              //   state.visits && 
+              //   state.visits[visitKey] && 
+              //   state.visits[visitKey].visit &&
+              //   state.visits[visitKey].visit.domainValues && 
+              //   state.visits[visitKey].visit.domainValues[key])
+              //   {
+              //     console.log('Setting domain values')
+              //     // state.visits[visitKey].visit.domainValues[key] = { values: res.data, status: 'Success' }
+              //   }
+              }
+            )
+            .catch((error) => {
+              console.log('Get Domain Data Error', error)
+              //Update status to error
+              state.visits[visitKey].visit.domainValues[key].status = 'Error'
+            })
+          } catch(e) {
+            console.log('Get Domain Data Exception', e)
+            state.visits[visitKey].visit.domainValues[key].status = 'Error'
+          }
+        }
+      }
       }
   },
 });
@@ -224,6 +277,7 @@ export const {
   setMPin,
   onAddVisitId,
   updateVisitStatus,
+  getDomainData
 } = visitLocalStoreSlice.actions;
 
 export default visitLocalStoreSlice.reducer;

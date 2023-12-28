@@ -8,12 +8,13 @@ import VisitFieldUpdateContext from '../../../models/visit/VisitFieldUpdateConte
 const CustomRadioInput: React.FC<{
   field: Field;
   visitFieldUpdateContext: VisitFieldUpdateContext;
-}> = ({field, visitFieldUpdateContext}) => {
+  onChange: (value:any) => void
+}> = ({field, visitFieldUpdateContext, onChange}) => {
   const [value, setValue] = useState<string>();
   return (
     <View style={{backgroundColor: '#FFFFFF', marginTop: 5}}>
       <RadioButton.Group
-        onValueChange={value => setValue(value)}
+        onValueChange={onChange}
         value={value || ''}>
         {field.listofValues &&
           field.listofValues.map((item: any) => {

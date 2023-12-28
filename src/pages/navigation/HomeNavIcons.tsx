@@ -28,7 +28,7 @@ const HomeNavIcons = () => {
 
   return (
     <View>
-      <ScrollView horizontal={true}>
+      <ScrollView horizontal={true}   showsHorizontalScrollIndicator={false}>
         <Surface
           elevation={0}
           style={{

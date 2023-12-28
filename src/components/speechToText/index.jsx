@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Voice from '@react-native-community/voice';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import showToast from '../../utils/showToast';
+
 const TextAreaWithSpeech = ({
   value,
   onChange,
@@ -70,7 +70,7 @@ const TextAreaWithSpeech = ({
           // style={styles.textInputStyle}
           style={{ justifyContent: 'center' }}
         >
-          <TextInput
+          {/* <TextInput
             value={result}
             style={[styles.input, styles.textArea]}
             multiline={true}
@@ -80,6 +80,18 @@ const TextAreaWithSpeech = ({
             onChangeText={t => {
               setResult(t)
             }}
+            defaultValue={defaultValue}
+            maxFontSizeMultiplier={1}
+          /> */}
+          <TextInput
+            style={{verticalAlign: "top", backgroundColor: "#FFFFFF", marginTop: 10}}
+            value={result}
+            multiline={true}
+            numberOfLines={6}
+            maxHeight={150}
+            placeholder={placeholder}
+            placeholderTextColor="rgba(129,102,102,0.44)"
+            onChangeText={setResult}
             defaultValue={defaultValue}
             maxFontSizeMultiplier={1}
           />
@@ -117,11 +129,11 @@ const TextAreaWithSpeech = ({
             // color="#ffffff"
             />
           </TouchableOpacity></View>}
-          <View style={{ padding: 10, color: "red", justifyContent: 'center', alignSelf: 'center', margin: 5, }}>
+          {/* <View style={{ padding: 10, color: "red", justifyContent: 'center', alignSelf: 'center', margin: 5, }}>
             <Pressable style={styles.button} onPress={close}>
               <Text style={styles.text}>Close</Text>
             </Pressable>
-          </View>
+          </View> */}
         </View>
       </SafeAreaView>
     </View>

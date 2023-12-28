@@ -57,6 +57,7 @@ const Input: React.FC<{
           <CustomTextAreaInput
             field={field}
             visitFieldUpdateContext={visitFieldUpdateContext}
+            onChange={onChange}
           />
         );
       case 'radio':
@@ -64,6 +65,7 @@ const Input: React.FC<{
           <CustomRadioInput
             field={field}
             visitFieldUpdateContext={visitFieldUpdateContext}
+            onChange={onChange}
           />
         );
       case 'multiselect':
@@ -71,6 +73,7 @@ const Input: React.FC<{
           <CustomMultiSelectInput
             field={field}
             visitFieldUpdateContext={visitFieldUpdateContext}
+            onChange={onChange}
           />
         );
       case 'groupText':
@@ -78,6 +81,7 @@ const Input: React.FC<{
           <CustomGroupInput
             field={field}
             visitFieldUpdateContext={visitFieldUpdateContext}
+            //On change is handled by group input, this is a deviation. Need to be corrected.
           />
         );
       default:

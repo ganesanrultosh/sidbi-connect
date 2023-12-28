@@ -1,14 +1,16 @@
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 import React from "react";
 import Field from "../../../models/visit/reportStructure/field";
 import Visit from "../../../models/visit/visit";
 import VisitFieldUpdateContext from "../../../models/visit/VisitFieldUpdateContext";
+import MultiSelectComp from "../../../components/multiselectcomp";
 
 const CustomMultiSelectInput: React.FC<{
   field: Field;
   visitFieldUpdateContext: VisitFieldUpdateContext;
-}> = ({field, visitFieldUpdateContext}) => {
-  return <Text style={{marginVertical: 10, color: "red"}}>Yet to be implemented</Text>
+  onChange: (value:any) => void
+}> = ({field, visitFieldUpdateContext, onChange}) => {
+  return <View><MultiSelectComp visitFieldContext={visitFieldUpdateContext} domainValue={field.domainValue} onChange={onChange} /></View>
 }
 
 export default CustomMultiSelectInput;

@@ -8,6 +8,12 @@ interface Visit {
   status: 'created' | 'submitted' | 'synced' | 'syncfailure'
   error?: string;
   dateCreated: string | undefined
+  domainValues: {
+    [lkey: string]: {
+      status: string,
+      values: []
+    }
+  };
 }
 
 export default Visit;

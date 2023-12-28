@@ -23,13 +23,13 @@ const CustomGroupInput: React.FC<{
     <>
       {field.group.map((item, index) => {
         return (
-          <View style={{margin: 10, backgroundColor: '#E1EAF4', padding: 10}}>
+          <View style={{margin: 10, backgroundColor: '#E1EAF4', padding: 10}} key={`group-field-${item.groupTitle}-${index}`}>
             <Text style={{marginVertical: 10, fontWeight: 'bold'}}>
               {item.groupTitle}
             </Text>
             {item.groupFields.map((field, gfIndex) => {
               return (
-                <>
+                <View key={`group-field-${field.fieldId}-${gfIndex}`}>
                   <Text style={{marginHorizontal: 10}}>{field.fieldTitle}</Text>
                   <CustomTextInput
                     field={field}
@@ -46,7 +46,7 @@ const CustomGroupInput: React.FC<{
                       })
                     }
                   />
-                </>
+                </View>
               );
             })}
           </View>

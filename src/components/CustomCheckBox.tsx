@@ -19,7 +19,11 @@ const CustomCheckBox = (props : any) => {
       <CheckBox
         style={{ flex: 1, padding: 10 }}
         isChecked={value}
-        onClick={() => setFieldValue(name, !value)}
+        onClick={() => { 
+            props.onChange && props.onChange(!value)
+            setFieldValue(name, !value)
+          }
+        }
         {...inputProps}
       />
       {hasError && <Text style={styles.errorText}>{errors[name]}</Text>}

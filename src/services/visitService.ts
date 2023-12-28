@@ -199,6 +199,16 @@ const VisitService = {
       throw new Error(error?.message);
     }
   },
+  getDomainData: async (params: {domain: string, key: string}) => {
+    try {
+      console.log('trying to get domain Value', `/api/${params.domain}/${params.key}`)
+      const res = await service.get(`/api/${params.domain}/${params.key}`);
+      // console.log('json', res)
+      return res;
+    } catch (error: any) {
+      throw new Error(error?.message);
+    }
+  },
 };
 
 export default VisitService;
