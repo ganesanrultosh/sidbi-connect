@@ -10,12 +10,12 @@ const CustomRadioInput: React.FC<{
   visitFieldUpdateContext: VisitFieldUpdateContext;
   onChange: (value:any) => void
 }> = ({field, visitFieldUpdateContext, onChange}) => {
-  const [value, setValue] = useState<string>();
+  // const [value, setValue] = useState<string>();
   return (
     <View style={{backgroundColor: '#FFFFFF', marginTop: 5}}>
       <RadioButton.Group
-        onValueChange={onChange}
-        value={value || ''}>
+        onValueChange={(value) => onChange(value)}
+        value={field.fieldValue || ''}>
         {field.listofValues &&
           field.listofValues.map((item: any) => {
             return (

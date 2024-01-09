@@ -9,6 +9,7 @@ import VisitFieldUpdateContext from '../../../models/visit/VisitFieldUpdateConte
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
 import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
 import VisitService, { postVisitTrigger } from '../../../services/visitService';
+import Toast from 'react-native-root-toast';
 
 const Form: React.FC<{
   navigation: any;
@@ -126,8 +127,12 @@ const Form: React.FC<{
                       visits[visit.customer.pan + visit.report.reportId];
 
                     if (visitToPost) {
-                      dispatch(postVisitTrigger({visit: visitToPost.visit}))
-                      navigation.navigate('Home' as never)
+                      if(!visit.report.images || visit.report.images.length === 0) {
+                        Toast.show('Atleast one image should be present.')
+                      } else {
+                        dispatch(postVisitTrigger({visit: visitToPost.visit}))
+                        navigation.navigate('Home' as never)
+                      }
                     }
                   }
                 }

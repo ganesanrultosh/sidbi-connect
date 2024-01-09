@@ -25,6 +25,7 @@ const TextAreaWithSpeech = ({
     // console.log('speechStart successful', e);
   };
   const speechEndHandler = e => {
+    Voice.stop();
     setLoading(false);
     console.log('stop handler', e);
   };
@@ -91,7 +92,7 @@ const TextAreaWithSpeech = ({
             maxHeight={150}
             placeholder={placeholder}
             placeholderTextColor="rgba(129,102,102,0.44)"
-            onChangeText={setResult}
+            onChangeText={t => {setResult(t)}}
             defaultValue={defaultValue}
             maxFontSizeMultiplier={1}
           />

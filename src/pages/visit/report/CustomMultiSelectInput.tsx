@@ -10,7 +10,7 @@ const CustomMultiSelectInput: React.FC<{
   visitFieldUpdateContext: VisitFieldUpdateContext;
   onChange: (value:any) => void
 }> = ({field, visitFieldUpdateContext, onChange}) => {
-  return <View><MultiSelectComp visitFieldContext={visitFieldUpdateContext} domainValue={field.domainValue} onChange={onChange} /></View>
+  return <View><MultiSelectComp field={field} visitFieldContext={visitFieldUpdateContext} domainValue={field.domainValue} onChange={onChange} /></View>
 }
 
 export default CustomMultiSelectInput;

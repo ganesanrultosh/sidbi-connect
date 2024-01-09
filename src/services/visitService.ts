@@ -16,7 +16,7 @@ export const postVisitTrigger = createAsyncThunk(
       await VisitService.postVisitTrigger(params.visit, dispatch);
       Toast.show("Visit submitted sucessfully");
     } catch (error) {
-      Toast.show('Error submitting visit. Please contact support.');
+      throw error;
     }
   },
 );
@@ -65,7 +65,10 @@ const VisitService = {
           throw new Error('One image should be present');
         }
       } catch (error: any) {
-        console.log('Visit trigger error', error?.message);
+        // console.log('Visit trigger error', error?.message);
+        Toast.show(
+          'Error submitting visit.',
+        );
         throw new Error(error?.message);
       }
   },

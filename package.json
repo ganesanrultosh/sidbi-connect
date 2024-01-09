@@ -39,7 +39,7 @@
     "react-native-paper-dates": "^0.18.20",
     "react-native-paper-dropdown": "^1.0.7",
     "react-native-permissions": "^4.0.0",
-    "react-native-reanimated": "^3.5.1",
+    "react-native-reanimated": "^3.6.1",
     "react-native-root-toast": "^3.4.1",
     "react-native-safe-area-context": "^4.7.2",
     "react-native-screens": "^3.25.0",
