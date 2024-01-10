@@ -165,7 +165,7 @@ const SiteVisitCustomerSearch = () => {
     <View style={styles.viewStyle}>
       <Surface elevation={4} style={styles.surfaceStyle}>
         <Text style={styles.headerText}>
-          Search Customer {isCustomerLoading ? "Loading" : "Not loading"}
+          Search Customer
         </Text>
         {isCustomerLoading && <Text>Searching...</Text>}
         {!isCustomerLoading && <>
