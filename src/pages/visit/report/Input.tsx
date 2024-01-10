@@ -93,7 +93,8 @@ const Input: React.FC<{
     <View style={{
       backgroundColor: theme.colors.secondaryContainer, 
       padding: 10, 
-      margin: 2}}>
+      margin: 2,
+      }}>
       <Text style={{marginTop: 2}}>{field.fieldTitle}</Text>
       {getInput(field, visitFieldUpdateContext)}
     </View>

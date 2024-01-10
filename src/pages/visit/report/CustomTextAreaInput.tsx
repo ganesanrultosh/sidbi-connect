@@ -11,6 +11,7 @@ const CustomTextAreaInput: React.FC<{
   visitFieldUpdateContext: VisitFieldUpdateContext;
   onChange: (value: any) => void;
 }> = ({field, visitFieldUpdateContext, onChange}) => {
+
   const getValueAsString = (value: any) => {
     if (value)
       return (
@@ -42,7 +43,7 @@ const CustomTextAreaInput: React.FC<{
           mode="flat"
           underlineColor="transparent"
           style={{
-            marginRight: 20,
+            // marginRight: 20,
             verticalAlign: 'top',
             backgroundColor: '#FFFFFF',
             paddingRight: 10,

@@ -2,10 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import Voice from '@react-native-community/voice';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import {setSpeechOn} from '../../slices/visitCacheSlice';
 
 const TextAreaWithSpeech = ({value, onChange, defaultValue}) => {
   const [result, setResult] = useState(value || defaultValue);
   const [isLoading, setLoading] = useState(false);
+  const {isSpeechOn} = useAppSelector(state => state.persistedVisists);
+  const dispatch = useAppDispatch();
   const speechStartHandler = e => {
     console.log('speechStart successful', e);
   };
@@ -21,6 +25,7 @@ const TextAreaWithSpeech = ({value, onChange, defaultValue}) => {
   };
   const startRecording = async locale => {
     setLoading(true);
+    dispatch(setSpeechOn(true))
     try {
       await Voice.start(locale);
     } catch (error) {
@@ -36,6 +41,7 @@ const TextAreaWithSpeech = ({value, onChange, defaultValue}) => {
     } catch (error) {
       console.log('error', error);
     }
+    dispatch(setSpeechOn(false))
   };
   useEffect(() => {
     Voice.onSpeechStart = speechStartHandler;
@@ -52,17 +58,21 @@ const TextAreaWithSpeech = ({value, onChange, defaultValue}) => {
       {!isLoading && (
         <TouchableOpacity
           onPress={() => startRecording('en-Us')}
+          disabled={isSpeechOn}
           style={{
             ...StyleSheet.absoluteFillObject,
             alignSelf: 'flex-end',
             alignItems: 'flex-end',
             margin: 3,
+            marginRight: -3,
+            marginTop: -25,
+            position: 'absolute'
           }}>
           <Ionicons
             maxFontSizeMultiplier={1}
             name="mic"
             size={20}
-            style={{color: 'blue'}}
+            style={{color: isSpeechOn ? 'gray' : 'blue'}}
           />
         </TouchableOpacity>
       )}
@@ -74,12 +84,14 @@ const TextAreaWithSpeech = ({value, onChange, defaultValue}) => {
             alignSelf: 'flex-end',
             alignItems: 'flex-end',
             margin: 3,
+            marginTop: -25,
+            position: 'absolute',
             zIndex: 20,
           }}>
           <Ionicons
             maxFontSizeMultiplier={1}
             name="square"
-            size={20}
+            size={15}
             style={{color: 'red'}}
           />
         </TouchableOpacity>

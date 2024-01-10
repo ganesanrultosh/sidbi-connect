@@ -8,6 +8,7 @@ import { stat } from 'fs';
 
 interface VisitLocalStore {
   mpin: string | undefined;
+  isSpeechOn: boolean;
   visits: {
     [key: string]: {
       //Key is PAN + REPORT ID
@@ -17,7 +18,7 @@ interface VisitLocalStore {
   };
 }
 
-const initialState: VisitLocalStore = {mpin: undefined, visits: {}};
+const initialState: VisitLocalStore = {mpin: undefined, isSpeechOn: false, visits: {}};
 
 export const getCachedVisits = createAsyncThunk(
   'visits/cachedVisits',
@@ -178,6 +179,12 @@ export const visitLocalStoreSlice = createSlice({
     ) => {
       state.mpin = action.payload;
     },
+    setSpeechOn: (
+      state: VisitLocalStore,
+      action: PayloadAction<boolean>,
+    ) => {
+      state.isSpeechOn = action.payload;
+    },
     onAddVisitId(
       state,
       {
@@ -277,7 +284,8 @@ export const {
   setMPin,
   onAddVisitId,
   updateVisitStatus,
-  getDomainData
+  getDomainData,
+  setSpeechOn
 } = visitLocalStoreSlice.actions;
 
 export default visitLocalStoreSlice.reducer;
