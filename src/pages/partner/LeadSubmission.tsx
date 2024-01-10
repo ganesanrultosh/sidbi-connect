@@ -1,10 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {CommonActions, useNavigation, useRoute} from '@react-navigation/native';
 import {Button, Surface, useTheme} from 'react-native-paper';
 import {Field, Formik} from 'formik';
@@ -13,7 +8,10 @@ import CustomDropDown from '../../components/CustomDropDown';
 import CustomRadioGroup from '../../components/CustomRadioGroup';
 import CustomerDataPicker from '../../components/CustomerDataPicker';
 import CustomSwitch from '../../components/CustomSwitch';
-import {LeadSubmissionProps, LeadSubmissionRouteProps} from '../navigation/NavigationProps';
+import {
+  LeadSubmissionProps,
+  LeadSubmissionRouteProps,
+} from '../navigation/NavigationProps';
 import {useAddLeadMutation} from '../../slices/leadSlice';
 import {Lead, leadDefaultValue} from '../../models/partner/Lead';
 import {useGetMasterQuery} from '../../slices/masterSlice';
@@ -21,6 +19,13 @@ import {skipToken} from '@reduxjs/toolkit/query';
 import {saveLead} from '../../slices/leadCacheSlice';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import Moment from 'moment';
+import {HasLocationPermission} from '../../utils/hasPermissions';
+import Toast from 'react-native-root-toast';
+import Geolocation from 'react-native-geolocation-service';
+import BranchServices from '../../services/branchService';
+import useToken from '../../components/Authentication/useToken';
+import CustomTextInput from '../visit/report/CustomTextInput';
+import CustomInput from '../../components/CustomInput';
 
 const LeadSubmission = (props: LeadSubmissionProps) => {
   const navigation = useNavigation();
@@ -92,6 +97,7 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
   const [leadInfo, setLeadInfo] = useState(leadDefaultValue);
   const [addLead, result] = useAddLeadMutation();
   const [branches, setBranches] = useState<any>();
+  const [branchesLoadStatus, setBranchesLoadStatus] = useState('uninitialized')
 
   const [modalVisible, setModalVisible] = useState(false);
   const [termsViewed, setTermsViewed] = useState(false);
@@ -123,27 +129,66 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
     isLoading: isMasterLoading,
   } = useGetMasterQuery(initialValues.pincode || skipToken);
 
+  const {getToken} = useToken();
+
   useEffect(() => {
-    if (!isMasterLoading && master) {
-      let branchList: any = [];
-      master.branchCodes?.map((value: any) => {
-        branchList.push({
-          label: value,
-          value,
-        });
-      });
-      if (branchList.length > 0) setBranches(branchList);
-    }
-  }, [master]);
+    
+    let locPermission = HasLocationPermission();
+
+    locPermission.then(value => {
+      if (value) {
+        setBranches(undefined)
+        setBranchesLoadStatus('loading')
+        Geolocation.getCurrentPosition(
+          position => {
+            console.log(position.coords.latitude, position.coords.longitude);
+            
+            BranchServices.getBranches(
+              // position.coords.latitude,
+              // position.coords.longitude,
+              12.8981, 80.2296
+            ).then(listOfBranch => {
+              let branchesToShow: { label: string; value: string; }[] = [];
+              if(listOfBranch) {
+                listOfBranch.map(value => {
+                  branchesToShow.push(
+                    {
+                      label: value,
+                      value
+                    }
+                  )
+                })
+                setBranches(branchesToShow)
+                setBranchesLoadStatus('success')
+              } else {
+                setBranchesLoadStatus('error')
+              }
+            });
+          },
+          _error => {
+            setBranchesLoadStatus('error')
+            Toast.show('Unable to access location');
+          },
+          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+        );
+      } else {
+        Toast.show('Need Location Access');
+      }
+    });
+  }, []);
 
   const submissionValidationSchema = yup.object().shape({
     branchName: yup.string().required('Branch is required.'),
     // dateOfIncorp: yup.string().required('Date of incorporation required'),
-    itrFilingLocal: yup.boolean().isTrue('Customer should have 3 yrs IT Returns'),
+    itrFilingLocal: yup
+      .boolean()
+      .isTrue('Customer should have 3 yrs IT Returns'),
     bankStatementLocal: yup
       .boolean()
       .isTrue('Customer should have 3 yrs bank statement'),
-    gstRegimeLocal: yup.boolean().isTrue('Customer should be registered under GST'),
+    gstRegimeLocal: yup
+      .boolean()
+      .isTrue('Customer should be registered under GST'),
     applicationFillingBy: yup.string().required('Filled by is required'),
   });
 
@@ -159,7 +204,7 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
             // dateOfIncorp: Moment(values.dateOfIncorp).format('YYYY-MM-DD'),
           };
           dispatch(saveLead(currentValues));
-          setLeadInfo(currentValues)      
+          setLeadInfo(currentValues);
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
@@ -171,19 +216,28 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
           <Surface elevation={4} style={styles.surface}>
             <ScrollView>
               <Text style={styles.header}>Submission</Text>
-              <Field
+              {branchesLoadStatus === "loading" && 
+              <Text style={{paddingBottom: 10}}>Loading branches...</Text>
+              }
+              {branchesLoadStatus === "success" && branches && <Field
                 component={CustomDropDown}
                 name="branchName"
                 label="Branch (*)"
                 enableReinitialize
                 list={branches}
+              />}
+
+              {branchesLoadStatus === "error" && 
+              <>
+              <Field
+                component={CustomInput}
+                name="branchName"
+                label="Branch (*)"
+                enableReinitialize
+                disabled={isMasterLoading}
               />
-              {/* <Field
-                component={CustomerDataPicker}
-                name="dateOfIncorp"
-                label="Date of incorporation"
-                // value=values.dateOfIncorp ? Moment(values.dateOfIncorp, "YYYY-MM-DD").toDate() : undefined}
-              /> */}
+              <Text style={{fontSize: 10, color: 'orange', paddingBottom: 10}}>Unable to load branches</Text>
+              </>}
               <Field
                 component={CustomSwitch}
                 name="itrFilingLocal"
@@ -238,7 +292,7 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
                       };
                       dispatch(saveLead(currentValues));
                       setLeadInfo(currentValues);
-                      navigation.navigate("Root");
+                      navigation.navigate('Root');
                     }}>
                     Cancel
                   </Button>

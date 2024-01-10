@@ -29,8 +29,10 @@ const CustomDropDown = (props : any) => {
     }
   }, [props.list])
 
+  console.log('list', props.list)
+
   return (
-    props.list && <View style={{marginBottom: 0}}>
+    props.list ? <View style={{marginBottom: 0}}>
       <DropDown
         mode={"outlined"}
         visible={showDropDown}
@@ -45,7 +47,7 @@ const CustomDropDown = (props : any) => {
         {...inputProps}
       />
       {hasError && <Text style={styles.errorText}>{errors[name]}</Text>}
-    </View>
+    </View> : <></>
   )
 }
 
