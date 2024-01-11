@@ -508,10 +508,35 @@ PODS:
     - React-Core
   - RNPermissions (4.0.0):
     - React-Core
-  - RNReanimated (3.6.1):
-    - RCT-Folly (= 2021.07.22.00)
+  - RNReanimated (3.5.1):
+    - DoubleConversion
+    - FBLazyVector
+    - glog
+    - hermes-engine
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-callinvoker
     - React-Core
+    - React-Core/DevSupport
+    - React-Core/RCTWebSocket
+    - React-CoreModules
+    - React-cxxreact
+    - React-hermes
+    - React-jsi
+    - React-jsiexecutor
+    - React-jsinspector
+    - React-RCTActionSheet
+    - React-RCTAnimation
+    - React-RCTAppDelegate
+    - React-RCTBlob
+    - React-RCTImage
+    - React-RCTLinking
+    - React-RCTNetwork
+    - React-RCTSettings
+    - React-RCTText
     - ReactCommon/turbomodule/core
+    - Yoga
   - RNScreens (3.25.0):
     - React-Core
     - React-RCTImage
@@ -790,7 +815,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: c913ede1fa163a71cea118ed4670bbaaa4b511bb
   RNGestureHandler: c0d04458598fcb26052494ae23dda8f8f5162b13
   RNPermissions: b8c136d8dc745e1e51a5698b1034681c7736f42e
-  RNReanimated: fdbaa9c964bbab7fac50c90862b6cc5f041679b9
+  RNReanimated: 99aa8c96151abbc2d7e737a56ec62aca709f0c92
   RNScreens: 85d3880b52d34db7b8eeebe2f1a0e807c05e69fa
   RNSha256: a6bc3640a34eb41907e363828b9ec742c274298d
   RNVectorIcons: 8b5bb0fa61d54cd2020af4f24a51841ce365c7e9
@@ -800,4 +825,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 78130ce334a0105e8e712157670262a109199ab1
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.13.0

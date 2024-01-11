@@ -20,6 +20,7 @@ import {GalleryProps, GalleryRouteProps} from '../navigation/NavigationProps';
 import {useRoute, useTheme} from '@react-navigation/native';
 import {addImage, deleteImage} from '../../slices/visitCacheSlice';
 import Report from '../../models/visit/reportStructure/report';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
 const Gallery = (props: GalleryProps) => {
   const route = useRoute<GalleryRouteProps>();
@@ -145,11 +146,16 @@ const Gallery = (props: GalleryProps) => {
             }
             
           }}>
-          <Ionicons
+          {/* <Ionicons
             maxFontSizeMultiplier={1}
             name="trash"
             size={20}
             color="#ff0000"
+          /> */}
+          <FontAwesome6
+            name={'trash'}
+            solid
+            style={{paddingLeft: 10, textAlignVertical: 'bottom'}}
           />
         </TouchableOpacity>
         <Image

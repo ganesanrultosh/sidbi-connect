@@ -60,7 +60,6 @@ export const visitLocalStoreSlice = createSlice({
     ) => {
       if (action.payload.pan && action.payload.reportId) {
         let visitKey = action.payload.pan + action.payload.reportId;
-        console.log('save field value', action);
         if (
           state.visits[visitKey] &&
           state.visits[visitKey].visit &&
@@ -84,6 +83,7 @@ export const visitLocalStoreSlice = createSlice({
               action.payload.groupFieldIndex
             ].fieldValue = action.payload.value;
           } else {
+            console.log('save field value', action);
             state.visits[visitKey].visit.report.pages[
               action.payload.page
             ].segments[action.payload.segment].fields[

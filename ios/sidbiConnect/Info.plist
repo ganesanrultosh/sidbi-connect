@@ -36,7 +36,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>To get the precise location to geo code image of the visits</string>
 	<key>UILaunchStoryboardName</key>
 	<string></string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -49,6 +49,20 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To capture images of the visited sites</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>To geo code the image of the visits</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>To capture text using speech instead of typing long comments.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>To capture text using speech instead of typing long comments.</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

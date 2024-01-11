@@ -6,7 +6,6 @@ import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {setSpeechOn} from '../../slices/visitCacheSlice';
 
 const TextAreaWithSpeech = ({value, onChange, defaultValue}) => {
-  const [result, setResult] = useState(value || defaultValue);
   const [isLoading, setLoading] = useState(false);
   const {isSpeechOn} = useAppSelector(state => state.persistedVisists);
   const dispatch = useAppDispatch();
@@ -14,16 +13,26 @@ const TextAreaWithSpeech = ({value, onChange, defaultValue}) => {
     console.log('speechStart successful', e);
   };
   const speechEndHandler = e => {
-    Voice.stop();
-    setLoading(false);
-    console.log('stop handler', e);
+    // try {
+    //   Voice.stop();
+    //   setLoading(false);
+    // } catch(error) {
+    //   console.log('stop handler', e);
+    // }
+    
+    // console.log('speech end handler result', result)
+    // onChange(result)
   };
   const speechResultsHandler = e => {
     const text = e.value[0];
     console.log('text', text);
-    setResult(existingText => existingText + ' ' + text);
+    // setResult(text);
+    onChange(text);
   };
   const startRecording = async locale => {
+    Voice.onSpeechStart = speechStartHandler;
+    Voice.onSpeechEnd = speechEndHandler;
+    Voice.onSpeechResults = speechResultsHandler;
     setLoading(true);
     dispatch(setSpeechOn(true))
     try {
@@ -35,24 +44,15 @@ const TextAreaWithSpeech = ({value, onChange, defaultValue}) => {
   const stopRecording = async () => {
     try {
       await Voice.stop();
+      Voice.destroy().then(Voice.removeAllListeners);
       setLoading(false);
-      console.log('result', result);
-      onChange(result);
+      dispatch(setSpeechOn(false))
     } catch (error) {
       console.log('error', error);
     }
     dispatch(setSpeechOn(false))
   };
-  useEffect(() => {
-    Voice.onSpeechStart = speechStartHandler;
-    Voice.onSpeechEnd = speechEndHandler;
-    Voice.onSpeechResults = speechResultsHandler;
-    return () => {
-      stopRecording();
-      Voice.destroy().then(Voice.removeAllListeners);
-    };
-  }, []);
-
+  
   return (
     <>
       {!isLoading && (

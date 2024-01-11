@@ -4,25 +4,13 @@ import VisitFieldUpdateContext from '../../../models/visit/VisitFieldUpdateConte
 import TextAreaWithSpeech from '../../../components/speechToText';
 import {Modal, TextInput} from 'react-native-paper';
 import {View, TouchableOpacity, StyleSheet, Text} from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const CustomTextAreaInput: React.FC<{
   field: Field;
   visitFieldUpdateContext: VisitFieldUpdateContext;
   onChange: (value: any) => void;
 }> = ({field, visitFieldUpdateContext, onChange}) => {
-
-  const getValueAsString = (value: any) => {
-    if (value)
-      return (
-        JSON.stringify(value)
-          .replaceAll('[', '')
-          .replaceAll(']', '')
-          .replaceAll('"', '')
-      );
-    else return value;
-  };
-
+  const [value, setValue] = useState(field.fieldValue || '')
   return (
     <View
       style={{
@@ -33,13 +21,15 @@ const CustomTextAreaInput: React.FC<{
       }}>
       <>
         <TextAreaWithSpeech
-          value={getValueAsString(field.fieldValue) || ''}
+          value={field.fieldValue || ''}
           onChange={(t: any) => {
-            onChange(t);
-          }}
+              setValue(t)
+              onChange(t)
+            }
+          }
           defaultValue={field.defaultValue || ''}
         />
-        <TextInput
+        {/* <TextInput
           mode="flat"
           underlineColor="transparent"
           style={{
@@ -48,13 +38,35 @@ const CustomTextAreaInput: React.FC<{
             backgroundColor: '#FFFFFF',
             paddingRight: 10,
           }}
-          value={getValueAsString(field.fieldValue) || ''}
+          value={field.fieldValue || ''}
           multiline={true}
           numberOfLines={10}
           placeholder={field.placeholder || ''}
           placeholderTextColor="rgba(129,102,102,0.44)"
-          onChangeText={onChange}
+          onChangeText={(t) => {
+            console.log('text area text change', t)
+            onChange(t)
+          }}
           defaultValue={field.defaultValue || ''}
+          maxFontSizeMultiplier={1}
+        /> */}
+        <TextInput
+          mode="outlined"
+          value={value}
+          style={{
+            // marginRight: 20,
+            verticalAlign: 'top',
+            backgroundColor: '#FFFFFF',
+            paddingRight: 10,
+            minHeight: 200,
+          }}
+          multiline={true}
+          numberOfLines={10}
+          onChangeText={(text) => {
+            setValue(text)
+          }}
+          onBlur={() => onChange(value)}
+          defaultValue={field.defaultValue || ""}
           maxFontSizeMultiplier={1}
         />
       </>

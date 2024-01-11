@@ -25,7 +25,6 @@ const Input: React.FC<{
   const dispatch = useAppDispatch();
 
   const onChange = (value: any) => {
-    console.log('onChange', {...visitFieldUpdateContext, value: value})
     dispatch(saveFieldValue(
       {...visitFieldUpdateContext, value: value}
     ))
