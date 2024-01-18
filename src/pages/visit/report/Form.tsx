@@ -31,7 +31,7 @@ const Form: React.FC<{
       fontSize: 20,
       fontWeight: 'bold',
     },
-    scrollView: {height: '80%', marginTop: 10},
+    scrollView: {height: '84%', marginTop: 10},
     continueButton: {alignSelf: 'flex-start', display: 'flex'},
     radioGroupEnclosure: {
       marginTop: 10,
