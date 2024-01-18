@@ -140,20 +140,28 @@ export const visitLocalStoreSlice = createSlice({
         Toast.show('Image saved sucessfully');
       }
     },
-    deleteImage: (state: VisitLocalStore, action: PayloadAction<Visit>) => {
-      let visitKey =
-        action.payload.customer.pan + action.payload.report.reportId;
+    deleteImage: (state: VisitLocalStore, {
+      payload: {visitKey, imageIndex},
+    }: PayloadAction<{
+      visitKey: string;
+      imageIndex: any;
+    }>,) => {
+      console.log('visitkey', visitKey)
+      console.log('imageIndex', imageIndex)
       if (
         visitKey &&
-        action.payload.report.images &&
-        action.payload.report.images[0].index !== undefined
-      ) {
+        imageIndex !== undefined
+      )  {
         let index = state.visits[visitKey].visit.report.images?.findIndex(
-          image => image.index === (action.payload.report.images && 
-          action.payload.report.images[0].index),
+          (image) => image.index === (imageIndex),
         );
-        if (index) state.visits[visitKey].visit.report.images?.splice(index, 1);
-        Toast.show('Image deleted sucessfully');
+        console.log('index to delete', index)
+        if (index !== undefined) {
+          state.visits[visitKey].visit.report.images?.splice(index, 1);
+          Toast.show('Image deleted sucessfully');
+        } else {
+          Toast.show("Unable to delete the image.")
+        }
       }
     },
     setImageUrl: (state: VisitLocalStore, {

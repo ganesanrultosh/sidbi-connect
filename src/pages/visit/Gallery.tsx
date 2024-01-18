@@ -119,7 +119,7 @@ const Gallery = (props: GalleryProps) => {
   const getTwoCards = (keys: any[]) => {
     let image1 : any = keys[0];
     let image2: any = keys[1];
-    return <View style={{flex: 1, flexDirection: 'row', height: 200}}>
+    return <View style={{flex: 1, flexDirection: 'row', height: 200}} key={`gallery=${keys[0].index}-${keys[1]?.index}`}>
       {image1 && <View
         style={{
           width: '45%',
@@ -134,13 +134,8 @@ const Gallery = (props: GalleryProps) => {
             if(visitLocal) {
               dispatch(
                 deleteImage({
-                  ...visitLocal,
-                  report: {
-                    ...visitLocal.report,
-                    images: [
-                      image1
-                    ],
-                  },
+                  visitKey: visitLocal.customer.pan + visitLocal.report.reportId,
+                  imageIndex: image1.index
                 }),
               );
             }
@@ -179,13 +174,8 @@ const Gallery = (props: GalleryProps) => {
             if(visitLocal) {
               dispatch(
                 deleteImage({
-                  ...visitLocal,
-                  report: {
-                    ...visitLocal.report,
-                    images: [
-                      image2
-                    ],
-                  },
+                  visitKey: visitLocal.customer.pan + visitLocal.report.reportId,
+                  imageIndex: image2.index
                 }),
               );
             }
