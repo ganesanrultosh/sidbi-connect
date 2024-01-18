@@ -146,32 +146,30 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
               if(officeAddress) {
                 BranchServices
                   .getLatLng(officeAddress)
-                  .then((response) => {
-                    console.log(response);
-                  })
+                  .then(response => response.json())
+                  .then((response: any) => {
+                    BranchServices.getBranches(
+                      response.results[0].geometry.location.lat, response.results[0].geometry.location.lng
+                    ).then(listOfBranch => {
+                      let branchesToShow: { label: string; value: string; }[] = [];
+                      if(listOfBranch) {
+                        listOfBranch.map(value => {
+                          branchesToShow.push(
+                            {
+                              label: value,
+                              value
+                            }
+                          )
+                        })
+                        setBranches(branchesToShow)
+                        setBranchesLoadStatus('success')
+                      } else {
+                        setBranchesLoadStatus('error')
+                      }
+                    });
+                  });
               }
             }
-            
-            console.log(position.coords.latitude, position.coords.longitude);
-            BranchServices.getBranches(
-              12.8981, 80.2296
-            ).then(listOfBranch => {
-              let branchesToShow: { label: string; value: string; }[] = [];
-              if(listOfBranch) {
-                listOfBranch.map(value => {
-                  branchesToShow.push(
-                    {
-                      label: value,
-                      value
-                    }
-                  )
-                })
-                setBranches(branchesToShow)
-                setBranchesLoadStatus('success')
-              } else {
-                setBranchesLoadStatus('error')
-              }
-            });
           },
           _error => {
             setBranchesLoadStatus('error')
