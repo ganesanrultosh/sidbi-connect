@@ -28,6 +28,14 @@ const BranchServices = {
     }
     
   },
+  getLatLng: (address: string) => {
+    return fetch(`https://maps.googleapis.com/maps/api/geocode/json?region=IN&address=${address}&key=AIzaSyC-1bK9bzLlfvNhCB0VaCjN00YPr4dE2-Y`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      },
+    })
+  }
 };
 
 export default BranchServices;

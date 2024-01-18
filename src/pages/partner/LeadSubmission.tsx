@@ -141,11 +141,19 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
         setBranchesLoadStatus('loading')
         Geolocation.getCurrentPosition(
           position => {
-            console.log(position.coords.latitude, position.coords.longitude);
+            if(lead?.pan && leads[lead?.pan].lead?.officeAddress) {
+              let officeAddress = leads[lead?.pan].lead?.officeAddress;
+              if(officeAddress) {
+                BranchServices
+                  .getLatLng(officeAddress)
+                  .then((response) => {
+                    console.log(response);
+                  })
+              }
+            }
             
+            console.log(position.coords.latitude, position.coords.longitude);
             BranchServices.getBranches(
-              // position.coords.latitude,
-              // position.coords.longitude,
               12.8981, 80.2296
             ).then(listOfBranch => {
               let branchesToShow: { label: string; value: string; }[] = [];
