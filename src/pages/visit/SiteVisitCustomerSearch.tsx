@@ -166,8 +166,10 @@ const SiteVisitCustomerSearch = () => {
       <Surface elevation={4} style={styles.surfaceStyle}>
         <Text style={styles.headerText}>
           Search Customer
+          Customer Loading: {isCustomerLoading ? 'true' : 'false'}
+          Customer isSuccess: {isCustomerSuccess ? 'true' : 'false'}
         </Text>
-        {isCustomerLoading && <Text>Searching...</Text>}
+        {isCustomerLoading && <Text>Searching... </Text>}
         {!isCustomerLoading && <>
         <TextInput
           mode="outlined"
@@ -222,7 +224,7 @@ const SiteVisitCustomerSearch = () => {
                 </TouchableOpacity>
               );
             })}
-            {isCustomerSuccess && !(customers && customers?.length > 0) && <><Text style={{margin: 5, color: 'red'}}>
+            {!isCustomerLoading && !(customers && customers?.length > 0) && <><Text style={{margin: 5, color: 'red'}}>
               No customer record found.
             </Text>
             <Button

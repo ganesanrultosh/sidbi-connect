@@ -13,17 +13,10 @@ const TextAreaWithSpeech = ({value, onChange, defaultValue}) => {
     console.log('speechStart successful', e);
   };
   const speechEndHandler = e => {
-    // try {
-    //   Voice.stop();
-    //   setLoading(false);
-    // } catch(error) {
-    //   console.log('stop handler', e);
-    // }
-    
-    // console.log('speech end handler result', result)
-    // onChange(result)
+    console.log('speechEnd handler');
   };
   const speechResultsHandler = e => {
+    console.log('speech result handler');
     const text = e.value[0];
     console.log('text', text);
     // setResult(text);
@@ -42,6 +35,7 @@ const TextAreaWithSpeech = ({value, onChange, defaultValue}) => {
     }
   };
   const stopRecording = async () => {
+    console.log('stop recording');
     try {
       await Voice.stop();
       Voice.destroy().then(Voice.removeAllListeners);
