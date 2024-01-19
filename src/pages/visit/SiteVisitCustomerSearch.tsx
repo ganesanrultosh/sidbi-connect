@@ -92,6 +92,7 @@ const SiteVisitCustomerSearch = () => {
     data: customers,
     isLoading: isCustomerLoading,
     isSuccess: isCustomerSuccess,
+    isError: isCustomerError,
   } = useFilterCustomersQuery(panOrNameForSearch || skipToken)
 
   const theme = useTheme();
@@ -224,7 +225,7 @@ const SiteVisitCustomerSearch = () => {
                 </TouchableOpacity>
               );
             })}
-            {!isCustomerLoading && !(customers && customers?.length > 0) && <><Text style={{margin: 5, color: 'red'}}>
+            {isCustomerError && !(customers && customers?.length > 0) && <><Text style={{margin: 5, color: 'red'}}>
               No customer record found.
             </Text>
             <Button
