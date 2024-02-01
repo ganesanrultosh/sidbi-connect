@@ -167,8 +167,6 @@ const SiteVisitCustomerSearch = () => {
       <Surface elevation={4} style={styles.surfaceStyle}>
         <Text style={styles.headerText}>
           Search Customer
-          Customer Loading: {isCustomerLoading ? 'true' : 'false'}
-          Customer isSuccess: {isCustomerSuccess ? 'true' : 'false'}
         </Text>
         {isCustomerLoading && <Text>Searching... </Text>}
         {!isCustomerLoading && <>
@@ -197,7 +195,7 @@ const SiteVisitCustomerSearch = () => {
                   onPress={() => {
                     navigation.navigate('VisitTypeSelection', {
                       customer: {
-                        id: undefined,
+                        id: item.id,
                         pan: item.pan,
                         name: item.name,
                       },

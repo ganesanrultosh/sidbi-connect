@@ -7,7 +7,6 @@ import moment from 'moment';
 import {profile} from './authService';
 import {onAddVisitId, updateVisitStatus} from '../slices/visitCacheSlice';
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {RootState} from '../app/store';
 
 export const postVisitTrigger = createAsyncThunk(
   'visit/postVisitTrigger',
@@ -65,7 +64,7 @@ const VisitService = {
           throw new Error('One image should be present');
         }
       } catch (error: any) {
-        // console.log('Visit trigger error', error?.message);
+        console.log('Visit trigger error', error?.message);
         Toast.show(
           'Error submitting visit.',
         );
@@ -110,8 +109,9 @@ const VisitService = {
     try {
       console.log('Post visit', visit.id, iid);
       let visitKey = visit.customer.pan + visit.report.reportId;
+      let visitId = visit.id;
 
-      if (!visit.id) {
+      if (!visitId) {
         let emptyVParams = {
           visitDate: moment().format('YYYYMMDD'),
           reportId: visit.report.reportId,
@@ -131,12 +131,14 @@ const VisitService = {
             
             dispatch(onAddVisitId({visitKey, id: emptyVRes.data?.id}));
             console.log('push to server', visit.id, emptyVRes?.data?.id);
-            visit.id = emptyVRes.data?.id;
+            visit.id = emptyVRes?.data?.id;
+            visitId = emptyVRes?.data?.id;
+            console.log('push to server', visit.id, emptyVRes?.data?.id, visitId);
           },
         );
       }
 
-      if(visit.id) {
+      if(visitId) {
         console.log('Patching visit');
         const data: any = {};
         visit.report.pages.forEach((page: any) => {
@@ -171,14 +173,26 @@ const VisitService = {
           'Patch URL: ',
           Config.VISITS_PATCH!.replace('{iid}', iid.toString()).replace(
             '{vid}',
-            visit?.id + '',
+            visitId + '',
           ),
         );
+
+        console.log('Visit patch request', {
+          customerId: visit.customer.id,
+          reportId: visit.report.reportId,
+          visitDate: moment().format('YYYYMMDD'),
+          visitData: JSON.stringify(visitData),
+          customerName: visit.customer.name,
+          customerPAN: visit.customer.pan,
+        }, visit.customer, Config.VISITS_PATCH!.replace('{iid}', iid.toString()).replace(
+          '{vid}',
+          visit?.id + '',
+        ))
 
         const res = await service.patch(
           Config.VISITS_PATCH!.replace('{iid}', iid.toString()).replace(
             '{vid}',
-            visit?.id + '',
+            visitId + '',
           ),
           {
             customerId: visit.customer.id,
@@ -189,6 +203,8 @@ const VisitService = {
             customerPAN: visit.customer.pan,
           },
         );
+
+        console.log('Patch sucessfull', res)
 
         dispatch(updateVisitStatus({visitKey: visitKey, status: "synced"}))
 

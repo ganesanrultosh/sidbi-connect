@@ -148,25 +148,30 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
                   .getLatLng(officeAddress)
                   .then(response => response.json())
                   .then((response: any) => {
-                    BranchServices.getBranches(
-                      response.results[0].geometry.location.lat, response.results[0].geometry.location.lng
-                    ).then(listOfBranch => {
-                      let branchesToShow: { label: string; value: string; }[] = [];
-                      if(listOfBranch) {
-                        listOfBranch.map(value => {
-                          branchesToShow.push(
-                            {
-                              label: value,
-                              value
-                            }
-                          )
-                        })
-                        setBranches(branchesToShow)
-                        setBranchesLoadStatus('success')
-                      } else {
-                        setBranchesLoadStatus('error')
-                      }
-                    });
+                    if(response.results[0] !== undefined) {
+                      BranchServices.getBranches(
+                        response.results[0].geometry.location.lat, response.results[0].geometry.location.lng
+                      ).then(listOfBranch => {
+                        let branchesToShow: { label: string; value: string; }[] = [];
+                        if(listOfBranch) {
+                          listOfBranch.map(value => {
+                            branchesToShow.push(
+                              {
+                                label: value,
+                                value
+                              }
+                            )
+                          })
+                          setBranches(branchesToShow)
+                          setBranchesLoadStatus('success')
+                        } else {
+                          setBranchesLoadStatus('error')
+                        }
+                      });
+                    } else {
+                      setBranchesLoadStatus('error')
+                    }
+                    
                   });
               }
             }

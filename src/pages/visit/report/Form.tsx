@@ -127,7 +127,7 @@ const Form: React.FC<{
                       visits[visit.customer.pan + visit.report.reportId];
 
                     if (visitToPost) {
-                      if(!visit.report.images || visit.report.images.length === 0) {
+                      if(!visitToPost.visit.report.images || visitToPost.visit.report.images.length === 0) {
                         Toast.show('Atleast one image should be present.')
                       } else {
                         dispatch(postVisitTrigger({visit: visitToPost.visit}))
