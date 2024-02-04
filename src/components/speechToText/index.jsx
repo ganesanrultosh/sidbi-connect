@@ -52,7 +52,7 @@ const TextAreaWithSpeech = ({value, onChange, defaultValue}) => {
       {!isLoading && (
         <TouchableOpacity
           onPress={() => startRecording('en-Us')}
-          disabled={isSpeechOn}
+          // disabled={isSpeechOn}
           style={{
             ...StyleSheet.absoluteFillObject,
             alignSelf: 'flex-end',
@@ -66,7 +66,8 @@ const TextAreaWithSpeech = ({value, onChange, defaultValue}) => {
             maxFontSizeMultiplier={1}
             name="mic"
             size={20}
-            style={{color: isSpeechOn ? 'gray' : 'blue'}}
+            // style={{color: isSpeechOn ? 'gray' : 'blue'}}
+            style={{color: 'blue'}}
           />
         </TouchableOpacity>
       )}
