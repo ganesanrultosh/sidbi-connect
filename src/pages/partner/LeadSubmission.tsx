@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Platform, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {CommonActions, useNavigation, useRoute} from '@react-navigation/native';
 import {Button, Surface, useTheme} from 'react-native-paper';
 import {Field, Formik} from 'formik';
@@ -131,8 +131,7 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
 
   const {getToken} = useToken();
 
-  useEffect(() => {
-    
+  const getBranches = () => {
     let locPermission = HasLocationPermission();
 
     locPermission.then(value => {
@@ -187,6 +186,18 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
         Toast.show('Need Location Access');
       }
     });
+  }
+
+  useEffect(() => {
+    if(Platform.OS === "ios"){
+      Geolocation.requestAuthorization('whenInUse').then(res => {
+        getBranches()
+      })
+   } else {
+    getBranches()
+   }
+
+    
   }, []);
 
   const submissionValidationSchema = yup.object().shape({
