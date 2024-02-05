@@ -37,6 +37,8 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>To get the precise location to geo code image of the visits</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>To get the precise location to geo code image of the visits</string>
 	<key>UILaunchStoryboardName</key>
 	<string></string>
 	<key>UIRequiredDeviceCapabilities</key>

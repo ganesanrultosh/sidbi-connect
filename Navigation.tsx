@@ -123,6 +123,11 @@ function Navigation(): JSX.Element {
             component={PartnerLogin} 
             options={{title: 'Partner Login'}} />
           <Stack.Screen
+            name="RegisterBasicInfo"
+            component={RegisterBasicInfo}
+            options={{ title: 'Registration' }}
+          />
+          <Stack.Screen
             name="RegisterContactInfo"
             component={RegisterContactInfo}
             options={{ title: 'Registration' }}

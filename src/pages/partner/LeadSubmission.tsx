@@ -183,6 +183,7 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
           {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
         );
       } else {
+        setBranchesLoadStatus('error')
         Toast.show('Need Location Access');
       }
     });
