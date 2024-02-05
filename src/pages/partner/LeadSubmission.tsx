@@ -132,60 +132,51 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
   const {getToken} = useToken();
 
   const getBranches = () => {
-    let locPermission = HasLocationPermission();
-
-    locPermission.then(value => {
-      if (value) {
-        setBranches(undefined)
-        setBranchesLoadStatus('loading')
-        Geolocation.getCurrentPosition(
-          position => {
-            if(lead?.pan && leads[lead?.pan].lead?.officeAddress) {
-              let officeAddress = leads[lead?.pan].lead?.officeAddress;
-              if(officeAddress) {
-                BranchServices
-                  .getLatLng(officeAddress)
-                  .then(response => response.json())
-                  .then((response: any) => {
-                    if(response.results[0] !== undefined) {
-                      BranchServices.getBranches(
-                        response.results[0].geometry.location.lat, response.results[0].geometry.location.lng
-                      ).then(listOfBranch => {
-                        let branchesToShow: { label: string; value: string; }[] = [];
-                        if(listOfBranch) {
-                          listOfBranch.map(value => {
-                            branchesToShow.push(
-                              {
-                                label: value,
-                                value
-                              }
-                            )
-                          })
-                          setBranches(branchesToShow)
-                          setBranchesLoadStatus('success')
-                        } else {
-                          setBranchesLoadStatus('error')
-                        }
-                      });
+    setBranches(undefined)
+    setBranchesLoadStatus('loading')
+    Geolocation.getCurrentPosition(
+      position => {
+        if(lead?.pan && leads[lead?.pan].lead?.officeAddress) {
+          let officeAddress = leads[lead?.pan].lead?.officeAddress;
+          if(officeAddress) {
+            BranchServices
+              .getLatLng(officeAddress)
+              .then(response => response.json())
+              .then((response: any) => {
+                if(response.results[0] !== undefined) {
+                  BranchServices.getBranches(
+                    response.results[0].geometry.location.lat, response.results[0].geometry.location.lng
+                  ).then(listOfBranch => {
+                    let branchesToShow: { label: string; value: string; }[] = [];
+                    if(listOfBranch) {
+                      listOfBranch.map(value => {
+                        branchesToShow.push(
+                          {
+                            label: value,
+                            value
+                          }
+                        )
+                      })
+                      setBranches(branchesToShow)
+                      setBranchesLoadStatus('success')
                     } else {
                       setBranchesLoadStatus('error')
                     }
-                    
                   });
-              }
-            }
-          },
-          _error => {
-            setBranchesLoadStatus('error')
-            Toast.show('Unable to access location');
-          },
-          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-        );
-      } else {
+                } else {
+                  setBranchesLoadStatus('error')
+                }
+                
+              });
+          }
+        }
+      },
+      _error => {
         setBranchesLoadStatus('error')
-        Toast.show('Need Location Access');
-      }
-    });
+        Toast.show('Unable to access location');
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+    );
   }
 
   useEffect(() => {
@@ -194,7 +185,16 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
         getBranches()
       })
    } else {
-    getBranches()
+    let locPermission = HasLocationPermission();
+
+    locPermission.then(value => {
+      if (value) {
+        getBranches()
+      } else {
+        setBranchesLoadStatus('error')
+        Toast.show('Need Location Access');
+      }
+    });
    }
 
     
