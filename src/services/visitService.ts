@@ -26,6 +26,9 @@ const VisitService = {
     if (!visit) Toast.show('Unknown error');
     else
       try {
+        //Set the status of visit to submitted.
+        let visitKey = visit.customer.pan + visit.report.reportId;
+        dispatch(updateVisitStatus({visitKey: visitKey, status: "submitted"}))
         let images: string[];
         if (visit.report.images) {
           console.log('posting visit images');

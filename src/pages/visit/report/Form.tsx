@@ -141,7 +141,7 @@ const Form: React.FC<{
               length !== undefined &&
               pageNumber < length - 1
                 ? 'Next'
-                : 'Save'}
+                : 'Submit & Sync'}
             </Button>
           </View>
         </View>
