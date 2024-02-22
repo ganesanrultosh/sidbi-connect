@@ -8,7 +8,7 @@ interface Visit {
   status: 'created' | 'submitted' | 'synced' | 'syncfailure'
   error?: string;
   dateCreated: string | undefined
-  domainValues: {
+  domainValues?: {
     [lkey: string]: {
       status: string,
       values: []

@@ -22,34 +22,35 @@ const EmployeeLogin = () => {
   const styles = StyleSheet.create({
     scenarioQuestion: {
       fontWeight: 'bold',
-      margin: 5,
+      margin: 12,
+      fontSize: 20,
       alignSelf: 'center',
     },
     registrationSurface: {
+      flex: 3,
       width: '95%',
-      margin: 0,
-      padding: 15,
-      marginTop: 15,
+      marginHorizontal: 15,
+      paddingHorizontal: 15,
     },
     registerButton: {
-      margin: 10,
+      marginVertical: 15,
     },
     signinButton: {
-      margin: 10,
+      marginVertical: 15,
     },
     sidbiImageStyle: {
-      marginTop: 10,
-      height: 60,
+      flex: 1,
       resizeMode: 'contain',
     },
     loginContainer: {
-      paddingTop: 15,
       width: '100%',
       height: '100%',
       alignContent: 'center',
       alignItems: 'center',
       alignSelf: 'center',
-      backgroundColor: '#F5F7F9',
+      justifyContent: 'center',
+      gap: 15,
+      backgroundColor: '#FCFAFE',
     },
   });
 
@@ -101,7 +102,7 @@ const EmployeeLogin = () => {
         style={styles.sidbiImageStyle}
         source={require('../../images/sidbi.png')}
       />
-      <Surface elevation={4} style={styles.registrationSurface}>
+      <View  style={styles.registrationSurface}>
         <Text style={styles.scenarioQuestion}>SIDBI Employee </Text>
         {!loggedIn && !otpSent && (
           <Formik
@@ -293,7 +294,7 @@ const EmployeeLogin = () => {
             )}
           </Formik>
         )}
-      </Surface>
+       </View>
     </View>
   );
 };

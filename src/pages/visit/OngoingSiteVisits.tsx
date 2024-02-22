@@ -1,78 +1,53 @@
-import {ScrollView, Text, View} from 'react-native';
-import React, {useEffect} from 'react';
-import {Button, Surface, Tooltip, useTheme} from 'react-native-paper';
+import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  Button,
+  Card,
+  Paragraph,
+  Surface,
+  Tooltip,
+  useTheme,
+} from 'react-native-paper';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {useNavigation} from '@react-navigation/native';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Visit from '../../models/visit/visit';
-import { deleteVisit } from '../../slices/visitCacheSlice';
+import VisitCacheSlice, {deleteVisit} from '../../slices/visitCacheSlice';
 import decrypt from '../../utils/decrypt';
+const screenWidth = Dimensions.get('window').width;
 
 const OngoingSiteVisits = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
 
+  const [visitsArray, setVisitsArray] = useState([] as Array<Visit>);
+
   const {visits} = useAppSelector(state => state.persistedVisists);
 
   useEffect(() => {
-    console.log('ongoing leads', visits);
-  }, [visits]);
+    let mounted = true;
 
-  function getCards(): React.ReactNode {
-    let keys: string[] = [];
-    let keysHandled = Object.keys(visits).length;
-
-    if (Object.keys(visits).length === 0) {
-      return (
-        <View
-          style={{
-            alignContent: 'center',
-            alignItems: 'center',
-            alignSelf: 'center',
-            flexDirection: 'row',
-          }}>
-          <Text
-            style={{
-              alignSelf: 'center',
-              textAlign: 'center',
-              flex: 1,
-              flexWrap: 'wrap',
-            }}
-            numberOfLines={3}>
-            No ongoing leads found. Please create a new lead by clicking "Lead
-            Generation" icon above.
-          </Text>
-        </View>
-      );
-    } else {
-      return Object.keys(visits).map(key => {
-        keys.push(key);
-        if (
-          keys.length === 2 ||
-          keysHandled === 1 ||
-          Object.keys(visits).length === 2
-        ) {
-          keysHandled -= 2;
-          let twoCards = getTwoCards(keys);
-          keys = [];
-          return twoCards;
-        }
-      });
+    if (mounted) {
+      if (visits) {
+        let keys: string[] = Object.keys(visits);
+        let dataArray: Array<Visit> = [];
+        keys.forEach((k: string) => {
+          if (k) {
+            if (visits[k]) {
+              dataArray.push(visits[k]['visit']);
+            }
+          }
+        });
+        // dataArray = [...dataArray, {...dataArray[0], ['status']: 'synced'}];
+        setVisitsArray(dataArray);
+      }
     }
-  }
 
-  function getTwoCards(keys: string[]) {
-    console.log('Two cards', keys)
-    let visit1: Visit | undefined = visits[keys[0]].visit;
-    let visit2: Visit | undefined =
-      keys.length == 2 ? visits[keys[1]].visit : undefined;
-    return (
-      <View key={`${visit1.customer.pan + visit1.report.reportId + visit2?.customer.pan + visit2?.report.reportId}`}>
-        {visit1 && getLeadSurface(visit1)}
-        {visit2 && getLeadSurface(visit2)}
-      </View>
-    );
-  }
+    return () => {
+      mounted = false;
+    };
+  }, [visits]);
 
   const getBgColor = (status: string | undefined) => {
     if (status === 'created') {
@@ -83,111 +58,254 @@ const OngoingSiteVisits = () => {
       return '#d9ead3';
     } else if (status === 'syncfailure') {
       return '#FFFDF7';
-    // } else if (status === '4') {
-    //   return '#FEF6F0';
-    // } else if (status === '5') {
-    //   return '#F8F6F0';
     }
   };
 
   const getStatus = (status: string) => {
-    switch(status) {
-      case "synced":
-        return "Visit synchronized."
-      case "submitted":
-        return "Yet to be synchronized"
-      case "syncfailure":
-        return "Syncronization failure"
+    switch (status) {
+      case 'synced':
+        return 'Visit synchronized.';
+      case 'submitted':
+        return 'Yet to be synchronized';
+      case 'syncfailure':
+        return 'Syncronization failure';
       default:
-        return ""
-    } 
-  }
+        return '';
+    }
+  };
 
-  function getLeadSurface(visit: Visit) {
+  const VisitCard = (props: Visit) => {
     return (
-      <Surface
-        key={`${visit.customer.pan + visit.report.reportId}`}
-        elevation={2}
-        style={{
-          margin: 10,
-          padding: 10,
-          paddingHorizontal: 15,
-          width: 200,
-          minHeight: 150,
-          backgroundColor: getBgColor(visit.status)
-        }}>
-        <Text
-          style={{fontWeight: 'bold', color: 'black', fontSize: 20, flex: 1}}
-          numberOfLines={1}>
-          {visit.customer?.name}
-        </Text>
-        <Text style={{fontWeight: 'bold', fontSize: 14, paddingVertical: 5}}>
-          {decrypt(visit.customer.pan)}
-        </Text>
-        <Text style={{fontWeight: 'bold', fontSize: 16, paddingVertical: 5}}>
-          {visit.report.reportTitle}
-        </Text>
-        <Text style={{fontWeight: 'bold', fontSize: 12}}>
-          {visit.dateCreated}
-        </Text>
-        {visit.status === 'created' && <View style={{flexDirection: 'row', alignContent: 'center'}}>
-          <View style={{flex: 1, alignSelf: 'center'}}>
-            <Button
-              onPress={() => {
-                dispatch(deleteVisit(visit));
-              }}>
-              Delete
-            </Button>
-          </View>
-          <View style={{flex: 1}}>
-            <Button
-              onPress={() => {
-                navigation.navigate('VisitReport', {visit: visit}) }}>
-              Continue
-            </Button>
-          </View>
-        </View>}
-        {visit.status !== 'created' && <View style={{flexDirection: 'row', alignContent: 'center'}}>
-          <View style={{flex: 1, alignSelf: 'center', paddingVertical: 10}}>
-            <Tooltip title={visit.error || getStatus(visit.status)}>
-              <Text style={{fontWeight: "bold"}}>{getStatus(visit.status)}</Text>
-            </Tooltip>
-          </View>
-        </View>}
-      </Surface>
+      <>
+        <Card
+          style={[
+            styles.leadCard,
+            {backgroundColor: getBgColor(props.status)},
+          ]}>
+          <Card.Content style={styles.contentWrapper}>
+            <View style={styles.contentContainer}>
+              <View style={[styles.cardDetails]}>
+                <View style={styles.customerNameContainer}>
+                  <Paragraph
+                    numberOfLines={2}
+                    style={{
+                      fontSize: 18,
+                      color: '#2F5596',
+                      fontWeight: '600',
+                    }}>
+                    {props.customer?.name}
+                  </Paragraph>
+                </View>
+                <Paragraph style={{fontSize: 20, fontWeight: '500'}}>
+                  {decrypt(props.customer.pan)}
+                </Paragraph>
+                <Paragraph style={{fontSize: 16, fontWeight: '500'}}>
+                  {props.report.reportTitle}
+                </Paragraph>
+                <Paragraph style={{fontSize: 16}}>
+                  {props.dateCreated}
+                </Paragraph>
+              </View>
+              {props.status === 'created' && (
+                <View style={styles.deleteIconContainer}>
+                  <FontAwesome6
+                    name={'trash-can'}
+                    solid
+                    size={20}
+                    style={{color: '#36454F'}}
+                    onPress={() => {
+                      dispatch(deleteVisit(props));
+                    }}
+                  />
+                </View>
+              )}
+            </View>
+            {props.status === 'created' && (
+              <View style={[styles.buttonContainer]}>
+                <Button
+                  style={styles.continueButton}
+                  mode="contained"
+                  onPress={() => {
+                    navigation.navigate('VisitReport', {visit: props as Visit});
+                  }}>
+                  Continue
+                </Button>
+              </View>
+            )}
+            {props.status !== 'created' && (
+              <View
+                style={[
+                  styles.buttonContainer,
+                  {
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  },
+                ]}>
+                <View>
+                  <Tooltip title={props.error || getStatus(props.status)}>
+                    <Text style={{fontWeight: 'bold', fontSize: 16}}>
+                      {getStatus(props.status)}
+                    </Text>
+                  </Tooltip>
+                </View>
+              </View>
+            )}
+          </Card.Content>
+        </Card>
+      </>
     );
-  }
+  };
 
-  if (Object.keys(visits).length === 0) {
+  const getVisits = (): React.ReactNode => {
     return (
-      <View style={{paddingHorizontal: 25, flexDirection: 'row'}}>
-        <Text
-          style={{
-            flex: 1,
-            flexWrap: 'wrap',
-          }}
-          numberOfLines={3}>
-          No ongoing visit report found. Please create a new visit report by clicking "Site Visits" icon above.
-        </Text>
-      </View>
+      <>
+        {visitsArray.map((item, index) => {
+          return <VisitCard key={'visit' + index} {...item} />;
+        })}
+      </>
+    );
+  };
+
+  if (visitsArray.length === 0) {
+    return (
+      <>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Ongoing Visits</Text>
+        </View>
+        <View style={{paddingHorizontal: 10}}>
+          <Text style={{fontSize: 16}} numberOfLines={3}>
+            No ongoing leads found. Please create a new lead by clicking "Lead
+            Generation" icon above.
+          </Text>
+        </View>
+      </>
     );
   } else {
     return (
-      <View>
+      <>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Ongoing Visits</Text>
+        </View>
         {
-          <ScrollView
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            decelerationRate={0}
-            snapToInterval={200} //your element width
-            snapToAlignment={'center'}
-            style={{paddingHorizontal: 15}}>
-            {getCards()}
-          </ScrollView>
+          <View
+            style={{
+              width: screenWidth,
+              flexDirection: 'row',
+              marginBottom: 12,
+            }}>
+            <View
+              style={{
+                width: (screenWidth * 0.15) / 2,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <FontAwesome6
+                name={'caret-left'}
+                light
+                size={40}
+                style={{
+                  color: '#a1a1aa',
+                }}
+              />
+            </View>
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{
+                padding: 10,
+                columnGap: 12,
+              }}
+              // how to set props for pagination?
+              decelerationRate={0}
+              snapToAlignment={'center'}
+              snapToInterval={screenWidth * 0.8}>
+              {getVisits()}
+            </ScrollView>
+            <View
+              style={{
+                width: (screenWidth * 0.15) / 2,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <FontAwesome6
+                name={'caret-right'}
+                light
+                size={40}
+                style={{
+                  color: '#a1a1aa',
+                }}
+              />
+            </View>
+          </View>
         }
-      </View>
+      </>
     );
   }
 };
 
 export default OngoingSiteVisits;
+
+const styles = StyleSheet.create({
+  headerContainer: {
+    padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  headerText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#3f7ebb',
+  },
+  leadCard: {
+    width: screenWidth * 0.8,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    borderWidth: 0.2,
+  },
+  contentWrapper: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    rowGap: 5,
+  },
+  contentContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    height: 160,
+  },
+  cardDetails: {
+    width: '85%',
+    flexDirection: 'column',
+    rowGap: 5,
+  },
+  customerNameContainer: {
+    height: 45,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  // duplicated here for future reference
+  mobileNoContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 12,
+    marginTop: 5,
+  },
+  deleteIconContainer: {
+    width: '15%',
+    paddingTop: 15,
+    alignItems: 'center',
+  },
+  buttonContainer: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 5,
+  },
+  continueButton: {
+    width: '60%',
+    alignSelf: 'center',
+    backgroundColor: '#2F5596',
+    borderRadius: 50,
+  },
+});

@@ -1,67 +1,77 @@
 // CustomInput.js
-import React, { useEffect, useState } from 'react'
-import { Text, StyleSheet, View } from 'react-native'
-import DropDown from 'react-native-paper-dropdown'
+import React, {useEffect, useState} from 'react';
+import {Text, StyleSheet, View} from 'react-native';
+import DropDown from 'react-native-paper-dropdown';
 
-const CustomDropDown = (props : any) => {
+const CustomDropDown = (props: any) => {
   const {
-    field: { name, onBlur, onChange, value },
-    form: { errors, touched, setFieldTouched, setFieldValue },
+    field: {name, onBlur, onChange, value},
+    form: {errors, touched, setFieldTouched, setFieldValue},
     list: any,
     ...inputProps
-  } = props
+  } = props;
 
-  const hasError = errors[name] && touched[name]
+  const hasError = errors[name] && touched[name];
 
   const [showDropDown, setShowDropDown] = useState(false);
 
   useEffect(() => {
-    if(props.list && value && value !== "") {
-      let found = props.list?.find((item : any) => {
-        if(item.value === value) return true;
+    if (props.list && value && value !== '') {
+      let found = props.list?.find((item: any) => {
+        if (item.value === value) return true;
       });
-      console.log("Custom drop down props.list", name, found)
-      if(!found) {
-        setFieldValue(name, "")
-        setFieldTouched(name, true)
-      } 
-      
+      console.log('Custom drop down props.list', name, found);
+      if (!found) {
+        setFieldValue(name, '');
+        setFieldTouched(name, true);
+      }
     }
-  }, [props.list])
+  }, [props.list]);
 
-  console.log('list', props.list)
+  console.log('list', props.list);
 
-  return (
-    props.list ? <View style={{marginBottom: 0}}>
+  return props.list ? (
+    <View style={styles.dropDownWrapper}>
       <DropDown
-        mode={"outlined"}
+        mode={'outlined'}
         visible={showDropDown}
         showDropDown={() => setShowDropDown(true)}
         onDismiss={() => setShowDropDown(false)}
         value={value}
         list={props.list}
-        setValue={(text) => {
-          onChange(name)(text)
+        setValue={text => {
+          onChange(name)(text);
         }}
+        dropDownItemStyle={styles.dropDownItemStyle}
         inputProps={{style: [styles.dropDown, hasError && styles.errorInput]}}
         {...inputProps}
       />
       {hasError && <Text style={styles.errorText}>{errors[name]}</Text>}
-    </View> : <></>
-  )
-}
+    </View>
+  ) : (
+    <></>
+  );
+};
 
 const styles = StyleSheet.create({
-  dropDown: { 
-    marginBottom: 10
+  dropDownWrapper: {
+    width: '100%',
+    backgroundColor: '#FCFAFE',
+  },
+  dropDown: {
+    backgroundColor: '#FCFAFE',
+  },
+  dropDownItemStyle: {
+    backgroundColor: '#FCFAFE',
   },
   errorText: {
-    fontSize: 10,
+    fontSize: 12,
     color: 'red',
+    marginBottom: 10,
   },
   errorInput: {
-    backgroundColor: '#FFCCBB'
-  }
-})
+    backgroundColor: '#FCFAFE',
+  },
+});
 
-export default CustomDropDown
+export default CustomDropDown;

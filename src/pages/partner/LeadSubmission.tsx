@@ -30,62 +30,39 @@ import CustomInput from '../../components/CustomInput';
 const LeadSubmission = (props: LeadSubmissionProps) => {
   const navigation = useNavigation();
   const theme = useTheme();
-  const styles = StyleSheet.create({
-    surface: {width: '93%', margin: 15, padding: 20},
-    registerButton: {alignSelf: 'flex-start', display: 'flex', margin: 10},
-    header: {
-      color: `${theme.colors.onBackground}`,
-      fontSize: 20,
-      fontWeight: 'bold',
-      marginBottom: 20,
-    },
-    actionContainer: {flexDirection: 'row', alignContent: 'center'},
-    buttonContainer: {flex: 2, alignSelf: 'flex-start'},
-    button: {
-      alignSelf: 'flex-start',
-      display: 'flex',
-      marginTop: 10,
-    },
-    buttonTermsAccept: {
-      borderRadius: 20,
-      padding: 10,
-      elevation: 2,
-    },
-    centeredView: {
+    const styles = StyleSheet.create({
+    screenWrapper: {
       flex: 1,
+      backgroundColor: '#FCFAFE',
+    },
+    formContainer: {
+      width: '100%',
+      height: '100%',
+      paddingTop: 50,
+      rowGap: 10,
+      paddingHorizontal: 20,
+    },
+    headerText: {
+      color: `${theme.colors.onBackground}`,
+      fontWeight: '500',
+      fontSize: 25,
+    },
+    questionContainer: {
+      borderBlockColor: 'black',
+      borderWidth: 1,
+      padding: 10,
+      borderRadius: 10,
+      backgroundColor: `${theme.colors.background}`,
+    },
+    actionContainer: {
+      height: 120,
+      flexDirection: 'row',
+      alignItems: 'center',
       justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 22,
+      columnGap: 10,
     },
-    modalView: {
-      margin: 20,
-      backgroundColor: 'white',
-      borderRadius: 20,
-      padding: 35,
-      alignItems: 'center',
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 4,
-      elevation: 5,
-    },
-    buttonOpen: {
-      backgroundColor: '#F194FF',
-    },
-    buttonClose: {
-      backgroundColor: `${theme.colors.primary}`,
-    },
-    textStyle: {
-      color: 'white',
-      fontWeight: 'bold',
-      textAlign: 'center',
-    },
-    modalText: {
-      marginBottom: 15,
-      textAlign: 'center',
+    button: {
+      alignSelf: 'center',
     },
   });
 
@@ -216,119 +193,115 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
   });
 
   return (
-    <ScrollView>
-      <Formik
-        validationSchema={submissionValidationSchema}
-        initialValues={initialValues}
-        onSubmit={(values, isValid) => {
-          let currentValues = {
-            ...leadInfo,
-            ...values,
-            // dateOfIncorp: Moment(values.dateOfIncorp).format('YYYY-MM-DD'),
-            "loanType": "PL",
-            "customerType": "new"
-          };
-          console.log('Submitting lead', currentValues)
-          dispatch(saveLead(currentValues));
-          setLeadInfo(currentValues);
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{name: 'LeadConsent', params: {lead: currentValues}}],
-            }),
-          );
-        }}>
-        {({values, handleSubmit, isValid}) => (
-          <Surface elevation={4} style={styles.surface}>
-            <ScrollView>
-              <Text style={styles.header}>Submission</Text>
-              {branchesLoadStatus === "loading" && 
+    <Formik
+      validationSchema={submissionValidationSchema}
+      initialValues={initialValues}
+      onSubmit={(values, isValid) => {
+        let currentValues = {
+          ...leadInfo,
+          ...values,
+          // dateOfIncorp: Moment(values.dateOfIncorp).format('YYYY-MM-DD'),
+          loanType: 'PL',
+          customerType: 'new',
+        };
+        // console.log('Submitting lead', currentValues);
+        dispatch(saveLead(currentValues));
+        setLeadInfo(currentValues);
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: 'LeadConsent', params: {lead: currentValues}}],
+          }),
+        );
+      }}>
+      {({values, handleSubmit, isValid}) => (
+        <View style={styles.screenWrapper}>
+          <ScrollView contentContainerStyle={styles.formContainer}>
+            <Text style={[styles.headerText]}>Submission</Text>
+            {branchesLoadStatus === 'loading' && (
               <Text style={{paddingBottom: 10}}>Loading branches...</Text>
-              }
-              {branchesLoadStatus === "success" && branches && <Field
+            )}
+            {branchesLoadStatus === 'success' && branches && (
+              <Field
                 component={CustomDropDown}
                 name="branchName"
                 label="Branch (*)"
                 enableReinitialize
                 list={branches}
-              />}
+              />
+            )}
 
-              {branchesLoadStatus === "error" && 
+            {branchesLoadStatus === 'error' && (
               <>
-              <Field
-                component={CustomInput}
-                name="branchName"
-                label="Branch (*)"
-                enableReinitialize
-                disabled={isMasterLoading}
-              />
-              <Text style={{fontSize: 10, color: 'orange', paddingBottom: 10}}>Unable to load branches</Text>
-              </>}
-              <Field
-                component={CustomSwitch}
-                name="itrFilingLocal"
-                label="Does the customer have Min 3 years of Income tax return filing?"
-                enableReinitialize
-              />
-              <Field
-                component={CustomSwitch}
-                name="bankStatementLocal"
-                label="Does the customer have most recent 12 months (till last month) bank statement?"
-              />
-              <Field
-                component={CustomSwitch}
-                name="gstRegimeLocal"
-                label="Is the customer registered under GST?"
-              />
-              <View
-                style={{
-                  marginTop: 10,
-                  borderBlockColor: 'black',
-                  borderWidth: 1,
-                  padding: 10,
-                  borderRadius: 10,
-                  backgroundColor: `${theme.colors.background}`,
-                }}>
                 <Field
-                  component={CustomRadioGroup}
-                  name="applicationFillingBy"
-                  header={'Who will be filling the online loan application?'}
-                  radioList={filledByList}
+                  component={CustomInput}
+                  name="branchName"
+                  label="Branch (*)"
+                  enableReinitialize
+                  disabled={isMasterLoading}
                 />
-              </View>
-              <View style={styles.actionContainer}>
-                {!concentSent && (
-                  <Button
-                    mode="contained"
-                    style={styles.registerButton}
-                    disabled={!isValid}
-                    onPress={() => handleSubmit()}>
-                    Get Customer Consent
-                  </Button>
-                )}
-                <View style={styles.buttonContainer}>
-                  <Button
-                    mode="outlined"
-                    style={styles.button}
-                    onPress={() => {
-                      let currentValues = {
-                        ...leadInfo,
-                        ...values,
-                        // dateOfIncorp: values.dateOfIncorp?.toLocaleString()
-                      };
-                      dispatch(saveLead(currentValues));
-                      setLeadInfo(currentValues);
-                      navigation.navigate('Root');
-                    }}>
-                    Cancel
-                  </Button>
-                </View>
-              </View>
-            </ScrollView>
-          </Surface>
-        )}
-      </Formik>
-    </ScrollView>
+                <Text
+                  style={{fontSize: 10, color: 'orange', paddingBottom: 10}}>
+                  Unable to load branches
+                </Text>
+              </>
+            )}
+            <Field
+              component={CustomSwitch}
+              name="itrFilingLocal"
+              label="Does the customer have Min 3 years of Income tax return filing?"
+              enableReinitialize
+            />
+            <Field
+              component={CustomSwitch}
+              name="bankStatementLocal"
+              label="Does the customer have most recent 12 months (till last month) bank statement?"
+            />
+            <Field
+              component={CustomSwitch}
+              name="gstRegimeLocal"
+              label="Is the customer registered under GST?"
+            />
+            <View style={styles.questionContainer}>
+              <Field
+                component={CustomRadioGroup}
+                name="applicationFillingBy"
+                header={'Who will be filling the online loan application?'}
+                radioList={filledByList}
+              />
+            </View>
+            <View style={styles.actionContainer}>
+              {!concentSent && (
+                <Button
+                  labelStyle={{fontSize: 16}}
+                  mode="contained"
+                  style={styles.button}
+                  disabled={!isValid}
+                  onPress={() => handleSubmit()}>
+                  Get Customer Consent
+                </Button>
+              )}
+              <Button
+                labelStyle={{fontSize: 16}}
+                mode="outlined"
+                style={styles.button}
+                onPress={() => {
+                  let currentValues = {
+                    ...leadInfo,
+                    ...values,
+                    // dateOfIncorp: values.dateOfIncorp?.toLocaleString()
+                  };
+                  dispatch(saveLead(currentValues));
+                  setLeadInfo(currentValues);
+                  navigation.navigate('Root');
+                }}>
+                Cancel
+              </Button>
+            </View>
+          </ScrollView>
+        </View>
+      )}
+    </Formik>
   );
 };
 

@@ -7,11 +7,14 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Dimensions,
 } from 'react-native';
-import {Surface} from 'react-native-paper';
+import {Card, Paragraph} from 'react-native-paper';
 import {Lead} from '../../models/partner/Lead';
 import useToken from '../../components/Authentication/useToken';
 import Toast from 'react-native-root-toast';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+const screenWidth = Dimensions.get('window').width;
 
 const HomeNavIcons = () => {
   const navigation = useNavigation();
@@ -27,125 +30,133 @@ const HomeNavIcons = () => {
   });
 
   return (
-    <View>
-      <ScrollView horizontal={true}   showsHorizontalScrollIndicator={false}>
-        <Surface
-          elevation={0}
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginVertical: 15,
-            paddingVertical: 10,
+    <>
+      <ScrollView
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{
+          padding: 10,
+          columnGap: 10,
+          backgroundColor: '#f4f4f5',
+        }}
+        decelerationRate={0}
+        snapToAlignment={'center'}>
+        {/* Lead Generation */}
+        <TouchableOpacity
+          onPress={() => {
+            if (userType === 'TPE') {
+              navigation.navigate('LeadBasicInfo', {lead: {} as Lead});
+            } else {
+              Toast.show(
+                'Only facilitators are allowed to create leads at the moment.',
+              );
+            }
           }}>
-          <Surface elevation={2} style={{margin: 10}}>
-            <TouchableOpacity
-              style={styles.buttonFacebookStyle}
-              activeOpacity={0.5}
-              onPress={() => {
-                if (userType === 'TPE') {
-                  navigation.navigate('LeadBasicInfo', {lead: {} as Lead});
-                } else {
-                  Toast.show(
-                    'Only facilitators are allowed to create leads at the moment.',
-                  );
-                }
-              }}>
-              <Image
-                source={require('../../images/LeadGenerationIcon.png')}
-                style={styles.buttonImageIconStyle}
-              />
-              <Text style={styles.buttonTextStyle}> Lead Generation </Text>
-            </TouchableOpacity>
-          </Surface>
-          <Surface elevation={2} style={{margin: 10}}>
-            <TouchableOpacity
-              style={styles.buttonFacebookStyle}
-              activeOpacity={0.5}
-              onPress={() => {
-                console.log('userType', userType)
-                if (userType === 'EMPLOYEE') {
-                  navigation.navigate('SiteVisitCustomerSearch');
-                } else {
-                  Toast.show(
-                    'Only employees are allowed to perform site visit at the moment.',
-                  );
-                }
-              }}>
-              <Image
-                source={require('../../images/sitevisit.png')}
-                style={styles.buttonImageIconStyle}
-              />
-              <Text style={styles.buttonTextStyle}> Site Visits </Text>
-            </TouchableOpacity>
-          </Surface>
-          <Surface elevation={2} style={{margin: 10}}>
-            <TouchableOpacity
-              style={styles.buttonFacebookStyle}
-              activeOpacity={0.5}
-              onPress={() => {
-                if (userType === 'TPE') {
-                  navigation.navigate('Leads' as never);
-                } else {
-                  Toast.show(
-                    'Only facilitators are allowed to view leads at the moment.',
-                  );
-                }
-              }}>
-              <Image
-                source={require('../../images/ViewLeadsIcon.png')}
-                style={styles.buttonImageIconStyle}
-              />
-              <Text style={styles.buttonTextStyle}> View Leads </Text>
-            </TouchableOpacity>
-          </Surface>
-        </Surface>
+          <Card style={styles.Card}>
+            <Card.Content style={styles.cardContent}>
+              <View style={styles.iconWrapper}>
+                <FontAwesome6
+                  name={'handshake'}
+                  size={40}
+                  color="#2F5596"
+                  sharpSolid
+                />
+              </View>
+              <View style={styles.titleWrapper}>
+                <Text style={styles.titleText}>Lead</Text>
+                <Text style={styles.titleText}>Generation</Text>
+              </View>
+            </Card.Content>
+          </Card>
+        </TouchableOpacity>
+        {/* Site Visits */}
+        <TouchableOpacity
+          onPress={() => {
+            // console.log('userType', userType);
+            if (userType === 'EMPLOYEE') {
+              navigation.navigate('SiteVisitCustomerSearch');
+            } else {
+              Toast.show(
+                'Only employees are allowed to perform site visit at the moment.',
+              );
+            }
+          }}>
+          <Card style={styles.Card}>
+            <Card.Content style={styles.cardContent}>
+              <View style={styles.iconWrapper}>
+                <FontAwesome6
+                  name={'building'}
+                  size={40}
+                  color="#2F5596"
+                  sharpSolid
+                />
+              </View>
+              <View style={styles.titleWrapper}>
+                <Text style={styles.titleText}>Site</Text>
+                <Text style={styles.titleText}>Visits</Text>
+              </View>
+            </Card.Content>
+          </Card>
+        </TouchableOpacity>
+        {/* View Leads */}
+        <TouchableOpacity
+          onPress={() => {
+            if (userType === 'TPE') {
+              navigation.navigate('Leads' as never);
+            } else {
+              Toast.show(
+                'Only facilitators are allowed to view leads at the moment.',
+              );
+            }
+          }}>
+          <Card style={styles.Card}>
+            <Card.Content style={styles.cardContent}>
+              <View style={styles.iconWrapper}>
+                <FontAwesome6
+                  name={'users-viewfinder'}
+                  size={40}
+                  color="#2F5596"
+                  sharpSolid
+                />
+              </View>
+              <View style={styles.titleWrapper}>
+                <Text style={styles.titleText}>View</Text>
+                <Text style={styles.titleText}>Leads</Text>
+              </View>
+            </Card.Content>
+          </Card>
+        </TouchableOpacity>
       </ScrollView>
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    margin: 10,
-    marginTop: 30,
-    padding: 30,
-  },
-  buttonGPlusStyle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#dc4e41',
-    borderWidth: 0.5,
-    borderColor: '#fff',
-    borderRadius: 5,
-    margin: 5,
-  },
-  buttonFacebookStyle: {
-    alignItems: 'center',
-    alignContent: 'center',
-    // borderWidth: 0.5,
-    // borderColor: '#fff',
-    // borderRadius: 5,
-    margin: 5,
-    width: 150,
-  },
-  buttonImageIconStyle: {
-    padding: 10,
-    margin: 5,
-    height: 55,
-    width: 55,
-    resizeMode: 'stretch',
-  },
-  buttonTextStyle: {
-    marginBottom: 4,
-    marginLeft: 10,
-    fontSize: 18,
-  },
-  buttonIconSeparatorStyle: {
+  Card: {
     backgroundColor: '#fff',
-    width: 1,
-    height: 40,
+    borderRadius: 5,
+    width: (screenWidth - 40) / 3,
+  },
+  cardContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  iconWrapper: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  titleWrapper: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  titleText: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#334155',
   },
 });
 

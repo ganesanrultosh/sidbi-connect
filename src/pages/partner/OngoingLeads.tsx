@@ -1,192 +1,268 @@
-import {Pressable, ScrollView, Text, View} from 'react-native';
+import {Pressable, ScrollView, Text, View, Dimensions} from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import {Linking} from 'react-native';
-import React, {useEffect} from 'react';
-import {Button, Surface, useTheme} from 'react-native-paper';
+import React, {useEffect, useState} from 'react';
+import {Button, useTheme, Card, Paragraph} from 'react-native-paper';
 import {RootState} from '@reduxjs/toolkit/query';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {Lead} from '../../models/partner/Lead';
 import {useNavigation} from '@react-navigation/native';
 import {deleteLead} from '../../slices/leadCacheSlice';
+import {StyleSheet} from 'react-native';
+import {createEntityAdapter} from '@reduxjs/toolkit';
+import useToken from '../../components/Authentication/useToken';
+const screenWidth = Dimensions.get('window').width;
 
 const OngoingLeads = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
 
+  const [leadsArray, setLeadsArray] = useState([] as Array<Lead | undefined>);
+
   const {leads} = useAppSelector(state => state.persistedLeads);
 
   useEffect(() => {
-    console.log('ongoing leads', leads);
+    let mounted = true;
+
+    if (mounted) {
+      if (leads) {
+        let keys: string[] = Object.keys(leads);
+        let dataArray: Array<Lead | undefined> = [];
+        keys.forEach((k: string) => {
+          if (k) {
+            if (leads[k]) {
+              dataArray.push(leads[k]['lead']);
+            }
+          }
+        });
+        setLeadsArray(dataArray);
+      }
+    }
+
+    return () => {
+      mounted = false;
+    };
   }, [leads]);
 
-  function getCards(): React.ReactNode {
-    let keys: string[] = [];
-    let keysHandled = Object.keys(leads).length;
+  const LeadCard = (props: Lead) => {
+    return (
+      <>
+        <Card style={styles.leadCard}>
+          <Card.Content style={styles.contentWrapper}>
+            <View style={styles.contentContainer}>
+              <View style={styles.cardDetails}>
+                <View style={styles.customerNameContainer}>
+                  <Paragraph
+                    numberOfLines={2}
+                    style={{
+                      fontSize: 20,
+                      color: '#2F5596',
+                      fontWeight: '600',
+                    }}>
+                    {props.entityName}
+                    {/* Lorem, ipsum dolor sit amet consectetur adipisicing. */}
+                  </Paragraph>
+                </View>
+                <Paragraph style={{fontSize: 16}}>
+                  {props.dateCreated}
+                </Paragraph>
+                <Paragraph style={{fontSize: 18, fontWeight: '500'}}>
+                  Amount: {props.loanAmount} lakh
+                </Paragraph>
+                <Paragraph style={{fontSize: 18, fontWeight: '500'}}>
+                  Type: {props.loanType}
+                </Paragraph>
+                {props.mobileNo && (
+                  <View style={styles.mobileNoContainer}>
+                    <View>
+                      <FontAwesome6
+                        name={'phone'}
+                        solid
+                        size={20}
+                        style={{color: '#2F5596'}}
+                        onPress={() => {
+                          Linking.openURL(`tel:${props?.mobileNo}`);
+                        }}
+                      />
+                    </View>
+                    <View>
+                      <Text style={{fontWeight: '500', fontSize: 16}}>
+                        {props.mobileNo}
+                      </Text>
+                    </View>
+                  </View>
+                )}
+              </View>
+              <View style={styles.deleteIconContainer}>
+                <FontAwesome6
+                  name={'trash-can'}
+                  solid
+                  size={20}
+                  style={{color: '#36454F'}}
+                  onPress={() => {
+                    dispatch(deleteLead(props.pan));
+                  }}
+                />
+              </View>
+            </View>
+            <View style={styles.buttonContainer}>
+              <Button
+                style={styles.continueButton}
+                labelStyle={{fontSize: 14}}
+                mode="contained"
+                onPress={() => {
+                  navigation.navigate('LeadBasicInfo', {lead: props as Lead});
+                }}>
+                Continue
+              </Button>
+            </View>
+          </Card.Content>
+        </Card>
+      </>
+    );
+  };
 
-    if (Object.keys(leads).length === 0) {
-      return (
-        <View
-          style={{
-            alignContent: 'center',
-            alignItems: 'center',
-            alignSelf: 'center',
-            flexDirection: 'row',
-          }}>
-          <Text
-            style={{
-              alignSelf: 'center',
-              textAlign: 'center',
-              flex: 1,
-              flexWrap: 'wrap',
-            }}
-            numberOfLines={3}>
+  const getLeads = (): React.ReactNode => {
+    return (
+      <>
+        {leadsArray.map((item, index) => (
+          <LeadCard key={'lead' + index} {...item} />
+        ))}
+      </>
+    );
+  };
+
+  if (leadsArray.length === 0) {
+    return (
+      <>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Ongoing Leads</Text>
+        </View>
+        <View style={{paddingHorizontal: 10}}>
+          <Text style={{fontSize: 16}} numberOfLines={3}>
             No ongoing leads found. Please create a new lead by clicking "Lead
             Generation" icon above.
           </Text>
         </View>
-      );
-    } else {
-      return Object.keys(leads).map(key => {
-        keys.push(key);
-        if (
-          keys.length === 2 ||
-          keysHandled === 1 ||
-          Object.keys(leads).length == 2
-        ) {
-          keysHandled -= 2;
-          let twoCards = getTwoCards(keys);
-          keys = [];
-          return twoCards;
-        }
-      });
-    }
-  }
-
-  function getTwoCards(keys: string[]) {
-    let lead1: Lead | undefined = leads[keys[0]].lead;
-    let lead2: Lead | undefined =
-      keys.length == 2 ? leads[keys[1]].lead : undefined;
-    return (
-      <View>
-        {lead1 && getLeadSurface(lead1)}
-        {lead2 && getLeadSurface(lead2)}
-      </View>
-    );
-  }
-
-  function getLeadSurface(lead: Lead) {
-    return (
-      <Surface
-        key={`${lead.id}`}
-        elevation={2}
-        style={{
-          margin: 10,
-          padding: 10,
-          paddingHorizontal: 15,
-          width: 200,
-        }}>
-        <Text
-          style={{fontWeight: 'bold', color: 'black', fontSize: 20, flex: 1}}
-          numberOfLines={1}>
-          {lead?.entityName}
-        </Text>
-        <Text style={{fontWeight: 'bold', fontSize: 12}}>
-          {lead?.dateCreated}
-        </Text>
-        <Text
-          style={{
-            fontWeight: 'bold',
-            color: 'black',
-            fontSize: 15,
-            marginTop: 10,
-          }}>
-          Loan Amount: {lead?.loanAmount} Lac
-        </Text>
-        <Text style={{fontWeight: 'bold', color: 'black', fontSize: 15}}>
-          Type: {lead?.loanType}
-        </Text>
-        {lead?.mobileNo && (
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-              marginTop: 10,
-            }}>
-            <Text
-              style={{
-                color: 'black',
-                fontSize: 15,
-                textAlignVertical: 'top',
-                verticalAlign: 'top',
-              }}>
-              {lead?.mobileNo}
-            </Text>
-            <FontAwesome6
-              name={'phone'}
-              solid
-              style={{paddingLeft: 10, textAlignVertical: 'bottom'}}
-              onPress={() => {
-                Linking.openURL(`tel:${lead?.mobileNo}`);
-              }}
-            />
-          </View>
-        )}
-        <View style={{flexDirection: 'row', alignContent: 'center'}}>
-          <View style={{flex: 1, alignSelf: 'center'}}>
-            <Button
-              onPress={() => {
-                dispatch(deleteLead(lead.pan));
-              }}>
-              Delete
-            </Button>
-          </View>
-          <View style={{flex: 1}}>
-            <Button
-              onPress={() => {
-                console.log('OL', lead);
-                navigation.navigate('LeadBasicInfo', {lead: lead as Lead});
-              }}>
-              Continue
-            </Button>
-          </View>
-        </View>
-      </Surface>
-    );
-  }
-
-  if (Object.keys(leads).length === 0) {
-    return (
-      <View style={{paddingHorizontal: 25, flexDirection: 'row'}}>
-        <Text
-          style={{
-            flex: 1,
-            flexWrap: 'wrap',
-          }}
-          numberOfLines={3}>
-          No ongoing leads found. Please create a new lead by clicking "Lead
-          Generation" icon above.
-        </Text>
-      </View>
+      </>
     );
   } else {
     return (
-      <View>
+      <>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Ongoing Leads</Text>
+        </View>
         {
-          <ScrollView
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            decelerationRate={0}
-            snapToInterval={200} //your element width
-            snapToAlignment={'center'}
-            style={{paddingHorizontal: 15}}>
-            {getCards()}
-          </ScrollView>
+          <View style={{width: screenWidth, flexDirection: 'row'}}>
+            <View
+              style={{
+                width: (screenWidth * 0.15) / 2,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <FontAwesome6
+                name={'caret-left'}
+                light
+                size={40}
+                style={{
+                  color: '#a1a1aa',
+                }}
+              />
+            </View>
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{padding: 10, columnGap: 12}}
+              decelerationRate={0}
+              snapToAlignment={'center'}
+              snapToInterval={screenWidth * 0.8}>
+              {getLeads()}
+            </ScrollView>
+            <View
+              style={{
+                width: (screenWidth * 0.15) / 2,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <FontAwesome6
+                name={'caret-right'}
+                light
+                size={40}
+                style={{
+                  color: '#a1a1aa',
+                }}
+              />
+            </View>
+          </View>
         }
-      </View>
+      </>
     );
   }
 };
 
 export default OngoingLeads;
+
+const styles = StyleSheet.create({
+  headerContainer: {
+    padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  headerText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#3f7ebb',
+  },
+  leadCard: {
+    width: screenWidth * 0.8,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    borderWidth: 0.2,
+  },
+  contentWrapper: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    rowGap: 5,
+  },
+  contentContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    height: 160,
+  },
+  cardDetails: {
+    width: '85%',
+    flexDirection: 'column',
+    rowGap: 5,
+  },
+  customerNameContainer: {
+    height: 45,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  mobileNoContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 12,
+    marginTop: 5,
+  },
+  deleteIconContainer: {
+    width: '15%',
+    paddingTop: 15,
+    alignItems: 'center',
+  },
+  buttonContainer: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 5,
+  },
+  continueButton: {
+    width: '60%',
+    alignSelf: 'center',
+    backgroundColor: '#2F5596',
+    borderRadius: 50,
+  },
+});

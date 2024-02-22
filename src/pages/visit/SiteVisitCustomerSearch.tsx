@@ -10,7 +10,7 @@ import {
   GestureResponderEvent,
   ScrollView,
 } from 'react-native';
-import {Button, Surface, TextInput, useTheme} from 'react-native-paper';
+import {Button, Surface,Card, TextInput, useTheme} from 'react-native-paper';
 import {tr} from 'react-native-paper-dates';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import * as Yup from 'yup';
@@ -128,103 +128,13 @@ const SiteVisitCustomerSearch = () => {
     },
   });
 
-  const styles = StyleSheet.create({
-    viewStyle: {flex: 1},
-    surfaceStyle: {width: '90%', margin: 20, padding: 10},
-    headerText: {
-      color: `${theme.colors.onBackground}`,
-      fontSize: 20,
-      fontWeight: 'bold',
-      marginBottom: 20,
-    },
-    scrollView: {height: '88%', marginTop: 10},
-    continueButton: {alignSelf: 'center', display: 'flex'},
-    radioGroupEnclosure: {
-      marginTop: 10,
-      borderBlockColor: 'black',
-      borderWidth: 1,
-      padding: 10,
-      borderRadius: 3,
-    },
-    error: {
-      fontSize: 14,
-      fontFamily: 'Roboto-Regular',
-      color: 'red',
-      marginTop: 0,
-      marginBottom: 10,
-    },
-    modal: {
-      backgroundColor: 'white',
-      margin: 0,
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: 200,
-    },
-  });
-
-  return (
-    <View style={styles.viewStyle}>
-      <Surface elevation={4} style={styles.surfaceStyle}>
-        <Text style={styles.headerText}>
-          Search Customer
-        </Text>
-        {isCustomerLoading && <Text>Searching... </Text>}
-        {!isCustomerLoading && <>
-        <TextInput
-          mode="outlined"
-          placeholder="Search Name or PAN"
-          value={panOrName}
-          onChangeText={value => {
-            setPanOrName(value);
-          }}
-          style={{
-            marginBottom: 10,
-          }}
-        />
-        <Button mode="contained" style={{marginBottom: 10}} onPress={() => {
-          setPanOrNameForSearch(panOrName)
-        }}>
-          Search
-        </Button>
-        <ScrollView style={{height: "70%"}}>
-          <View>
-            {customers?.map(item => {
-              return (
-                <TouchableOpacity
-                  key={item.id}
-                  onPress={() => {
-                    navigation.navigate('VisitTypeSelection', {
-                      customer: {
-                        id: item.id,
-                        pan: item.pan,
-                        name: item.name,
-                      },
-                    });
-                  }}>
-                  <Surface elevation={2} style={{margin: 2, padding: 5}}>
-                    <View
-                      key={`v1-${item}`}
-                      style={{flexDirection: 'row', alignContent: 'center'}}>
-                      <View
-                        key={`v3-${item}`}
-                        style={{flex: 0.9, alignItems: 'flex-start'}}>
-                        <Text maxFontSizeMultiplier={1} numberOfLines={2} style={{fontWeight: "bold"}}>
-                          {item.name}
-                        </Text>
-                        <Text>{decrypt(item.pan)}</Text>
-                      </View>
-                      <View
-                        key={`v2-${item}`}
-                        style={{flex: 0.1, justifyContent: 'center'}}>
-                        <FontAwesome6 name="greater-than" size={15} />
-                      </View>
-                    </View>
-                  </Surface>
-                </TouchableOpacity>
-              );
-            })}
-            {isCustomerError && !(customers && customers?.length > 0) && <><Text style={{margin: 5, color: 'red'}}>
-              No customer record found.
+const createCustomers = () => {
+    if (panOrNameForSearch !== '') {
+      if (isCustomerError || !(customers && customers.length > 0)) {
+        return (
+          <>
+            <Text style={{color: 'red', fontSize: 16}}>
+              No customers record found.
             </Text>
             <Button
               mode="contained"
@@ -233,98 +143,224 @@ const SiteVisitCustomerSearch = () => {
                 setShowCreate(true);
               }}>
               Create customer
-            </Button></>}
-          </View>
-        </ScrollView>
-        </>}
-        <Modal
-          visible={showCreate}
-          animationType="slide"
-          transparent={true}
-          style={styles.modal}>
-          <View
-            style={{
-              marginHorizontal: 20,
-              marginTop: 75,
-              flex: 1,
-            }}>
-            <Surface elevation={2} style={{margin: 2, padding: 20}}>
-              <Text
-                style={{fontSize: 16, paddingVertical: 10, fontWeight: 'bold'}}>
-                Enter customer details to create
-              </Text>
-              <TextInput
-                mode="outlined"
-                placeholder="Customer Name"
-                style={{width: '90%'}}
-                value={formik.values.name}
-                onChangeText={v => {
-                  formik.setFieldValue('name', v);
-                }}
-                defaultValue=""
-                onBlur={() => {
-                  formik.setFieldTouched('name', true);
-                }}
-              />
-              {formik.errors.name && formik.touched.name && (
-                <Text maxFontSizeMultiplier={1} style={styles.error}>
-                  {formik.errors.name}
-                </Text>
-              )}
-              <TextInput
-                mode="outlined"
-                placeholder="PAN"
-                value={formik.values.pan}
-                onChangeText={v => {
-                  formik.setFieldValue('pan', v);
-                }}
-                defaultValue=""
-                onBlur={() => {
-                  formik.setFieldTouched('pan', true);
-                }}
-                style={{width: '90%'}}
-              />
-              {formik.errors.pan && formik.touched.pan && (
-                <Text maxFontSizeMultiplier={1} style={styles.error}>
-                  {formik.errors.pan}
-                </Text>
-              )}
-              <View
-                key={`create-buttons`}
-                style={{
-                  flexDirection: 'row',
-                  alignContent: 'center',
-                  margin: 20,
-                }}>
-                <View
-                  key={`create-button-save`}
-                  style={{flex: 1, alignItems: 'center'}}>
-                  <Button
-                    mode="contained"
-                    onPress={
-                      formik.handleSubmit as unknown as (
-                        e: GestureResponderEvent,
-                      ) => void
-                    }>
-                    Create
-                  </Button>
-                </View>
-                <View
-                  key={`create-button-close`}
-                  style={{flex: 1, alignItems: 'center'}}>
-                  <Button
-                    mode="outlined"
+            </Button>
+          </>
+        );
+      }
+    } else {
+      return <></>;
+    }
+  };
+  const styles = StyleSheet.create({
+    screenWrapper: {
+      flex: 1,
+      backgroundColor: '#FCFAFE',
+    },
+    searchContainer: {
+      flex: 1,
+      width: '100%',
+      paddingHorizontal: 20,
+      paddingTop: 20,
+    },
+    headerText: {
+      color: `${theme.colors.onBackground}`,
+      fontWeight: '500',
+      fontSize: 25,
+      textAlign: 'center',
+    },
+    inputWrapper: {
+      flexDirection: 'column',
+      rowGap: 10,
+    },
+    scrollContainer: {
+      height: '70%',
+      width: '100%',
+      paddingHorizontal: 20,
+      paddingVertical: 10,
+      rowGap: 10,
+      borderRadius: 5,
+      borderWidth: 0.5,
+      borderColor: '#000',
+    },
+    touchableOpacity: {
+      width: '100%',
+      borderRadius: 10,
+      backgroundColor: '#f4f4f5',
+      shadowColor: '#E2DFD2',
+    },
+    customerCard: {
+      flexDirection: 'column',
+      rowGap: 5,
+      padding: 10,
+      width: '100%',
+    },
+
+    centeredView: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '100%',
+      paddingHorizontal: 20,
+      backgroundColor: 'rgba(0,0,0, 0.4)',
+    },
+    card: {
+      width: '100%',
+      borderRadius: 5,
+      backgroundColor: '#e5e5e5',
+    },
+    cartTitle: {
+      fontSize: 18,
+      color: '#1f2937',
+      fontStyle: 'italic',
+      alignSelf: 'center',
+    },
+
+    cardContent: {
+      rowGap: 5,
+      paddingBottom: 10,
+    },
+    cardActions: {},
+    error: {
+      color: 'red',
+      fontSize: 14,
+    },
+  });
+
+  return (
+    <View style={styles.screenWrapper}>
+      <View style={styles.searchContainer}>
+        <Text style={[styles.headerText, {marginBottom: 10}]}>
+          Search Customer
+        </Text>
+        {isCustomerLoading && (
+          <Text style={{marginBottom: 10}}>Searching... </Text>
+        )}
+        {!isCustomerLoading && (
+          <View style={styles.inputWrapper}>
+            <TextInput
+              mode="outlined"
+              placeholder="Search Name or PAN"
+              value={panOrName}
+              onChangeText={value => {
+                setPanOrName(value);
+              }}
+            />
+            <Button
+              labelStyle={{fontSize: 16}}
+              mode="contained"
+              onPress={() => {
+                setPanOrNameForSearch(panOrName);
+              }}>
+              Search
+            </Button>
+
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
+              {customers?.map(item => {
+                return (
+                  <TouchableOpacity
+                    style={styles.touchableOpacity}
+                    key={item.id}
                     onPress={() => {
-                      setShowCreate(false);
+                      navigation.navigate('VisitTypeSelection', {
+                        customer: {
+                          id: item.id,
+                          pan: item.pan,
+                          name: item.name,
+                        },
+                      });
                     }}>
-                    Close
-                  </Button>
-                </View>
-              </View>
-            </Surface>
+                    <View style={styles.customerCard} key={`v1-${item}`}>
+                      <Text
+                        maxFontSizeMultiplier={1}
+                        numberOfLines={2}
+                        style={{
+                          fontWeight: '500',
+                          color: '#000',
+                          fontSize: 18,
+                        }}>
+                        {item.name}
+                      </Text>
+                      <Text style={{fontSize: 16}}>{decrypt(item.pan)}</Text>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
+              {createCustomers()}
+            </ScrollView>
+          </View>
+        )}
+      </View>
+      {
+        <Modal visible={showCreate} animationType="slide" transparent={true}>
+          <View style={styles.centeredView}>
+            <Card style={styles.card}>
+              <Card.Title
+                title="Customer Details to Create"
+                titleStyle={styles.cartTitle}></Card.Title>
+              <Card.Content style={styles.cardContent}>
+                <TextInput
+                  mode="outlined"
+                  placeholder="Name"
+                  style={{width: '100%'}}
+                  value={formik.values.name}
+                  onChangeText={v => {
+                    formik.setFieldValue('name', v);
+                  }}
+                  defaultValue=""
+                  onBlur={() => {
+                    formik.setFieldTouched('name', true);
+                  }}
+                />
+                {formik.errors.name && formik.touched.name && (
+                  <Text maxFontSizeMultiplier={1} style={styles.error}>
+                    {formik.errors.name}
+                  </Text>
+                )}
+                <TextInput
+                  mode="outlined"
+                  placeholder="PAN"
+                  value={formik.values.pan}
+                  onChangeText={v => {
+                    formik.setFieldValue('pan', v);
+                  }}
+                  defaultValue=""
+                  onBlur={() => {
+                    formik.setFieldTouched('pan', true);
+                  }}
+                  style={{width: '100%'}}
+                />
+                {formik.errors.pan && formik.touched.pan && (
+                  <Text maxFontSizeMultiplier={1} style={styles.error}>
+                    {formik.errors.pan}
+                  </Text>
+                )}
+              </Card.Content>
+              <Card.Actions style={styles.cardActions}>
+                <Button
+                  style={{padding: 2}}
+                  labelStyle={{fontSize: 16}}
+                  mode="contained"
+                  onPress={
+                    formik.handleSubmit as unknown as (
+                      e: GestureResponderEvent,
+                    ) => void
+                  }>
+                  Create
+                </Button>
+                <Button
+                  style={{padding: 2}}
+                  labelStyle={{fontSize: 16}}
+                  mode="outlined"
+                  onPress={() => {
+                    setShowCreate(false);
+                  }}>
+                  Close
+                </Button>
+              </Card.Actions>
+            </Card>
           </View>
         </Modal>
-      </Surface>
+      }
     </View>
   );
 };

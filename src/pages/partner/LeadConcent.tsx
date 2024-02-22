@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Modal, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Modal, Pressable, ScrollView,SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {Button, Surface, useTheme} from 'react-native-paper';
 import {Field, Formik} from 'formik';
@@ -22,23 +22,37 @@ const LeadConcent = (props: LeadConsentProps) => {
   const navigation = useNavigation();
   const theme = useTheme();
   const styles = StyleSheet.create({
-    surface: {width: '93%', margin: 15, padding: 20},
-    registerButton: {alignSelf: 'flex-start', display: 'flex', margin: 10},
+    screenWrapper: {
+      flex: 1,
+      backgroundColor: '#FCFAFE',
+    },
+    formContainer: {
+      width: '100%',
+      height: '100%',
+      paddingTop: 50,
+      alignItems: 'center',
+      rowGap: 10,
+      paddingHorizontal: 20,
+    },
+    headerText: {
+      color: `${theme.colors.onBackground}`,
+      fontWeight: '500',
+      fontSize: 25,
+      textAlign: 'center',
+    },
     header: {
       color: `${theme.colors.onBackground}`,
       fontSize: 20,
       fontWeight: 'bold',
       marginBottom: 20,
     },
-    actionContainer: {flexDirection: 'row', alignContent: 'center'},
-    buttonContainer: {flex: 2, alignSelf: 'flex-start'},
-    button: {
-      alignSelf: 'flex-start', display: 'flex', marginTop: 10
-    },
-    buttonTermsAccept: {
-      borderRadius: 20,
-      padding: 10,
-      elevation: 2,
+    actionContainer: {
+      width: '100%',
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      columnGap: 10,
     },
     centeredView: {
       flex: 1,
@@ -60,12 +74,6 @@ const LeadConcent = (props: LeadConsentProps) => {
       shadowOpacity: 0.25,
       shadowRadius: 4,
       elevation: 5,
-    },
-    buttonOpen: {
-      backgroundColor: '#F194FF',
-    },
-    buttonClose: {
-      backgroundColor: `${theme.colors.primary}`,
     },
     textStyle: {
       color: 'white',
@@ -134,8 +142,12 @@ const LeadConcent = (props: LeadConsentProps) => {
                   Toast.show('Unable to sent consent!');
                 });
             }
-          });
-      }
+          })
+          .catch((error: any) => {
+        console.log('error at me() api', error);
+        // manually edited by nisg_vigneshj
+      });
+      };
 
   const {
     data: master,
@@ -157,6 +169,9 @@ const LeadConcent = (props: LeadConsentProps) => {
           setLeadInfo(lead);
           dispatch(saveLead(lead));
         }
+      })
+      .catch((error: any) => {
+        console.log('error at me() api in saveLeadToStore', error);
       });
   };
 
@@ -169,125 +184,137 @@ const LeadConcent = (props: LeadConsentProps) => {
   });
 
   return (
-    <ScrollView>
-    <Formik
-      validationSchema={submissionValidationSchema}
-      initialValues={initialValues}
-      onSubmit={async (values, isValid) => {
-        me()
-          .then(response => response.json())
-          .then(async (partner: Partner) => {
-            if (partner.id) {
-              console.log("Lead Consent", leadInfo);
-              console.log("Lead Consent", values)
-              let lead = {
-                ...leadInfo,
-                ...values,
-                parentId: partner.id,
-                bankStatement: values.bankStatementLocal ? "Y" : "N",
-                gstRegime: values.gstRegimeLocal ? "Y" : "N",
-                itrFiling: values.itrFilingLocal ? "Y" : "N",
-                // dateOfIncorp: Moment(values.dateOfIncorp).format('YYYY-MM-DD'),
-              };
+    <>
+      <Formik
+        validationSchema={submissionValidationSchema}
+        initialValues={initialValues}
+        onSubmit={async (values, isValid) => {
+          me()
+            .then(response => response.json())
+            .then(async (partner: Partner) => {
+              if (partner.id) {
+                console.log('Lead Consent', leadInfo);
+                console.log('Lead Consent', values);
+                let lead = {
+                  ...leadInfo,
+                  ...values,
+                  parentId: partner.id,
+                  bankStatement: values.bankStatementLocal ? 'Y' : 'N',
+                  gstRegime: values.gstRegimeLocal ? 'Y' : 'N',
+                  itrFiling: values.itrFilingLocal ? 'Y' : 'N',
+                  // dateOfIncorp: Moment(values.dateOfIncorp).format('YYYY-MM-DD'),
+                };
 
-              //Clean up local variables
-              delete lead.bankStatementLocal
-              delete lead.gstRegimeLocal
-              delete lead.itrFilingLocal
+                //Clean up local variables
+                delete lead.bankStatementLocal;
+                delete lead.gstRegimeLocal;
+                delete lead.itrFilingLocal;
 
-              console.log("lead consent submission", lead)
-              if (isValid) {
-                console.log('Lead Submission', lead);
-                await addLead(lead as Lead)
-                  .unwrap()
-                  .then(() => {
-                    Toast.show('Lead submitted sucessfully!');
-                    //Remove lead from local store once the lead submission is sucessfull
-                    dispatch(deleteLead(initialValues.pan));
-                    navigation.navigate('Root' as never)
-                  })
-                  .catch(error => {
-                    console.log('Error: ', error, result);
-                    if (error.data.error) {
-                      Toast.show(error.data.error);
-                    } else {
-                      Toast.show('Error submitting lead!');
-                    }
-                  });
-              } else {
-                console.log('Saving', lead);
-                dispatch(saveLead(lead));
+                console.log('lead consent submission', lead);
+                if (isValid) {
+                  console.log('Lead Submission', lead);
+                  await addLead(lead as Lead)
+                    .unwrap()
+                    .then(() => {
+                      Toast.show('Lead submitted sucessfully!');
+                      //Remove lead from local store once the lead submission is sucessfull
+                      dispatch(deleteLead(initialValues.pan));
+                      navigation.navigate('Root' as never);
+                    })
+                    .catch(error => {
+                      console.log('Error: ', error, result);
+                      if (error.data.error) {
+                        Toast.show(error.data.error);
+                      } else {
+                        Toast.show('Error submitting lead!');
+                      }
+                    });
+                } else {
+                  console.log('Saving', lead);
+                  dispatch(saveLead(lead));
+                }
               }
-            }
-          });
-      }}>
-      {({values, handleSubmit, isValid}) => (
-        <Surface elevation={4} style={styles.surface}>
-          <ScrollView>
-            <Text style={styles.header}>Customer Consent</Text>
-            {(
-              <>
-                {concentSent && (
-                  <>
-                    <Field component={CustomInput} name="otp" label="OTP (*)" />
-                    <Text>
-                      Consent OTP is sent to the customer{`\n`}
-                      {!resendConsent && <CountDownTimer initialValue={180}></CountDownTimer>}
-                      {resendConsent && <><Text
-                        style={{
-                          marginLeft: 10,
-                          padding: 10,
-                          textDecorationLine: 'underline',
-                          color: 'red'
-                        }}
-                        onPress={() => sendConsentOtp(values)}>
-                        Resend Consent OTP
-                      </Text></>}
-                      
-                    </Text>
-                  </>
+            });
+        }}>
+        {({values, handleSubmit, isValid}) => (
+          <View style={styles.screenWrapper}>
+            <View style={[styles.formContainer]}>
+              <Text style={[styles.headerText]}>Customer Consent</Text>
+              {
+                <>
+                  {concentSent && (
+                    <>
+                      <Field
+                        component={CustomInput}
+                        name="otp"
+                        label="OTP (*)"
+                      />
+                      <Text style={{fontSize: 18}}>
+                        Consent OTP is sent to the customer{`\n`}
+                        {!resendConsent && (
+                          <CountDownTimer initialValue={180}></CountDownTimer>
+                        )}
+                        {resendConsent && (
+                          <>
+                            <Text
+                              style={{
+                                textDecorationLine: 'underline',
+                                color: 'red',
+                                fontStyle: 'italic',
+                              }}
+                              onPress={() => sendConsentOtp(values)}>
+                              Resend Consent OTP
+                            </Text>
+                          </>
+                        )}
+                      </Text>
+                    </>
+                  )}
+                </>
+              }
+              <View style={styles.actionContainer}>
+                {!concentSent && (
+                  <Button
+                    labelStyle={{fontSize: 16}}
+                    mode="contained"
+                    onPress={() => sendConsentOtp(values)}>
+                    Send Consent OTP
+                  </Button>
                 )}
-              </>
-            )}
-            <View style={styles.actionContainer}>
-              {!concentSent && <Button
-                mode="contained"
-                style={styles.registerButton}
-                onPress={() => sendConsentOtp(values)}>
-                Send Consent OTP
-              </Button>
-              }
-              {!<View style={styles.buttonContainer}>
+                {/* why saveToLeadStore is marked with '!', Refer last line */}
+                {
+                  !(
+                    <View>
+                      <Button
+                        mode="contained"
+                        onPress={(e: any) => saveLeadToStore(values)}>
+                        Save
+                      </Button>
+                    </View>
+                  )
+                }
+                {concentSent && (
+                  <Button
+                    labelStyle={{fontSize: 16}}
+                    mode="contained"
+                    disabled={!isValid}
+                    onPress={(e: any) => handleSubmit(e)}>
+                    Submit
+                  </Button>
+                )}
                 <Button
-                  mode="contained"
-                  style={styles.registerButton}
-                  onPress={(e: any) => saveLeadToStore(values)}>
-                  Save
-                </Button>
-              </View>}
-              {concentSent && <View style={styles.buttonContainer}>
-                <Button
-                  mode="contained"
-                  style={styles.button}
-                  disabled={!isValid}
-                  onPress={(e: any) => handleSubmit(e)}>
-                  Submit
-                </Button>
-              </View>}
-              <View style={styles.buttonContainer}>
-                <Button
+                  labelStyle={{fontSize: 16}}
                   mode="outlined"
-                  style={styles.button}
                   onPress={() => navigation.navigate('Root' as never)}>
                   Cancel
                 </Button>
               </View>
             </View>
-          </ScrollView>
-        </Surface>
-      )}
-    </Formik>
-    <Modal
+          </View>
+        )}
+      </Formik>
+      {/* Need for Modal here? */}
+      <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -318,7 +345,6 @@ const LeadConcent = (props: LeadConsentProps) => {
               blandit viverra semper.
             </Text>
             <Pressable
-              style={[styles.buttonTermsAccept, styles.buttonClose]}
               onPress={() => {
                 setModalVisible(!modalVisible);
                 setTermsViewed(true);
@@ -328,7 +354,7 @@ const LeadConcent = (props: LeadConsentProps) => {
           </View>
         </View>
       </Modal>
-    </ScrollView>
+    </>
   );
 };
 
