@@ -52,34 +52,49 @@ const OngoingLeads = () => {
           <Card.Content style={styles.contentWrapper}>
             <View style={styles.contentContainer}>
               <View style={styles.cardDetails}>
-                <View style={styles.customerNameContainer}>
-                  <Paragraph
-                    numberOfLines={2}
-                    style={{
-                      fontSize: 20,
-                      color: '#2F5596',
-                      fontWeight: '600',
-                    }}>
-                    {props.entityName}
-                    {/* Lorem, ipsum dolor sit amet consectetur adipisicing. */}
-                  </Paragraph>
+                <View style={styles.cardHeader}>
+                  <View style={styles.customerNameContainer}>
+                    <Paragraph
+                      numberOfLines={2}
+                      style={{
+                        fontSize: 18,
+                        color: '#2F5596',
+                        fontWeight: '600',
+                      }}>
+                      {props.entityName}
+                      {/* Lorem, ipsum dolor sit amet consectetur */}
+                    </Paragraph>
+                  </View>
+                  <View style={styles.deleteIconContainer}>
+                    <FontAwesome6
+                      name={'trash-can'}
+                      solid
+                      size={20}
+                      style={{color: '#36454F'}}
+                      onPress={() => {
+                        dispatch(deleteLead(props.pan));
+                      }}
+                    />
+                  </View>
                 </View>
-                <Paragraph style={{fontSize: 16}}>
+                <Paragraph style={{fontSize: 14}}>
                   {props.dateCreated}
                 </Paragraph>
-                <Paragraph style={{fontSize: 18, fontWeight: '500'}}>
-                  Amount: {props.loanAmount} lakh
-                </Paragraph>
-                <Paragraph style={{fontSize: 18, fontWeight: '500'}}>
-                  Type: {props.loanType}
-                </Paragraph>
+                <View style={styles.loanDetails}>
+                  <Paragraph style={{fontSize: 16, fontWeight: '500', flex: 1}}>
+                    Amount: {props.loanAmount} lakh
+                  </Paragraph>
+                  <Paragraph style={{fontSize: 16, fontWeight: '500', flex: 1}}>
+                    Type: {props.loanType}
+                  </Paragraph>
+                </View>
                 {props.mobileNo && (
                   <View style={styles.mobileNoContainer}>
                     <View>
                       <FontAwesome6
                         name={'phone'}
                         solid
-                        size={20}
+                        size={18}
                         style={{color: '#2F5596'}}
                         onPress={() => {
                           Linking.openURL(`tel:${props?.mobileNo}`);
@@ -87,23 +102,12 @@ const OngoingLeads = () => {
                       />
                     </View>
                     <View>
-                      <Text style={{fontWeight: '500', fontSize: 16}}>
+                      <Text style={{fontWeight: '500', fontSize: 14}}>
                         {props.mobileNo}
                       </Text>
                     </View>
                   </View>
                 )}
-              </View>
-              <View style={styles.deleteIconContainer}>
-                <FontAwesome6
-                  name={'trash-can'}
-                  solid
-                  size={20}
-                  style={{color: '#36454F'}}
-                  onPress={() => {
-                    dispatch(deleteLead(props.pan));
-                  }}
-                />
               </View>
             </View>
             <View style={styles.buttonContainer}>
@@ -173,7 +177,7 @@ const OngoingLeads = () => {
             <ScrollView
               horizontal={true}
               showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{padding: 10, columnGap: 12}}
+              contentContainerStyle={{padding: 8, columnGap: 12}}
               decelerationRate={0}
               snapToAlignment={'center'}
               snapToInterval={screenWidth * 0.8}>
@@ -224,33 +228,41 @@ const styles = StyleSheet.create({
   contentWrapper: {
     flexDirection: 'column',
     justifyContent: 'space-between',
-    rowGap: 5,
   },
   contentContainer: {
     flexDirection: 'row',
     width: '100%',
-    height: 160,
+    height: 120,
   },
   cardDetails: {
-    width: '85%',
+    width: '100%',
     flexDirection: 'column',
-    rowGap: 5,
+    rowGap: 3,
+  },
+  cardHeader: {
+    width: '100%',
+    flexDirection: 'row',
   },
   customerNameContainer: {
-    height: 45,
+    width: '85%',
+    height: 40,
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  loanDetails: {
+    width: '100%',
+    flexDirection: 'row',
   },
   mobileNoContainer: {
     width: '100%',
     flexDirection: 'row',
+    flex: 1,
     alignItems: 'center',
     columnGap: 12,
-    marginTop: 5,
   },
   deleteIconContainer: {
     width: '15%',
-    paddingTop: 15,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   buttonContainer: {

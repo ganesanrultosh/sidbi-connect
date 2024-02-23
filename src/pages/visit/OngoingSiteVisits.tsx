@@ -85,40 +85,43 @@ const OngoingSiteVisits = () => {
           <Card.Content style={styles.contentWrapper}>
             <View style={styles.contentContainer}>
               <View style={[styles.cardDetails]}>
-                <View style={styles.customerNameContainer}>
-                  <Paragraph
-                    numberOfLines={2}
-                    style={{
-                      fontSize: 18,
-                      color: '#2F5596',
-                      fontWeight: '600',
-                    }}>
-                    {props.customer?.name}
-                  </Paragraph>
+                <View style={styles.cardHeader}>
+                  <View style={styles.customerNameContainer}>
+                    <Paragraph
+                      numberOfLines={2}
+                      style={{
+                        fontSize: 18,
+                        color: '#2F5596',
+                        fontWeight: '600',
+                      }}>
+                      {props.customer?.name}
+                      {/* Lorem, ipsum dolor sit amet consectetur */}
+                    </Paragraph>
+                  </View>
+                  {props.status === 'created' && (
+                    <View style={styles.deleteIconContainer}>
+                      <FontAwesome6
+                        name={'trash-can'}
+                        solid
+                        size={20}
+                        style={{color: '#36454F'}}
+                        onPress={() => {
+                          dispatch(deleteVisit(props));
+                        }}
+                      />
+                    </View>
+                  )}
                 </View>
-                <Paragraph style={{fontSize: 20, fontWeight: '500'}}>
+                <Paragraph style={{fontSize: 16, fontWeight: '500'}}>
                   {decrypt(props.customer.pan)}
                 </Paragraph>
                 <Paragraph style={{fontSize: 16, fontWeight: '500'}}>
                   {props.report.reportTitle}
                 </Paragraph>
-                <Paragraph style={{fontSize: 16}}>
+                <Paragraph style={{fontSize: 14}}>
                   {props.dateCreated}
                 </Paragraph>
               </View>
-              {props.status === 'created' && (
-                <View style={styles.deleteIconContainer}>
-                  <FontAwesome6
-                    name={'trash-can'}
-                    solid
-                    size={20}
-                    style={{color: '#36454F'}}
-                    onPress={() => {
-                      dispatch(deleteVisit(props));
-                    }}
-                  />
-                </View>
-              )}
             </View>
             {props.status === 'created' && (
               <View style={[styles.buttonContainer]}>
@@ -139,6 +142,7 @@ const OngoingSiteVisits = () => {
                   {
                     flexDirection: 'row',
                     alignItems: 'center',
+                    paddingVertical: 0,
                   },
                 ]}>
                 <View>
@@ -212,7 +216,7 @@ const OngoingSiteVisits = () => {
               horizontal={true}
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{
-                padding: 10,
+                padding: 8,
                 columnGap: 12,
               }}
               // how to set props for pagination?
@@ -266,34 +270,42 @@ const styles = StyleSheet.create({
   contentWrapper: {
     flexDirection: 'column',
     justifyContent: 'space-between',
-    rowGap: 5,
   },
   contentContainer: {
     flexDirection: 'row',
     width: '100%',
-    height: 160,
+    height: 120,
   },
   cardDetails: {
-    width: '85%',
+    width: '100%',
     flexDirection: 'column',
-    rowGap: 5,
+    rowGap: 3,
+  },
+  cardHeader: {
+    width: '100%',
+    flexDirection: 'row',
   },
   customerNameContainer: {
-    height: 45,
+    width: '85%',
+    height: 40,
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  loanDetails: {
+    width: '100%',
+    flexDirection: 'row',
   },
   // duplicated here for future reference
   mobileNoContainer: {
     width: '100%',
     flexDirection: 'row',
+    flex: 1,
     alignItems: 'center',
     columnGap: 12,
-    marginTop: 5,
   },
   deleteIconContainer: {
     width: '15%',
-    paddingTop: 15,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   buttonContainer: {

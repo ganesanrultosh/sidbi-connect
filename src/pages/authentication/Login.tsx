@@ -65,27 +65,31 @@ const Login = () => {
     justifyContent: 'center',
     paddingVertical: 5,
     paddingHorizontal: 10,
-    columnGap: 15,
   },
   touchable: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  Card: {
+    width: '80%',
+    backgroundColor: '#fff',
+  },
   cardContent: {
     width: '100%',
-    paddingVertical: 30,
+    paddingVertical: 15,
     justifyContent: 'center',
     alignItems: 'center',
     rowGap: 15,
   },
   loginText: {
-    fontSize: 20,
+    fontSize: 18,
     textAlign: 'center',
     color: '#2F5596',
     letterSpacing: 1,
   },
 });
+
 
   const navigation = useNavigation();
 
@@ -107,11 +111,11 @@ const Login = () => {
                   navigation.navigate('EmployeeLogin');
                 }}
                 style={styles.touchable}>
-                <Card style={{width: '100%'}}>
+                <Card style={styles.Card}>
                   <Card.Content style={styles.cardContent}>
                     <FontAwesome6
                       name={'user'}
-                      size={70}
+                      size={50}
                       color="#2F5596"
                       sharpSolid
                     />
@@ -124,11 +128,11 @@ const Login = () => {
                   navigation.navigate('PartnerLogin');
                 }}
                 style={styles.touchable}>
-                <Card style={{width: '100%'}}>
+                <Card style={styles.Card}>
                   <Card.Content style={styles.cardContent}>
                     <FontAwesome6
                       name={'handshake'}
-                      size={70}
+                      size={50}
                       color="#2F5596"
                       sharpSolid
                     />

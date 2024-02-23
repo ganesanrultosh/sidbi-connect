@@ -128,29 +128,32 @@ const SiteVisitCustomerSearch = () => {
     },
   });
 
-const createCustomers = () => {
+  const createCustomers = () => {
     if (panOrNameForSearch !== '') {
-      if (isCustomerError || !(customers && customers.length > 0)) {
-        return (
-          <>
-            <Text style={{color: 'red', fontSize: 16}}>
-              No customers record found.
-            </Text>
-            <Button
-              mode="contained"
-              style={{marginBottom: 10}}
-              onPress={() => {
-                setShowCreate(true);
-              }}>
-              Create customer
-            </Button>
-          </>
-        );
+      if (panOrName !== '') {
+        if (isCustomerError || !(customers && customers.length > 0)) {
+          return (
+            <>
+              <Text style={{color: 'red', fontSize: 16}}>
+                No customers record found.
+              </Text>
+              <Button
+                mode="contained"
+                style={{marginBottom: 10}}
+                onPress={() => {
+                  setShowCreate(true);
+                }}>
+                Create customer
+              </Button>
+            </>
+          );
+        }
       }
     } else {
       return <></>;
     }
   };
+
   const styles = StyleSheet.create({
     screenWrapper: {
       flex: 1,
@@ -172,29 +175,27 @@ const createCustomers = () => {
       flexDirection: 'column',
       rowGap: 10,
     },
+    scrollView: {
+      flex: 1,
+      marginVertical: 15,
+    },
     scrollContainer: {
-      height: '70%',
       width: '100%',
       paddingHorizontal: 20,
       paddingVertical: 10,
       rowGap: 10,
-      borderRadius: 5,
-      borderWidth: 0.5,
-      borderColor: '#000',
     },
-    touchableOpacity: {
-      width: '100%',
-      borderRadius: 10,
-      backgroundColor: '#f4f4f5',
-      shadowColor: '#E2DFD2',
-    },
+
     customerCard: {
       flexDirection: 'column',
       rowGap: 5,
       padding: 10,
       width: '100%',
+      borderRadius: 10,
+      backgroundColor: '#f4f4f5',
+      shadowColor: '#E2DFD2',
+      justifyContent: 'center',
     },
-
     centeredView: {
       flex: 1,
       justifyContent: 'center',
@@ -236,29 +237,32 @@ const createCustomers = () => {
           <Text style={{marginBottom: 10}}>Searching... </Text>
         )}
         {!isCustomerLoading && (
-          <View style={styles.inputWrapper}>
-            <TextInput
-              mode="outlined"
-              placeholder="Search Name or PAN"
-              value={panOrName}
-              onChangeText={value => {
-                setPanOrName(value);
-              }}
-            />
-            <Button
-              labelStyle={{fontSize: 16}}
-              mode="contained"
-              onPress={() => {
-                setPanOrNameForSearch(panOrName);
-              }}>
-              Search
-            </Button>
-
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <>
+            <View style={styles.inputWrapper}>
+              <TextInput
+                mode="outlined"
+                placeholder="Search Name or PAN"
+                value={panOrName}
+                onChangeText={value => {
+                  setPanOrName(value);
+                }}
+              />
+              <Button
+                labelStyle={{fontSize: 16}}
+                mode="contained"
+                onPress={() => {
+                  setPanOrNameForSearch(panOrName);
+                }}>
+                Search
+              </Button>
+            </View>
+            <ScrollView
+              style={styles.scrollView}
+              contentContainerStyle={styles.scrollContainer}>
               {customers?.map(item => {
                 return (
                   <TouchableOpacity
-                    style={styles.touchableOpacity}
+                    style={{width: '100%'}}
                     key={item.id}
                     onPress={() => {
                       navigation.navigate('VisitTypeSelection', {
@@ -287,7 +291,7 @@ const createCustomers = () => {
               })}
               {createCustomers()}
             </ScrollView>
-          </View>
+          </>
         )}
       </View>
       {

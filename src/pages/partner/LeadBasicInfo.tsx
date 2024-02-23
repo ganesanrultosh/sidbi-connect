@@ -76,8 +76,11 @@ const LeadBasicInfo = (props : LeadBasicInfoProps) => {
       .required('Entity Name is required.'),
     loanAmount: yup
       .number()
-      .min(10, "Loan Amount should be atleast 10 Lakhs ₹")
-      .max(100, "Loan Amount should not be more than 100 Lakhs ₹")
+      .min(10, ({min}) => `Loan Amount should be atleast ${min} Lakhs (₹)`)
+      .max(
+        100,
+        ({max}) => `Loan Amount should not be more than ${max} Lakhs (₹)`,
+      )
       .required('Loan amount is required.'),
     // loanType: yup
     //   .string()
