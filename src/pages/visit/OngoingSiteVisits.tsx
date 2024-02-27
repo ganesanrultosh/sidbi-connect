@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {
   Button,
   Card,
+  IconButton,
   Paragraph,
   Surface,
   Tooltip,
@@ -14,6 +15,7 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Visit from '../../models/visit/visit';
 import VisitCacheSlice, {deleteVisit} from '../../slices/visitCacheSlice';
 import decrypt from '../../utils/decrypt';
+import {postVisitTrigger} from '../../services/visitService';
 const screenWidth = Dimensions.get('window').width;
 
 const OngoingSiteVisits = () => {
@@ -136,23 +138,32 @@ const OngoingSiteVisits = () => {
               </View>
             )}
             {props.status !== 'created' && (
-              <View
-                style={[
-                  styles.buttonContainer,
-                  {
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    paddingVertical: 0,
-                  },
-                ]}>
-                <View>
-                  <Tooltip title={props.error || getStatus(props.status)}>
-                    <Text style={{fontWeight: 'bold', fontSize: 16}}>
-                      {getStatus(props.status)}
-                    </Text>
-                  </Tooltip>
+              <>
+                <View
+                  style={[
+                    styles.buttonContainer,
+                    {
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      paddingVertical: 0,
+                    },
+                  ]}>
+                  <Text style={{fontWeight: 'bold', fontSize: 16}}>
+                    {getStatus(props.status)}
+                  </Text>
+                  {props.status !== 'synced' && (
+                    <Button
+                      onPress={() => {
+                        dispatch(postVisitTrigger({visit: props}));
+                      }}>
+                      Sync
+                    </Button>
+                  )}
                 </View>
-              </View>
+                {props.status === "syncfailure" && <Text style={{fontWeight: 'bold', fontSize: 10, color: 'red'}}>
+                  {props.error}
+                </Text>}
+              </>
             )}
           </Card.Content>
         </Card>
