@@ -24,10 +24,10 @@ const VisitService = {
   postVisitTrigger: async (visit: Visit, dispatch: any) => {
     console.log('postVisitTrigger');
     if (!visit) Toast.show('Unknown error');
-    else
+    else {
+      let visitKey = visit.customer.pan + visit.report.reportId;
       try {
         //Set the status of visit to submitted.
-        let visitKey = visit.customer.pan + visit.report.reportId;
         dispatch(updateVisitStatus({visitKey: visitKey, status: "submitted"}))
         let images: string[];
         if (visit.report.images) {
@@ -68,11 +68,14 @@ const VisitService = {
         }
       } catch (error: any) {
         console.log('Visit trigger error', error?.message);
+        dispatch(updateVisitStatus({visitKey: visitKey, status: "syncfailure", message: error?.message}))
         Toast.show(
           'Error submitting visit.',
         );
         throw new Error(error?.message);
       }
+    }
+      
   },
   postEmptyVisit: async (params: {
     customerId: number | undefined;
@@ -109,11 +112,10 @@ const VisitService = {
     iid: number,
     dispatch: any,
   ) => {
+    let visitKey = visit.customer.pan + visit.report.reportId;
+    let visitId = visit.id;
     try {
       console.log('Post visit', visit.id, iid);
-      let visitKey = visit.customer.pan + visit.report.reportId;
-      let visitId = visit.id;
-
       if (!visitId) {
         let emptyVParams = {
           visitDate: moment().format('YYYYMMDD'),
@@ -213,11 +215,13 @@ const VisitService = {
 
         return res.data;
       } else {
+        dispatch(updateVisitStatus({visitKey: visitKey, status: "syncfailure"}))
         throw new Error("Visit Id cannot be null");
       }
 
       
     } catch (error: any) {
+      dispatch(updateVisitStatus({visitKey: visitKey, status: "syncfailure"}))
       throw new Error(error?.message);
     }
   },

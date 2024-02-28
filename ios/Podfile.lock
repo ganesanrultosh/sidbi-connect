@@ -502,11 +502,13 @@ PODS:
     - React-jsi (= 0.72.5)
     - React-logger (= 0.72.5)
     - React-perflogger (= 0.72.5)
+  - RNBackgroundFetch (4.2.2):
+    - React-Core
   - RNCAsyncStorage (1.19.3):
     - React-Core
   - RNGestureHandler (2.12.1):
     - React-Core
-  - RNPermissions (4.0.0):
+  - RNPermissions (4.1.1):
     - React-Core
   - RNReanimated (3.6.1):
     - RCT-Folly (= 2021.07.22.00)
@@ -592,6 +594,7 @@ DEPENDENCIES:
   - React-runtimescheduler (from `../node_modules/react-native/ReactCommon/react/renderer/runtimescheduler`)
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - RNBackgroundFetch (from `../node_modules/react-native-background-fetch`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
@@ -709,6 +712,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/utils"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNBackgroundFetch:
+    :path: "../node_modules/react-native-background-fetch"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNGestureHandler:
@@ -782,9 +787,10 @@ SPEC CHECKSUMS:
   React-runtimescheduler: cc32add98c45c5df18436a6a52a7e1f6edec102c
   React-utils: 7a9918a1ffdd39aba67835d42386f592ea3f8e76
   ReactCommon: 91ece8350ebb3dd2be9cef662abd78b6948233c0
+  RNBackgroundFetch: 35c7183f6eeff69396d42c4b206e1ae2a21e9327
   RNCAsyncStorage: c913ede1fa163a71cea118ed4670bbaaa4b511bb
   RNGestureHandler: c0d04458598fcb26052494ae23dda8f8f5162b13
-  RNPermissions: b8c136d8dc745e1e51a5698b1034681c7736f42e
+  RNPermissions: f0f9edd4041a7e267436739f86dce455adc2499a
   RNReanimated: fdbaa9c964bbab7fac50c90862b6cc5f041679b9
   RNScreens: 85d3880b52d34db7b8eeebe2f1a0e807c05e69fa
   RNSha256: a6bc3640a34eb41907e363828b9ec742c274298d
