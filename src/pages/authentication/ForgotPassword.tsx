@@ -80,7 +80,7 @@ const ForgotPassword = () => {
       handleSubmit,
       isValid
     }) => (<View style={styles.containerView}>
-      <Surface elevation={4} style={styles.surface}>
+     
         <Formik
           validationSchema={userIdValidationSchema}
           initialValues={initialValue}
@@ -101,50 +101,63 @@ const ForgotPassword = () => {
             {!isOtpSent &&
               <Button
                 mode='contained'
-                style={{ margin: 10 }}
+                style={{width: 100}}
                 disabled={!isValid}
                 onPress={(e: any) => handleSubmit(e)} >
                 Next
               </Button>}</>)}
         </Formik>
         {isOtpSent &&
-          <View>
-            <Field
-              component={CustomInput}
-              name="otp"
-              label="OTP (*)"
-              secureTextEntry
-            />
-            <Field
-              component={CustomInput}
-              name="password"
-              label="Password (*)"
-              secureTextEntry
-            />
-            <Field
-              component={CustomInput}
-              name="confirmPassword"
-              label="Confirm Password (*)"
-              secureTextEntry
-            />
-            <Button
-              mode='contained'
-              disabled={!isValid}
-              style={{ margin: 10 }} onPress={(e: any) => {
-                handleSubmit(e)
-              }} >Submit</Button>
-          </View>}
-      </Surface>
+          <View style={styles.setPasswordView}>
+              <Field
+                component={CustomInput}
+                name="otp"
+                label="OTP (*)"
+                secureTextEntry
+              />
+              <Field
+                component={CustomInput}
+                name="password"
+                label="Password (*)"
+                secureTextEntry
+              />
+              <Field
+                component={CustomInput}
+                name="confirmPassword"
+                label="Confirm Password (*)"
+                secureTextEntry
+              />
+              <Button
+                style={{width: 100}}
+                mode="contained"
+                disabled={!isValid}
+                onPress={(e: any) => {
+                  handleSubmit(e);
+                }}>
+                Submit
+              </Button>
+            </View>}
+      
     </View>)}
   </Formik>
 }
 
-const styles = StyleSheet.create(
-  {
-    containerView: { width: "90%", alignContent: "center", alignItems: "center", alignSelf: "center" },
-    headerText: { fontWeight: "bold", fontSize: 20, marginTop: 50, alignSelf: "center" },
-    surface: { width: "95%", margin: 50, padding: 20 }
-  }
-)
+const styles = StyleSheet.create({
+  containerView: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    rowGap: 10,
+    paddingVertical: 50,
+    paddingHorizontal: 50,
+  },
+  setPasswordView: {
+    width: '100%',
+    alignItems: 'center',
+    rowGap: 5,
+    paddingVertical: 25,
+  },
+});
+
 
 export default ForgotPassword;

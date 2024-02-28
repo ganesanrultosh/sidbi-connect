@@ -41,17 +41,17 @@ const CustomInput = (props : any) => {
 
 const styles = StyleSheet.create({
   textInput: {
-    width: "100%",
-    marginBottom: 10
+    width: '100%',
+    backgroundColor: '#FCFAFE',
   },
   errorText: {
-    fontSize: 10,
+    fontSize: 12,
     color: 'red',
     marginBottom: 10,
   },
   errorInput: {
-    backgroundColor: '#FFCCBB'
-  }
-})
+    backgroundColor: '#FCFAFE',
+  },
+});
 
 export default CustomInput

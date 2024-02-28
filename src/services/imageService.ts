@@ -18,8 +18,10 @@ const ImageService = {
         name: image.fileName,
       });
       const token = await getToken()
+      console.log('post url', `${Config.REACT_APP_FILE_SERVER_URL!}/files/${panNumber}`)
+      console.log("token", token)
       const res = await axios.post(`${Config.REACT_APP_FILE_SERVER_URL!}/files/${panNumber}`, params, {
-        baseURL: Config.FILE_SERVER_URL!,
+        baseURL: Config.REACT_APP_FILE_SERVER_URL!,
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,
@@ -28,6 +30,7 @@ const ImageService = {
       });
       return res.data;
     } catch (error: any) {
+      console.log(error?.message)
       throw new Error(error?.message);
     }
   },

@@ -24,23 +24,41 @@ const Form: React.FC<{
   const {visits} = useAppSelector(state => state.persistedVisists);
 
   const styles = StyleSheet.create({
-    viewStyle: {flex: 1},
-    surfaceStyle: {width: '90%', margin: 20, padding: 10},
+    screenWrapper: {
+      flex: 1,
+      backgroundColor: '#FCFAFE',
+    },
+    formContainer: {
+      width: '100%',
+      flex: 1,
+      paddingTop: 30,
+      alignItems: 'center',
+      paddingHorizontal: 10,
+    },
     headerText: {
       color: `${theme.colors.onBackground}`,
+      fontWeight: '500',
       fontSize: 20,
-      fontWeight: 'bold',
     },
-    scrollView: {height: '84%', marginTop: 10},
-    continueButton: {alignSelf: 'flex-start', display: 'flex'},
-    radioGroupEnclosure: {
+    scrollView: {
+      height: '84%',
       marginTop: 10,
-      borderBlockColor: 'black',
-      borderWidth: 1,
-      padding: 10,
-      borderRadius: 3,
+    },
+    scrollContainerStyle: {
+      padding: 12,
+      borderRadius: 5,
+      borderWidth: 0.2,
+      backgroundColor: '#fff',
+    },
+    buttonsContainer: {
+      width: '100%',
+      flexDirection: 'row',
+      paddingHorizontal: 20,
+      paddingVertical: 12,
+      alignItems: 'center',
     },
   });
+
 
   let visitFieldUpdateContext: VisitFieldUpdateContext = {
     pan: visit?.customer.pan || '',
@@ -54,10 +72,12 @@ const Form: React.FC<{
   };
 
   return (
-    <View style={styles.viewStyle}>
-      <Surface elevation={4} style={styles.surfaceStyle}>
+    <View style={[styles.screenWrapper, {paddingBottom: 20}]}>
+      <View style={styles.formContainer}>
         <Text style={styles.headerText}>{visit?.report.reportTitle}</Text>
-        <ScrollView style={styles.scrollView}>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContainerStyle}>
           {page.segments?.map((item, index) => {
             return (
               <Section
@@ -70,15 +90,7 @@ const Form: React.FC<{
             );
           })}
         </ScrollView>
-        <View
-          key={`FORM-buttons`}
-          style={{
-            flexDirection: 'row',
-            alignContent: 'center',
-            height: 40,
-            alignItems: 'center',
-            marginTop: 10,
-          }}>
+        <View key={`FORM-buttons`} style={styles.buttonsContainer}>
           <View
             key={`FORM-buttons-back`}
             style={{flex: 1, alignItems: 'flex-end'}}>
@@ -145,7 +157,7 @@ const Form: React.FC<{
             </Button>
           </View>
         </View>
-      </Surface>
+      </View>
     </View>
   );
 };

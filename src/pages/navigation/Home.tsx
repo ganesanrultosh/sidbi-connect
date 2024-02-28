@@ -10,15 +10,15 @@ import OngoingSiteVisitsHeader from "../visit/OngoingSiteVisitHeaders";
 
 const Home = () => {
   return <>
-    <View style={{ flex: 1, backgroundColor: "#f2f2f2" }}>
+    <View style={{ flex: 1, backgroundColor: "#FCFAFE" }}>
       <ScrollView>
         <HomeNavIcons />
-        <Surface elevation={0} style={{paddingBottom: 15}}>
-          <OngoingLeadsHeader />
+        <View>
+          
           <OngoingLeads />
-          <OngoingSiteVisitsHeader />
+         
           <OngoingSiteVisits />
-        </Surface>
+         </View>
       </ScrollView>
     </View>
     {/* <View>
