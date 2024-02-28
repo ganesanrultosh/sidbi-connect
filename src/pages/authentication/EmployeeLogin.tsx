@@ -11,6 +11,7 @@ import {useAppSelector} from '../../app/hooks';
 import {useDispatch} from 'react-redux';
 import {setMPin} from '../../slices/visitCacheSlice';
 import React, {useEffect, useState} from 'react';
+import CustomPasswordInput from '../../components/CustomPasswordInput';
 
 const EmployeeLogin = () => {
   const theme = useTheme();
@@ -113,7 +114,7 @@ const EmployeeLogin = () => {
                 .then(response => response.json())
                 .then(async (data: any) => {
                   if (data.error) {
-                    console.log(data);
+                    console.log(`error at "generateOtp" api`, data);
                     Toast.show(data.error);
                   } else {
                     Toast.show('OTP Sent sucessfully.');
@@ -162,7 +163,7 @@ const EmployeeLogin = () => {
                 .then(response => response.json())
                 .then(async (data: any) => {
                   if (data.error) {
-                    console.log(data);
+                    console.log(`error at "loginEmployee" method`, data.error);
                     Toast.show(data.error);
                   } else {
                     setOtpSent(false);
@@ -220,10 +221,9 @@ const EmployeeLogin = () => {
               <>
                 <View>
                   <Field
-                    component={CustomInput}
+                    component={CustomPasswordInput}
                     name="mpin"
                     label="Mobile PIN"
-                    secureTextEntry
                     autoCapitalize="none"
                   />
                   <Button
@@ -255,16 +255,17 @@ const EmployeeLogin = () => {
                     routes: [{name: 'Root'}],
                   }),
                 );
+              } else {
+                Toast.show('Incorrect PIN entered');
               }
             }}>
             {({handleSubmit, isValid}) => (
               <>
                 <View>
                   <Field
-                    component={CustomInput}
+                    component={CustomPasswordInput}
                     name="mpin"
                     label="Mobile PIN"
-                    secureTextEntry
                     autoCapitalize="none"
                   />
                   <Button
@@ -285,7 +286,6 @@ const EmployeeLogin = () => {
                       Toast.show('Login again to set a new MPIN');
                     }}
                     mode="outlined"
-                    style={styles.signinButton}
                     disabled={!isValid}>
                     Forgot Mpin
                   </Button>
@@ -294,7 +294,7 @@ const EmployeeLogin = () => {
             )}
           </Formik>
         )}
-       </View>
+      </View>
     </View>
   );
 };

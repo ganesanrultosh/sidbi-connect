@@ -143,6 +143,7 @@ const OngoingSiteVisits = () => {
                     flexDirection: 'row',
                     alignItems: 'center',
                     paddingVertical: 0,
+                    marginTop: 5,
                   },
                 ]}>
                 <View>
@@ -216,7 +217,7 @@ const OngoingSiteVisits = () => {
               horizontal={true}
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{
-                padding: 8,
+                padding: 10,
                 columnGap: 12,
               }}
               // how to set props for pagination?
@@ -287,7 +288,7 @@ const styles = StyleSheet.create({
   },
   customerNameContainer: {
     width: '85%',
-    height: 40,
+    height: 42,
     flexDirection: 'row',
     alignItems: 'center',
   },

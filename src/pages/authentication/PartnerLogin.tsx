@@ -19,6 +19,7 @@ import Toast from 'react-native-root-toast';
 import encrypt from '../../components/Authentication/passwordUtil';
 import EmployeeLogin from './EmployeeLogin';
 import {ScrollView} from 'react-native';
+import CustomPasswordInput from '../../components/CustomPasswordInput';
 
 const PartnerLogin = () => {
   const navigation = useNavigation();
@@ -196,10 +197,9 @@ const PartnerLogin = () => {
                 autoCapitalize="none"
               />
               <Field
-                component={CustomInput}
+                component={CustomPasswordInput}
                 name="password"
                 label="Password (*)"
-                secureTextEntry
               />
               <Button
                 onPress={(e: any) => setSignInModalVisible(true)}

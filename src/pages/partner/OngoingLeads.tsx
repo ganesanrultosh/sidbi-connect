@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
   },
   customerNameContainer: {
     width: '85%',
-    height: 40,
+    height: 42,
     flexDirection: 'row',
     alignItems: 'center',
   },

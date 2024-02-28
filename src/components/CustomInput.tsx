@@ -17,27 +17,24 @@ const CustomInput = (props : any) => {
     <>
       <TextInput
         mode="outlined"
-        style={[
-          styles.textInput,
-          hasError && styles.errorInput
-        ]}
+        style={[styles.textInput, hasError && styles.errorInput]}
         value={value}
-        onChangeText={
-          (text) => {
-            onChange(name)(text)
-            props.onChange && props.onChange(text)
-          }
-        }
+        onFocus={() => {
+          setFieldTouched(name);
+        }}
+        onChangeText={text => {
+          onChange(name)(text);
+          props.onChange && props.onChange(text);
+        }}
         onBlur={() => {
-          setFieldTouched(name)
-          onBlur(name)
+          onBlur(name);
         }}
         {...inputProps}
       />
       {hasError && <Text style={styles.errorText}>{errors[name]}</Text>}
     </>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   textInput: {
@@ -54,4 +51,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomInput
+export default CustomInput;
