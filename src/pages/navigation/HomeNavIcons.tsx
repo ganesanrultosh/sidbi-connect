@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: 14,
     color: '#334155',
   },
 });
