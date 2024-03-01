@@ -1,6 +1,6 @@
-import React from 'react';
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
-import _reports from '../../../reports.json';
+import React, {useEffect, useState} from 'react';
+import {Dimensions, ScrollView,StyleSheet, Text, View} from 'react-native';
+// import _reports from '../../../reports.json'; not needed [vigneshj]
 import ReportStructure from '../../models/visit/reportStructure/reportStructure';
 import {Surface, Card, Paragraph} from 'react-native-paper';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -17,15 +17,74 @@ import {TouchableOpacity} from 'react-native';
 import moment from 'moment';
 import Visit from '../../models/visit/visit';
 import decrypt from '../../utils/decrypt';
+import useToken from '../../components/Authentication/useToken';
+import Config from 'react-native-config';
+const visitApiEndpoint = Config.REACT_APP_VISIT_API_ENDPOINT;
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
 const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
-  const reportStructure = _reports as ReportStructure;
+  // const reportStructure = _reports as ReportStructure;
   const navigation = useNavigation();
   const route = useRoute<VisitTypeSelectionRouteProps>();
   const {customer} = route.params;
   const {visits} = useAppSelector(state => state.persistedVisists);
   const dispatch = useDispatch();
+
+  const {getUserRole, getToken} = useToken();
+
+  const [reportCards, setReportCards] = useState<Report[] | undefined>();
+
+  const getReportStructure = async () => {
+    const token = await getToken();
+    try {
+      await fetch(`${visitApiEndpoint}/api/reportstructure`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then(res => res.json())
+        .then(_reportsAll => {
+          // set report cards for different user roles
+          const {reports} = _reportsAll;
+
+          getUserRole().then(data => {
+            if (data !== 'GST' && data !== 'NBFC') {
+              const reportsArray = reports?.filter((item: any) =>
+                [1, 2, 3, 4, 5, 6].includes(item.reportId),
+              );
+              setReportCards(reportsArray);
+            } else if (data === 'NBFC') {
+              const reportsArray = reports?.filter((item: any) =>
+                [7].includes(item.reportId),
+              );
+              setReportCards(reportsArray);
+            } else if (data === 'GST') {
+              const reportsArray = reports?.filter((item: any) =>
+                [8, 9, 10, 11, 12, 13, 14].includes(item.reportId),
+              );
+              setReportCards(reportsArray);
+            }
+          });
+        });
+    } catch (error: any) {
+      console.log('error fetching reports structure ', error);
+    }
+  };
+
+  useEffect(() => {
+    let mounted = true;
+
+    if (mounted) {
+      // fetch reportStructure on mount
+      getReportStructure();
+    }
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const VisitTypeSelectionCard = (report: Report) => {
     return (
@@ -34,7 +93,7 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
         onPress={() => {
           if (customer) {
             let reportToCreate: Report | undefined =
-              reportStructure.reports?.find(
+            reportCards.reports?.find(
                 item => item.reportId === report.reportId,
               );
             if (reportToCreate) {
@@ -79,7 +138,7 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
       return (
         <>
           {reports.map((item, i) => (
-            <VisitTypeSelectionCard key={item.id} {...item} />
+            <VisitTypeSelectionCard key={item.reportId + '_' + item.id} {...item} />
           ))}
         </>
       );
@@ -147,10 +206,13 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
             Please select a visit report type to proceed
           </Text>
         </View>
-        <View style={styles.cardsContainer}>
-          {reportStructure?.reports &&
-            getVisitTypeSelectionCards(reportStructure?.reports)}
-        </View>
+        <ScrollView
+          style={[styles.scrollView]}
+          contentContainerStyle={[styles.scrollContainer]}>
+          <View style={[styles.cardsContainer]}>
+            {reportCards && getVisitTypeSelectionCards(reportCards)}
+          </View>
+        </ScrollView>
       </View>
     </View>
   );
