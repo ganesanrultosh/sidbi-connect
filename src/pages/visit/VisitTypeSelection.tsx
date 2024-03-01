@@ -92,10 +92,9 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
         style={{width: screenWidth * 0.4, height: 120}}
         onPress={() => {
           if (customer) {
-            let reportToCreate: Report | undefined =
-            reportCards.reports?.find(
-                item => item.reportId === report.reportId,
-              );
+            let reportToCreate: Report | undefined = reportCards?.find(
+              item => item.reportId === report.reportId,
+            );
             if (reportToCreate) {
               let visitKey = customer.pan + report.reportId;
               if (visits[visitKey]) {
@@ -138,7 +137,10 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
       return (
         <>
           {reports.map((item, i) => (
-            <VisitTypeSelectionCard key={item.reportId + '_' + item.id} {...item} />
+            <VisitTypeSelectionCard
+              key={item.reportId + '_' + item.id}
+              {...item}
+            /> // key > reportId_id
           ))}
         </>
       );
@@ -163,14 +165,23 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
       flexDirection: 'column',
       rowGap: 10,
     },
-    cardsContainer: {
+    scrollView: {
       flex: 1,
+      marginVertical: 15,
+    },
+    scrollContainer: {
       width: '100%',
-      paddingTop: 20,
+      paddingHorizontal: 20,
+      paddingVertical: 10,
+      rowGap: 10,
+    },
+    cardsContainer: {
+      width: '100%',
       flexDirection: 'row',
-      justifyContent: 'space-evenly',
+      justifyContent: 'center',
       flexWrap: 'wrap',
-      rowGap: 15,
+      rowGap: 10,
+      columnGap: 10,
     },
     Card: {
       width: '100%',

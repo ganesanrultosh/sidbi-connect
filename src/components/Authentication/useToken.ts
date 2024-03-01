@@ -35,11 +35,33 @@ export default function useToken() {
     }
   }
 
-  const setToken = async (userToken: { currentUser: string, userType: string } | undefined) => {
+  const setUserRole = async (userRole: string) => {
+    const tokenString = await EncryptedStorage.getItem(tokenKey);
+    if (tokenKey !== undefined && tokenString !== 'undefined' && tokenString !== null) {
+      let userToken = JSON.parse(tokenString);
+      userToken.userRole = userRole;
+      await EncryptedStorage.setItem(tokenKey, JSON.stringify(userToken));
+    } else {
+      console.log("Unable to set user Role", tokenString)
+      EncryptedStorage.removeItem(tokenKey);
+    }
+  }
+
+  const getUserRole = async () => {
+    const tokenString = await EncryptedStorage.getItem(tokenKey);
+    if (tokenString !== undefined && tokenString !== "undefined") {
+      const userToken = tokenString && JSON.parse(tokenString);
+      return userToken && userToken?.userRole;
+    } else {
+      EncryptedStorage.removeItem(tokenKey);
+    }
+  }
+
+  const setToken = async (userToken: { currentUser: string, userType: string, userRole: string } | undefined) => {
     if (!userToken) {
       await EncryptedStorage.removeItem(tokenKey);
     } else {
-      console.log('setting new token', JSON.stringify(userToken))
+      // console.log('setting new token', JSON.stringify(userToken))
       await EncryptedStorage.setItem(tokenKey, JSON.stringify(userToken));
     }
   };
@@ -49,5 +71,7 @@ export default function useToken() {
     getToken,
     getUserType,
     setUserType,
+    setUserRole,
+    getUserRole,
   };
 }

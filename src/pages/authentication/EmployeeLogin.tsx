@@ -3,7 +3,11 @@ import {Button, Surface, useTheme} from 'react-native-paper';
 import CustomInput from '../../components/CustomInput';
 import {Field, Formik} from 'formik';
 import * as yup from 'yup';
-import {generateOtp, loginEmployee} from '../../services/authService';
+import {
+  generateOtp,
+  loginEmployee,
+  verifyUser,
+} from '../../services/authService';
 import Toast from 'react-native-root-toast';
 import useToken from '../../components/Authentication/useToken';
 import {CommonActions, useNavigation} from '@react-navigation/native';
@@ -15,7 +19,7 @@ import CustomPasswordInput from '../../components/CustomPasswordInput';
 
 const EmployeeLogin = () => {
   const theme = useTheme();
-  const {setToken, getToken, setUserType} = useToken();
+  const {setToken, getToken, setUserType, setUserRole} = useToken();
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const {mpin} = useAppSelector(state => state.persistedVisists);
@@ -200,7 +204,6 @@ const EmployeeLogin = () => {
                   <Button
                     onPress={() => setOtpSent(false)}
                     mode="outlined"
-                    style={styles.signinButton}
                     disabled={!isValid}>
                     Cancel
                   </Button>
@@ -249,6 +252,22 @@ const EmployeeLogin = () => {
             onSubmit={async values => {
               if (mpin === values.mpin) {
                 setUserType('EMPLOYEE');
+                // vigneshj
+                await verifyUser()
+                  .then(response => response.json())
+                  .then(async (data: any) => {
+                    if (data.error) {
+                      console.log(`error at "verifyUser" method`, data.error);
+                      Toast.show(data.error);
+                    } else {
+                      if (data.role) {
+                        setUserRole(data.role);
+                      }
+                    }
+                  })
+                  .catch((error: any) => {
+                    console.log('error at "verifyUser" method', error);
+                  });
                 navigation.dispatch(
                   CommonActions.reset({
                     index: 0,
