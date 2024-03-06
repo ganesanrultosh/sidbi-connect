@@ -34,11 +34,10 @@ const HomeNavIcons = () => {
       <ScrollView
         horizontal={true}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{
-          padding: 10,
-          columnGap: 10,
-          backgroundColor: '#f4f4f5',
-        }}
+        contentContainerStyle={[
+          styles.scrollContainer,
+          userType === 'TPE' ? styles.flexibleContainer : {},
+        ]}
         decelerationRate={0}
         snapToAlignment={'center'}>
         {/* Lead Generation */}
@@ -70,34 +69,36 @@ const HomeNavIcons = () => {
           </Card>
         </TouchableOpacity>
         {/* Site Visits */}
-        <TouchableOpacity
-          onPress={() => {
-            // console.log('userType', userType);
-            if (userType === 'EMPLOYEE') {
-              navigation.navigate('SiteVisitCustomerSearch');
-            } else {
-              Toast.show(
-                'Only employees are allowed to perform site visit at the moment.',
-              );
-            }
-          }}>
-          <Card style={styles.Card}>
-            <Card.Content style={styles.cardContent}>
-              <View style={styles.iconWrapper}>
-                <FontAwesome6
-                  name={'building'}
-                  size={40}
-                  color="#2F5596"
-                  sharpSolid
-                />
-              </View>
-              <View style={styles.titleWrapper}>
-                <Text style={styles.titleText}>Site</Text>
-                <Text style={styles.titleText}>Visits</Text>
-              </View>
-            </Card.Content>
-          </Card>
-        </TouchableOpacity>
+        {userType === 'EMPLOYEE' && (
+          <TouchableOpacity
+            onPress={() => {
+              // console.log('userType', userType);
+              if (userType === 'EMPLOYEE') {
+                navigation.navigate('SiteVisitCustomerSearch');
+              } else {
+                Toast.show(
+                  'Only employees are allowed to perform site visit at the moment.',
+                );
+              }
+            }}>
+            <Card style={styles.Card}>
+              <Card.Content style={styles.cardContent}>
+                <View style={styles.iconWrapper}>
+                  <FontAwesome6
+                    name={'building'}
+                    size={40}
+                    color="#2F5596"
+                    sharpSolid
+                  />
+                </View>
+                <View style={styles.titleWrapper}>
+                  <Text style={styles.titleText}>Site</Text>
+                  <Text style={styles.titleText}>Visits</Text>
+                </View>
+              </Card.Content>
+            </Card>
+          </TouchableOpacity>
+        )}
         {/* View Leads */}
         <TouchableOpacity
           onPress={() => {
@@ -132,6 +133,12 @@ const HomeNavIcons = () => {
 };
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    padding: 10,
+    columnGap: 10,
+    backgroundColor: '#f4f4f5',
+    justifyContent: 'space-around',
+  },
   Card: {
     backgroundColor: '#fff',
     borderRadius: 5,
@@ -157,6 +164,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     color: '#334155',
+  },
+  flexibleContainer: {
+    flex: 1,
   },
 });
 

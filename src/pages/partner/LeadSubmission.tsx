@@ -201,7 +201,7 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
           ...leadInfo,
           ...values,
           // dateOfIncorp: Moment(values.dateOfIncorp).format('YYYY-MM-DD'),
-          loanType: 'PL',
+          loanType: 'ML',
           customerType: 'new',
         };
         // console.log('Submitting lead', currentValues);
