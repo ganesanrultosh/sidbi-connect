@@ -84,7 +84,7 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
   let filledByList = [
     {
       label: 'Facilitator',
-      value: 'Facilitator',
+      value: 'Partner',
     },
     {
       label: 'Customer',
