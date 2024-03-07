@@ -7,8 +7,8 @@ const BranchServices = {
     const { getToken } = useToken()
     try {
       const token = await getToken()
-      console.log(`${apiEndpoint}/open/master/getBranchLatLngData?locLat=${lat}&locLng=${lng}&from=2`)
-      return await fetch(`${apiEndpoint}/open/master/getBranchLatLngData?locLat=${lat}&locLng=${lng}&from=2`, {
+      console.log(`${apiEndpoint}/open/master/getBranchLatLngData?locLat=${lat}&locLng=${lng}&from=3`)
+      return await fetch(`${apiEndpoint}/open/master/getBranchLatLngData?locLat=${lat}&locLng=${lng}&from=3`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
