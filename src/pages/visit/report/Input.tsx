@@ -1,4 +1,4 @@
-import {Text, View} from 'react-native';
+import {Text, View, Dimensions} from 'react-native';
 import Segment from '../../../models/visit/reportStructure/segment';
 import React from 'react';
 import Field from '../../../models/visit/reportStructure/field';
@@ -10,25 +10,22 @@ import CustomMultiSelectInput from './CustomMultiSelectInput';
 import CustomGroupInput from './CustomGroupInput';
 import Visit from '../../../models/visit/visit';
 import VisitFieldUpdateContext from '../../../models/visit/VisitFieldUpdateContext';
-import { useTheme } from 'react-native-paper';
-import { useAppDispatch } from '../../../app/hooks';
-import { saveFieldValue } from '../../../slices/visitCacheSlice';
-
-
+import {useTheme} from 'react-native-paper';
+import {useAppDispatch} from '../../../app/hooks';
+import {saveFieldValue} from '../../../slices/visitCacheSlice';
+const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
 const Input: React.FC<{
   field: Field;
   visitFieldUpdateContext: VisitFieldUpdateContext;
 }> = ({field, visitFieldUpdateContext}) => {
   // type: 'text' | 'date' | 'textarea' | 'radio' | 'groupText' | 'multiselect';
-  const theme = useTheme()
+  const theme = useTheme();
   const dispatch = useAppDispatch();
 
   const onChange = (value: any) => {
-    dispatch(saveFieldValue(
-      {...visitFieldUpdateContext, value: value}
-    ))
-  }
+    dispatch(saveFieldValue({...visitFieldUpdateContext, value: value}));
+  };
 
   const getInput = (
     field: Field,
@@ -89,17 +86,17 @@ const Input: React.FC<{
   };
 
   return (
-    <View style={{
-      backgroundColor: theme.colors.secondaryContainer, 
-      padding: 10, 
-      margin: 2,
+    <View
+      style={{
+        backgroundColor: theme.colors.secondaryContainer,
+        padding: 10,
+        margin: 2,
+        width: screenWidth * 0.85,
       }}>
       <Text style={{marginTop: 2}}>{field.fieldTitle}</Text>
       {getInput(field, visitFieldUpdateContext)}
     </View>
   );
-
-  
 };
 
 export default Input;

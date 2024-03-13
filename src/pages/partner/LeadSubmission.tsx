@@ -194,6 +194,7 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
 
   return (
     <Formik
+      validateOnMount={true}
       validationSchema={submissionValidationSchema}
       initialValues={initialValues}
       onSubmit={(values, isValid) => {
@@ -217,7 +218,7 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
       {({values, handleSubmit, isValid}) => (
         <View style={styles.screenWrapper}>
           <ScrollView contentContainerStyle={styles.formContainer}>
-            <Text style={[styles.headerText]}>Submission</Text>
+            <Text style={[styles.headerText, {fontSize: 18}]}>Submission</Text>
             {branchesLoadStatus === 'loading' && (
               <Text style={{paddingBottom: 10}}>Loading branches...</Text>
             )}

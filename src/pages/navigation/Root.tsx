@@ -1,33 +1,35 @@
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import Home from "./Home";
-import React from "react";
-import Login from "../authentication/Login";
-import { RootStackParamList } from "../../../Navigation";
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import Home from './Home';
+import React from 'react';
+import Login from '../authentication/Login';
+import {RootStackParamList} from '../../../Navigation';
+import HomeHeader from '../../headers/HomeHeader';
 
 const Root = () => {
-
   const Drawer = createDrawerNavigator<RootStackParamList>();
 
   return (
-    <Drawer.Navigator>
-      <Drawer.Screen name="Home" component={Home} options={{ 
-          title: 'SIDBI Connect',
-          headerStyle: {
-            backgroundColor: "#2F5596",
+    <Drawer.Navigator initialRouteName="Home">
+      <Drawer.Screen
+        name="Home"
+        component={Home}
+        options={{
+          header: ({navigation, route, options}) => {
+            return <HomeHeader />;
           },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-          
-        }} />
-      <Drawer.Screen name="SignOut" component={Login} options={{
-      headerShown: false,
-      headerShadowVisible: false,
-      headerLeftLabelVisible: false
-    }}/>
+        }}
+      />
+      <Drawer.Screen
+        name="SignOut"
+        component={Login}
+        options={{
+          headerShown: false,
+          headerShadowVisible: false,
+          headerLeftLabelVisible: false,
+        }}
+      />
     </Drawer.Navigator>
   );
-}
+};
 
 export default Root;

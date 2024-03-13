@@ -38,19 +38,53 @@ const Register = (props: PartnerRegistrationProps) => {
       marginBottom: 20,
     },
     scrollView: {padding: 5},
-    registerButton: {alignSelf: 'flex-start', display: 'flex', margin: 10},
+    registerButton: {
+      alignSelf: 'flex-start',
+      display: 'flex',
+      margin: 10,
+    },
+    screenWrapper: {
+      flex: 1,
+      backgroundColor: '#fff',
+      paddingHorizontal: 20,
+    },
+    registerLabel: {
+      paddingTop: 20,
+      height: 50,
+      justifyContent: 'center',
+    },
+    registerText: {
+      fontSize: 18,
+      fontWeight: '600',
+      color: '#000',
+    },
+    infoWrapper: {
+      paddingTop: 50,
+      paddingHorizontal: 30,
+      rowGap: 20,
+    },
+    titleContainer: {
+      height: 30,
+      justifyContent: 'center',
+    },
+    titleText: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: '#000',
+    },
     centeredView: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: 22,
+      backgroundColor: 'rgba(0,0,0, 0.4)',
     },
     modalView: {
-      margin: 20,
-      backgroundColor: 'white',
-      borderRadius: 20,
-      padding: 35,
+      marginHorizontal: 20,
+      backgroundColor: '#FBF9FC',
+      borderRadius: 12,
+      padding: 20,
       alignItems: 'center',
+      rowGap: 15,
       shadowColor: '#000',
       shadowOffset: {
         width: 0,
@@ -60,10 +94,13 @@ const Register = (props: PartnerRegistrationProps) => {
       shadowRadius: 4,
       elevation: 5,
     },
+    modalText: {
+      textAlign: 'justify',
+    },
     button: {
-      borderRadius: 20,
-      padding: 10,
-      elevation: 2,
+      paddingVertical: 10,
+      width: 100,
+      borderRadius: 5,
     },
     buttonOpen: {
       backgroundColor: '#F194FF',
@@ -75,10 +112,6 @@ const Register = (props: PartnerRegistrationProps) => {
       color: 'white',
       fontWeight: 'bold',
       textAlign: 'center',
-    },
-    modalText: {
-      marginBottom: 15,
-      textAlign: 'justify',
     },
   });
 
@@ -183,91 +216,104 @@ const Register = (props: PartnerRegistrationProps) => {
           console.log('Register', values);
         }}>
         {({values, handleSubmit, isValid}) => (
-          <Surface elevation={4} style={styles.surface}>
-            <ScrollView style={styles.scrollView}>
-              <Text style={styles.headerText}>Complete registration</Text>
-              <Field
-                component={CustomInput}
-                name="password"
-                label="Password"
-                secureTextEntry
-              />
-              <Field
-                component={CustomInput}
-                name="confirmPassword"
-                label="Confirm Password"
-                secureTextEntry
-              />
-              {termsViewed && (
+          <ScrollView
+            automaticallyAdjustKeyboardInsets={true}
+            keyboardShouldPersistTaps="handled"
+            style={[styles.screenWrapper]}>
+            <View style={[styles.registerLabel]}>
+              <Text style={[styles.registerText]}>Registration</Text>
+            </View>
+            <View style={[styles.infoWrapper]}>
+              <View style={[styles.titleContainer]}>
+                <Text style={[styles.titleText]}>Complete Registration</Text>
+              </View>
+              <View style={[{rowGap: 10}]}>
                 <Field
-                  component={CustomCheckBox}
-                  name="termsAccepted"
-                  disabled={!termsViewed}
-                  rightText={
-                    <Text
-                      style={{
-                        textDecorationLine: 'underline',
-                      }}
-                      onPress={() => setModalVisible(true)}>
-                      I/We accept the Terms and Conditions
-                    </Text>
-                  }
+                  component={CustomInput}
+                  name="password"
+                  label="Password"
+                  secureTextEntry
                 />
-              )}
-              {/* {!termsViewed && (
+                <Field
+                  component={CustomInput}
+                  name="confirmPassword"
+                  label="Confirm Password"
+                  secureTextEntry
+                />
+                {termsViewed && (
+                  <Field
+                    component={CustomCheckBox}
+                    name="termsAccepted"
+                    disabled={!termsViewed}
+                    showModal={setModalVisible}
+                    rightText={'I/We accept the Terms and Conditions'}
+                  />
+                )}
+                {/* {!termsViewed && (
                 <Button
                   onPress={() => setModalVisible(true)}
                   disabled={!values.password || !values.confirmPassword}>
                   View Terms and Conditions
                 </Button>
               )} */}
-            </ScrollView>
-            {values.termsAccepted && (
-              <>
-                {values.termsAccepted && (
-                  <>
-                    {concentSent && (
-                      <>
-                        <Field component={CustomInput} name="otp" label="OTP (*)" />
-                        <Text>
-                          OTP is sent to your email and mobile{`\n`}
-                          {!resendConsent && <CountDownTimer initialValue={180}></CountDownTimer>}
-                          {resendConsent && <><Text
-                            style={{
-                              marginLeft: 10,
-                              padding: 10,
-                              textDecorationLine: 'underline',
-                              color: 'red'
-                            }}
-                            onPress={() => sendConsentOtp(values)}>
-                            Resend Consent OTP
-                          </Text></>}
-                          
-                        </Text>
-                      </>
-                    )}
-                  </>
-                )}
+              </View>
+              {values.termsAccepted && (
+                <>
+                  {values.termsAccepted && (
+                    <>
+                      {concentSent && (
+                        <>
+                          <Field
+                            component={CustomInput}
+                            name="otp"
+                            label="OTP (*)"
+                          />
+                          <Text>
+                            OTP is sent to your email and mobile{`\n`}
+                            {!resendConsent && (
+                              <CountDownTimer
+                                initialValue={180}></CountDownTimer>
+                            )}
+                            {resendConsent && (
+                              <>
+                                <Text
+                                  style={{
+                                    marginLeft: 10,
+                                    padding: 10,
+                                    textDecorationLine: 'underline',
+                                    color: 'red',
+                                  }}
+                                  onPress={() => sendConsentOtp(values)}>
+                                  Resend Consent OTP
+                                </Text>
+                              </>
+                            )}
+                          </Text>
+                        </>
+                      )}
+                    </>
+                  )}
 
-                {!concentSent && <Button
+                  {values.termsAccepted && concentSent && (
+                    <Button
+                      style={styles.registerButton}
+                      onPress={(e: any) => handleSubmit(e)}
+                      mode="contained">
+                      Register
+                    </Button>
+                  )}
+                </>
+              )}
+              {!concentSent && (
+                <Button
                   mode="contained"
                   style={styles.registerButton}
                   onPress={() => sendConsentOtp(values)}>
                   Send OTP
                 </Button>
-                }
-
-                {values.termsAccepted && concentSent && (
-                  <Button
-                    style={styles.registerButton}
-                    onPress={(e: any) => handleSubmit(e)}
-                    mode="contained">
-                    Register
-                  </Button>
-                )}
-              </>
-            )}
-          </Surface>
+              )}
+            </View>
+          </ScrollView>
         )}
       </Formik>
       <Modal
@@ -280,9 +326,18 @@ const Register = (props: PartnerRegistrationProps) => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>
-              I/We hereby declare and confirm that information submitted by me/us on Online Application Portal for the purpose of customer lead/application submission is true and accurate to the best of my/our knowledge and belief. I/We take full responsibility for the accuracy and authenticity of the information provided.{`\n\n`}
-              I/we further affirm that the customer is aware of the fact that that their information is being provided by me/us and has authorised me/us to provide this information on its behalf.{`\n\n`}
-              I/We also understand that, I/We will not be entitled to receive any payment or monetary compensation from SIDBI for submitting this customer lead/application to SIDBI through the Portal.
+              I/We hereby declare and confirm that information submitted by
+              me/us on Online Application Portal for the purpose of customer
+              lead/application submission is true and accurate to the best of
+              my/our knowledge and belief. I/We take full responsibility for the
+              accuracy and authenticity of the information provided.{`\n\n`}
+              I/we further affirm that the customer is aware of the fact that
+              that their information is being provided by me/us and has
+              authorised me/us to provide this information on its behalf.
+              {`\n\n`}
+              I/We also understand that, I/We will not be entitled to receive
+              any payment or monetary compensation from SIDBI for submitting
+              this customer lead/application to SIDBI through the Portal.
             </Text>
             <Pressable
               style={[styles.button, styles.buttonClose]}

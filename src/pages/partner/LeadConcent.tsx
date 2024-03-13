@@ -239,7 +239,9 @@ const LeadConcent = (props: LeadConsentProps) => {
         {({values, handleSubmit, isValid}) => (
           <View style={styles.screenWrapper}>
             <View style={[styles.formContainer]}>
-              <Text style={[styles.headerText]}>Customer Consent</Text>
+              <Text style={[styles.headerText, {fontSize: 18}]}>
+                Customer Consent
+              </Text>
               {
                 <>
                   {concentSent && (
