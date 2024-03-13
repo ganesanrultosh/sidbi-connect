@@ -4,13 +4,13 @@ import Visit from '../models/visit/visit';
 import ImageService from './imageService';
 import service from './index';
 import moment from 'moment';
-import {profile} from './authService';
-import {onAddVisitId, updateVisitStatus} from '../slices/visitCacheSlice';
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import { profile } from './authService';
+import { onAddVisitId, updateVisitStatus } from '../slices/visitCacheSlice';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 
 export const postVisitTrigger = createAsyncThunk(
   'visit/postVisitTrigger',
-  async (params: {visit: Visit}, {dispatch}) => {
+  async (params: { visit: Visit }, { dispatch }) => {
     try {
       await VisitService.postVisitTrigger(params.visit, dispatch);
       Toast.show("Visit submitted sucessfully");
@@ -28,8 +28,8 @@ const VisitService = {
       let visitKey = visit.customer.pan + visit.report.reportId;
       try {
         //Set the status of visit to submitted.
-        dispatch(updateVisitStatus({visitKey: visitKey, status: "submitted"}))
-        let images: string[];
+        dispatch(updateVisitStatus({ visitKey: visitKey, status: "submitted" }))
+        let images: any;
         if (visit.report.images) {
           console.log('posting visit images');
           images = await Promise.all(
@@ -39,7 +39,7 @@ const VisitService = {
                 visit.customer.pan,
               );
               console.log(res);
-              return res.message;
+              return { url: res.message, coords: item.coords };
             }),
           );
           console.log('images posted sucessfully');
@@ -68,14 +68,14 @@ const VisitService = {
         }
       } catch (error: any) {
         console.log('Visit trigger error', error?.message);
-        dispatch(updateVisitStatus({visitKey: visitKey, status: "syncfailure", message: error?.message}))
+        dispatch(updateVisitStatus({ visitKey: visitKey, status: "syncfailure", message: error?.message }))
         Toast.show(
           'Error submitting visit.',
         );
         throw new Error(error?.message);
       }
     }
-      
+
   },
   postEmptyVisit: async (params: {
     customerId: number | undefined;
@@ -126,15 +126,15 @@ const VisitService = {
           orgPan: visit.customer.pan,
         };
         console.log('emptyVParams', emptyVParams);
-        
-        dispatch(updateVisitStatus({visitKey: visitKey, status: "submitted"}))
+
+        dispatch(updateVisitStatus({ visitKey: visitKey, status: "submitted" }))
         await VisitService.postEmptyVisit(emptyVParams as any).then(
           emptyVRes => {
             if (!emptyVRes?.data.id) {
               throw new Error('Something went wrong');
             }
-            
-            dispatch(onAddVisitId({visitKey, id: emptyVRes.data?.id}));
+
+            dispatch(onAddVisitId({ visitKey, id: emptyVRes.data?.id }));
             console.log('push to server', visit.id, emptyVRes?.data?.id);
             visit.id = emptyVRes?.data?.id;
             visitId = emptyVRes?.data?.id;
@@ -143,7 +143,7 @@ const VisitService = {
         );
       }
 
-      if(visitId) {
+      if (visitId) {
         console.log('Patching visit');
         const data: any = {};
         visit.report.pages.forEach((page: any) => {
@@ -211,21 +211,21 @@ const VisitService = {
 
         console.log('Patch sucessfull', res)
 
-        dispatch(updateVisitStatus({visitKey: visitKey, status: "synced"}))
+        dispatch(updateVisitStatus({ visitKey: visitKey, status: "synced" }))
 
         return res.data;
       } else {
-        dispatch(updateVisitStatus({visitKey: visitKey, status: "syncfailure"}))
+        dispatch(updateVisitStatus({ visitKey: visitKey, status: "syncfailure" }))
         throw new Error("Visit Id cannot be null");
       }
 
-      
+
     } catch (error: any) {
-      dispatch(updateVisitStatus({visitKey: visitKey, status: "syncfailure"}))
+      dispatch(updateVisitStatus({ visitKey: visitKey, status: "syncfailure" }))
       throw new Error(error?.message);
     }
   },
-  getDomainData: async (params: {domain: string, key: string}) => {
+  getDomainData: async (params: { domain: string, key: string }) => {
     try {
       console.log('trying to get domain Value', `/api/${params.domain}/${params.key}`)
       const res = await service.get(`/api/${params.domain}/${params.key}`);
