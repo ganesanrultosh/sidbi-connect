@@ -19,6 +19,8 @@ function App(): JSX.Element {
 
   useEffect(() => {
     initBackgroundFetch();
+    //Run submit visit on login
+    submitVisit();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
