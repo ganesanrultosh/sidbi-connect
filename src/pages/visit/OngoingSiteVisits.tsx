@@ -163,7 +163,7 @@ const OngoingSiteVisits = () => {
                   color: '#000',
                   fontWeight: '500',
                 }}>
-                {decrypt(props.customer.pan)}
+                {decrypt(props.customer.pan).trim()}
               </Text>
             </View>
           </Card.Content>
