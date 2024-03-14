@@ -44,7 +44,9 @@ const OngoingSiteVisits = () => {
         keys.forEach((k: string) => {
           if (k) {
             if (visits[k]) {
-              dataArray.push(visits[k]['visit']);
+              if (visits[k]['visit']['status'] !== 'synced') {
+                dataArray.push(visits[k]['visit']);
+              }
             }
           }
         });
@@ -91,7 +93,9 @@ const OngoingSiteVisits = () => {
       <>
         <Card
           onPress={() => {
-            navigation.navigate('VisitReport', {visit: props as Visit});
+            if (props.status === 'created') {
+              navigation.navigate('VisitReport', {visit: props as Visit});
+            }
           }}
           style={[
             styles.leadCard,
@@ -163,7 +167,7 @@ const OngoingSiteVisits = () => {
                   color: '#000',
                   fontWeight: '500',
                 }}>
-                {decrypt(props.customer.pan).trim()}
+                {decrypt(props.customer.pan)?.trim()}
               </Text>
             </View>
           </Card.Content>

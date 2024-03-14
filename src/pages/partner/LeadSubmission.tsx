@@ -179,13 +179,16 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
     // dateOfIncorp: yup.string().required('Date of incorporation required'),
     itrFilingLocal: yup
       .boolean()
-      .isTrue('Customer should have 3 yrs IT Returns'),
+      .isTrue('Customer should have 3 yrs IT Returns')
+      .required('Customer should have 3 yrs IT Returns'),
     bankStatementLocal: yup
       .boolean()
-      .isTrue('Customer should have 3 yrs bank statement'),
+      .isTrue('Customer should have 3 yrs bank statement')
+      .required('Customer should have 3 yrs bank statement'),
     gstRegimeLocal: yup
       .boolean()
-      .isTrue('Customer should be registered under GST'),
+      .isTrue('Customer should be registered under GST')
+      .required('Customer should be registered under GST'),
     applicationFillingBy: yup.string().required('Filled by is required'),
   });
 

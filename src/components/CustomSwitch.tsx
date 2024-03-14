@@ -21,6 +21,7 @@ const CustomSwitch = (props : any) => {
         </View>
         <View style={{ flex: 3, alignSelf: 'flex-start' }}>
           <Switch 
+          	trackColor={{false: '#737373'}}
             style={{ marginBottom: 20 }} 
             value={value} 
             onValueChange={(value) => setFieldValue(name, value)} />
