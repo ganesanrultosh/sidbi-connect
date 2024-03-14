@@ -31,7 +31,7 @@ const SiteVisitCustomerSearch = () => {
     isLoading: isCustomerLoading,
     isSuccess: isCustomerSuccess,
     isError: isCustomerError,
-  } = useFilterCustomersQuery(panOrName || skipToken);
+  } = useFilterCustomersQuery(panOrNameForSearch || skipToken);
 
   const theme = useTheme();
 
@@ -70,8 +70,10 @@ const SiteVisitCustomerSearch = () => {
     let mounted = true;
 
     if (mounted) {
-      if (panOrName !== '') {
+      if (panOrNameForSearch !== '' && panOrName !== '') {
         setCustomersList(customers);
+      } else if (panOrNameForSearch !== '' && panOrName === '') {
+        setCustomersList(undefined);
       } else {
         setCustomersList(undefined);
       }
@@ -80,26 +82,28 @@ const SiteVisitCustomerSearch = () => {
     return () => {
       mounted = false;
     };
-  }, [panOrName, customers]);
+  }, [panOrNameForSearch, customers, panOrName]);
 
   const createCustomers = () => {
-    if (panOrName !== '') {
-      if (isCustomerError || !(customersList && customersList.length > 0)) {
-        return (
-          <>
-            <Text style={{color: 'red', fontSize: 16}}>
-              No customers record found.
-            </Text>
-            <Button
-              mode="contained"
-              style={{marginBottom: 10}}
-              onPress={() => {
-                setShowCreate(true);
-              }}>
-              Create customer
-            </Button>
-          </>
-        );
+    if (panOrNameForSearch !== '') {
+      if (panOrName !== '') {
+        if (isCustomerError || !(customersList && customersList.length > 0)) {
+          return (
+            <>
+              <Text style={{color: 'red', fontSize: 16}}>
+                No customers record found.
+              </Text>
+              <Button
+                mode="contained"
+                style={{marginBottom: 10}}
+                onPress={() => {
+                  setShowCreate(true);
+                }}>
+                Create customer
+              </Button>
+            </>
+          );
+        }
       }
     } else {
       return <></>;
@@ -215,15 +219,15 @@ const SiteVisitCustomerSearch = () => {
                   />
                 }
               />
-              {/* Not needed, Dynamic search implemented */}
-              {/* <Button
-                labelStyle={{fontSize: 16}}
+              {/* Not needed if Dynamic search implemented */}
+              <Button
+                labelStyle={{fontSize: 14}}
                 mode="contained"
                 onPress={() => {
                   setPanOrNameForSearch(panOrName);
                 }}>
                 Search
-              </Button> */}
+              </Button>
             </View>
             <ScrollView
               showsVerticalScrollIndicator={true}
