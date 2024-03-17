@@ -1,5 +1,6 @@
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { tokens } from 'react-native-paper/lib/typescript/styles/themes/v3/tokens';
+import parseJwt from './parseJwt';
 
 export default function useToken() {
   const tokenKey = "sidbi-connect-token";

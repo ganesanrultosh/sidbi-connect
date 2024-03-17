@@ -17,7 +17,6 @@ const CustomTextAreaInput: React.FC<{
         backgroundColor: '#FFFFFF',
         flex: 1,
         marginVertical: 5,
-        // marginRight: 15,
       }}>
       <>
         <TextAreaWithSpeech
@@ -29,32 +28,10 @@ const CustomTextAreaInput: React.FC<{
           }
           defaultValue={field.defaultValue || ''}
         />
-        {/* <TextInput
-          mode="flat"
-          underlineColor="transparent"
-          style={{
-            // marginRight: 20,
-            verticalAlign: 'top',
-            backgroundColor: '#FFFFFF',
-            paddingRight: 10,
-          }}
-          value={field.fieldValue || ''}
-          multiline={true}
-          numberOfLines={10}
-          placeholder={field.placeholder || ''}
-          placeholderTextColor="rgba(129,102,102,0.44)"
-          onChangeText={(t) => {
-            console.log('text area text change', t)
-            onChange(t)
-          }}
-          defaultValue={field.defaultValue || ''}
-          maxFontSizeMultiplier={1}
-        /> */}
         <TextInput
           mode="outlined"
           value={value}
           style={{
-            // marginRight: 20,
             verticalAlign: 'top',
             backgroundColor: '#FFFFFF',
             paddingRight: 10,
