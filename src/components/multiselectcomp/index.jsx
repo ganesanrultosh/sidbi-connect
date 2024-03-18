@@ -3,6 +3,7 @@ import {Text, View} from 'react-native';
 import MultiSelect from 'react-native-multiple-select';
 import VisitService from '../../services/visitService';
 import CustomTextAreaInput from '../../pages/visit/report/CustomTextAreaInput';
+import decrypt from '../../utils/decrypt';
 
 const MultiSelectComp = ({field, visitFieldContext, domainValue, onChange}) => {
   onSelectedItemsChange = selectedItems => {
@@ -15,8 +16,8 @@ const MultiSelectComp = ({field, visitFieldContext, domainValue, onChange}) => {
   useEffect(() => {
     if ((!domainValues || domainValues.length === 0) && status !== 'error') {
       setStatus('loading');
-      // let key = visitFieldContext.pan;
-      let key = 'ABECS7591N';
+      let key = decrypt(visitFieldContext.pan);
+      // let key = 'ABECS7591N';
       VisitService.getDomainData({domain: domainValue, key})
         .then(res => {
           console.log('Get Domain Data Success', res.data);
