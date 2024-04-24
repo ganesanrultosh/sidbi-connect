@@ -11,7 +11,7 @@ const CustomTextAreaInput: React.FC<{
   visitFieldUpdateContext: VisitFieldUpdateContext;
   onChange: (value: any) => void;
 }> = ({field, visitFieldUpdateContext, onChange}) => {
-  const [value, setValue] = useState(field.fieldValue || '')
+  const [value, setValue] = useState<string | null | undefined>(field.fieldValue)
   const [defaultValue, setDefaultValue] = useState<string | undefined>()
 
   useEffect(() => {
@@ -42,11 +42,11 @@ const CustomTextAreaInput: React.FC<{
               onChange(t)
             }
           }
-          defaultValue={field.defaultValue || ''}
+          defaultValue={defaultValue}
         />
         <TextInput
           mode="outlined"
-          value={value}
+          value={value || defaultValue}
           style={{
             verticalAlign: 'top',
             backgroundColor: '#FFFFFF',
