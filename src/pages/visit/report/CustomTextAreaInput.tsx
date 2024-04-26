@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Field from '../../../models/visit/reportStructure/field';
 import VisitFieldUpdateContext from '../../../models/visit/VisitFieldUpdateContext';
 import TextAreaWithSpeech from '../../../components/speechToText';
 import {Modal, TextInput} from 'react-native-paper';
 import {View, TouchableOpacity, StyleSheet, Text} from 'react-native';
+import { profile } from '../../../services/authService';
 
 const CustomTextAreaInput: React.FC<{
   field: Field;
@@ -11,6 +12,21 @@ const CustomTextAreaInput: React.FC<{
   onChange: (value: any) => void;
 }> = ({field, visitFieldUpdateContext, onChange}) => {
   const [value, setValue] = useState(field.fieldValue || '')
+  const [defaultValue, setDefaultValue] = useState<string | undefined>()
+
+  useEffect(() => {
+    getDefaultValue(field.defaultValue)
+  })
+  
+
+  const getDefaultValue = (defaultValue: string | null | undefined) => {
+    if(defaultValue && defaultValue.indexOf("default:") >= 0) {
+      profile()
+        .then(response => response.json())
+        .then(value => setDefaultValue(value.name));      
+    } else return defaultValue;
+  }
+  
   return (
     <View
       style={{
@@ -43,7 +59,7 @@ const CustomTextAreaInput: React.FC<{
             setValue(text)
           }}
           onBlur={() => onChange(value)}
-          defaultValue={field.defaultValue || ""}
+          defaultValue={defaultValue}
           maxFontSizeMultiplier={1}
         />
       </>
