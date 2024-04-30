@@ -11,6 +11,7 @@ const CustomTextAreaInput: React.FC<{
   onChange: (value: any) => void;
 }> = ({field, visitFieldUpdateContext, onChange}) => {
   const [value, setValue] = useState(field.fieldValue || '')
+	const [isValidInput, setIsValidInput] = useState(true);
   return (
     <View
       style={{
@@ -62,10 +63,20 @@ const CustomTextAreaInput: React.FC<{
           }}
           multiline={true}
           numberOfLines={10}
-          onChangeText={(text) => {
-            setValue(text)
+          onChangeText={text => {
+            const pattern = /[<>\/]/;
+
+            if (pattern.test(text)) {
+              setIsValidInput(false);
+            } else {
+              setIsValidInput(true);
+              setValue(text);
+            }
           }}
-          onBlur={() => onChange(value)}
+          onBlur={() => {
+            setIsValidInput(true);
+            onChange(value);
+          }}
           defaultValue={field.defaultValue || ""}
           maxFontSizeMultiplier={1}
         />

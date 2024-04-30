@@ -12,19 +12,34 @@ const CustomTextInput: React.FC<{
   onChange: (value:any) => void
 }> = ({field, onChange}) => {
   // const [value, setValue] = useState(field.fieldValue || field.defaultValue || "")
+  
+	const [isValidInput, setIsValidInput] = useState(true);
   return (
-    <TextInput
-      mode="outlined"
-      value={field.fieldValue || ""}
-      style={{
-        marginVertical: 10,
-      }}
-      onChangeText={(text) => {
-        onChange(text)
-      }}
-      defaultValue={field.defaultValue || ""}
-      maxFontSizeMultiplier={1}
-    />
+    <>
+      <TextInput
+        mode="outlined"
+        value={field.fieldValue || ''}
+        style={{
+          marginVertical: 10,
+          backgroundColor: '#FFFFFF',
+        }}
+        onChangeText={text => {
+          const pattern = /[<>\/]/;
+
+          if (pattern.test(text)) {
+            setIsValidInput(false);
+          } else {
+            setIsValidInput(true);
+            onChange(text);
+          }
+        }}
+        defaultValue={field.defaultValue || ''}
+        maxFontSizeMultiplier={1}
+      />
+      {!isValidInput && (
+        <Text style={{color: 'red'}}>Invalid input entered</Text>
+      )}
+    </>
   );
 };
 
