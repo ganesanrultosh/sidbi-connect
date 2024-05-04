@@ -8,6 +8,7 @@ import VisitFieldUpdateContext from '../../../models/visit/VisitFieldUpdateConte
 import { getDomainData } from '../../../slices/visitCacheSlice';
 import useToken from '../../../components/Authentication/useToken';
 import { profile } from '../../../services/authService';
+import { useAppSelector } from '../../../app/hooks';
 
 const CustomTextInput: React.FC<{
   field: Field;
@@ -17,18 +18,25 @@ const CustomTextInput: React.FC<{
 
   const me = useToken();
   const [defaultValue, setDefaultValue] = useState<string | undefined>()
-
+  const {visits} = useAppSelector(state => state.persistedVisists);
+  
   useEffect(() => {
     getDefaultValue(field.defaultValue)
   })
   
 
   const getDefaultValue = (defaultValue: string | null | undefined) => {
-    if(defaultValue && defaultValue.indexOf("default:") >= 0) {
+    if(defaultValue && defaultValue.indexOf("default:username") >= 0) {
       profile()
         .then(response => response.json())
         .then(value => setDefaultValue(value.name));      
-    } else return defaultValue;
+    } else if (defaultValue && defaultValue.indexOf("default:name") >= 0) {
+      let visitInState = visits[visitFieldUpdateContext.pan + visitFieldUpdateContext.reportId];
+      if (visitInState) {
+        return visitInState.visit.customer.name
+      }
+    } 
+    else return defaultValue;
   }
 
   return (

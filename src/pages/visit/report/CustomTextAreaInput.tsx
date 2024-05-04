@@ -5,6 +5,7 @@ import TextAreaWithSpeech from '../../../components/speechToText';
 import {Modal, TextInput} from 'react-native-paper';
 import {View, TouchableOpacity, StyleSheet, Text} from 'react-native';
 import { profile } from '../../../services/authService';
+import { useAppSelector } from '../../../app/hooks';
 
 const CustomTextAreaInput: React.FC<{
   field: Field;
@@ -13,18 +14,25 @@ const CustomTextAreaInput: React.FC<{
 }> = ({field, visitFieldUpdateContext, onChange}) => {
   const [value, setValue] = useState<string | null | undefined>(field.fieldValue)
   const [defaultValue, setDefaultValue] = useState<string | undefined>()
-
+  const {visits} = useAppSelector(state => state.persistedVisists);
+  
   useEffect(() => {
     getDefaultValue(field.defaultValue)
   })
   
 
   const getDefaultValue = (defaultValue: string | null | undefined) => {
-    if(defaultValue && defaultValue.indexOf("default:") >= 0) {
+    if(defaultValue && defaultValue.indexOf("default:username") >= 0) {
       profile()
         .then(response => response.json())
         .then(value => setDefaultValue(value.name));      
-    } else return defaultValue;
+    } else if (defaultValue && defaultValue.indexOf("default:name") >= 0) {
+      let visitInState = visits[visitFieldUpdateContext.pan + visitFieldUpdateContext.reportId];
+      if (visitInState) {
+        return visitInState.visit.customer.name
+      }
+    } 
+    else return defaultValue;
   }
   
   return (
