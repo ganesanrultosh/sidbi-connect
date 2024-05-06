@@ -26,6 +26,7 @@ const CustomTextInput: React.FC<{
   
 
   const getDefaultValue = (defaultValue: string | null | undefined) => {
+    console.log("getDefaultValue", defaultValue)
     if(defaultValue && defaultValue.indexOf("default:username") >= 0) {
       profile()
         .then(response => response.json())
@@ -33,10 +34,9 @@ const CustomTextInput: React.FC<{
     } else if (defaultValue && defaultValue.indexOf("default:name") >= 0) {
       let visitInState = visits[visitFieldUpdateContext.pan + visitFieldUpdateContext.reportId];
       if (visitInState) {
-        return visitInState.visit.customer.name
+        setDefaultValue(visitInState.visit.customer.name);
       }
     } 
-    else return defaultValue;
   }
 
   return (
