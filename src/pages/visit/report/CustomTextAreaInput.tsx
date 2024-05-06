@@ -29,10 +29,9 @@ const CustomTextAreaInput: React.FC<{
     } else if (defaultValue && defaultValue.indexOf("default:name") >= 0) {
       let visitInState = visits[visitFieldUpdateContext.pan + visitFieldUpdateContext.reportId];
       if (visitInState) {
-        return visitInState.visit.customer.name
+        setDefaultValue(visitInState.visit.customer.name)
       }
     } 
-    else return defaultValue;
   }
   
   return (
