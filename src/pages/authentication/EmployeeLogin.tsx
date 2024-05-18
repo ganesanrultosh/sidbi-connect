@@ -22,10 +22,12 @@ import useToken from '../../components/Authentication/useToken';
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import {useAppSelector} from '../../app/hooks';
 import {useDispatch} from 'react-redux';
-import {setMPin} from '../../slices/visitCacheSlice';
+import {saveReportStructure, setMPin} from '../../slices/visitCacheSlice';
 import React, {useEffect, useState} from 'react';
 import CustomPasswordInput from '../../components/CustomPasswordInput';
+import Config from 'react-native-config';
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
+const visitApiEndpoint = Config.REACT_APP_VISIT_API_ENDPOINT;
 
 const employeeMobileNoValidation = yup.object().shape({
   mobileNo: yup
@@ -55,7 +57,7 @@ const mpinValidationSchema = yup.object().shape({
 
 const EmployeeLogin = () => {
   const theme = useTheme();
-  const {setToken, getToken, setUserType, setUserRole} = useToken();
+  const {setToken, getToken, setUserType, setUserRole, getUserRole} = useToken();
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const {mpin} = useAppSelector(state => state.persistedVisists);
@@ -142,6 +144,62 @@ const EmployeeLogin = () => {
       textDecorationLine: 'underline',
     },
   });
+
+  const getReportStructure = async () => {
+    const token = await getToken();
+    try {
+      await fetch(`${visitApiEndpoint}/api/reportstructure`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then(res => res.json())
+        .then(_reportsAll => {
+          // set report cards for different user roles
+          const {reports} = _reportsAll;
+
+          getUserRole().then(data => {
+            // console.log('data', data);
+            if (data !== 'GST' && data !== 'NBFC') {
+              const reportsArray = reports?.filter((item: any) =>
+                [1, 2, 3, 4, 5, 6].includes(item.reportId),
+              );
+              console.log("Saving report structure");
+              dispatch(saveReportStructure(reportsArray))
+            } else if (data === 'NBFC') {
+              const reportsArray = reports?.filter((item: any) =>
+                [7].includes(item.reportId),
+              );
+              console.log("Saving report structure");
+              dispatch(saveReportStructure(reportsArray))
+            } else if (data === 'GST') {
+              const reportsArray = reports?.filter((item: any) =>
+                [8, 9, 10, 11, 12, 13, 14].includes(item.reportId),
+              );
+              console.log("Saving report structure");
+              dispatch(saveReportStructure(reportsArray))
+            }
+          });
+        });
+    } catch (error: any) {
+      console.log('error fetching reports structure ', error);
+    }
+  };
+
+  useEffect(() => {
+    let mounted = true;
+
+    if (mounted) {
+      // fetch reportStructure on mount
+      getReportStructure();
+    }
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <View style={[styles.screenWrapper]}>

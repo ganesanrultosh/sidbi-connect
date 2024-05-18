@@ -26,65 +26,10 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
   const navigation = useNavigation();
   const route = useRoute<VisitTypeSelectionRouteProps>();
   const {customer} = route.params;
-  const {visits} = useAppSelector(state => state.persistedVisists);
+  const {visits, reportStructure} = useAppSelector(state => state.persistedVisists);
   const dispatch = useDispatch();
 
   const {getUserRole, getToken} = useToken();
-
-  const [reportCards, setReportCards] = useState<Report[] | undefined>();
-
-  const getReportStructure = async () => {
-    const token = await getToken();
-    try {
-      await fetch(`${visitApiEndpoint}/api/reportstructure`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then(res => res.json())
-        .then(_reportsAll => {
-          // set report cards for different user roles
-          const {reports} = _reportsAll;
-
-          getUserRole().then(data => {
-            // console.log('data', data);
-            if (data !== 'GST' && data !== 'NBFC') {
-              const reportsArray = reports?.filter((item: any) =>
-                [1, 2, 3, 4, 5, 6].includes(item.reportId),
-              );
-              setReportCards(reportsArray);
-            } else if (data === 'NBFC') {
-              const reportsArray = reports?.filter((item: any) =>
-                [7].includes(item.reportId),
-              );
-              setReportCards(reportsArray);
-            } else if (data === 'GST') {
-              const reportsArray = reports?.filter((item: any) =>
-                [8, 9, 10, 11, 12, 13, 14].includes(item.reportId),
-              );
-              setReportCards(reportsArray);
-            }
-          });
-        });
-    } catch (error: any) {
-      console.log('error fetching reports structure ', error);
-    }
-  };
-
-  useEffect(() => {
-    let mounted = true;
-
-    if (mounted) {
-      // fetch reportStructure on mount
-      getReportStructure();
-    }
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
 
   const VisitTypeSelectionCard = (report: Report) => {
     return (
@@ -92,7 +37,7 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
         style={{width: screenWidth * 0.4, height: 120}}
         onPress={() => {
           if (customer) {
-            let reportToCreate: Report | undefined = reportCards?.find(
+            let reportToCreate: Report | undefined = reportStructure?.find(
               item => item.reportId === report.reportId,
             );
             if (reportToCreate) {
@@ -224,7 +169,7 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
           style={[styles.scrollView]}
           contentContainerStyle={[styles.scrollContainer]}>
           <View style={[styles.cardsContainer]}>
-            {reportCards && getVisitTypeSelectionCards(reportCards)}
+            {reportStructure && getVisitTypeSelectionCards(reportStructure)}
           </View>
         </ScrollView>
       </View>
