@@ -19,6 +19,7 @@ import Toast from 'react-native-root-toast';
 import encrypt from '../../components/Authentication/passwordUtil';
 import EmployeeLogin from './EmployeeLogin';
 import {ScrollView} from 'react-native';
+import CustomPasswordInput from '../../components/CustomPasswordInput';
 
 const PartnerLogin = () => {
   const navigation = useNavigation();
@@ -31,13 +32,11 @@ const PartnerLogin = () => {
 
   const styles = StyleSheet.create({
     loginContainer: {
-      paddingTop: 15,
+      flex: 1,
       width: '100%',
-      height: '100%',
-      alignContent: 'center',
       alignItems: 'center',
-      alignSelf: 'center',
-      backgroundColor: '#F5F7F9',
+      rowGap: 15,
+      backgroundColor: '#FCFAFE',
     },
     headerText: {
       color: `${theme.colors.onBackground}`,
@@ -48,21 +47,25 @@ const PartnerLogin = () => {
       width: 120,
       padding: 5,
     },
+    sidbiImageStyle: {
+      flex: 1,
+      resizeMode: 'contain',
+    },
     loginSurface: {
       width: '95%',
-      // margin: 30,
-      marginTop: 20,
+      flex: 3,
       padding: 20,
     },
     scenarioQuestion: {
       fontWeight: 'bold',
-      margin: 5,
+      fontSize: 20,
       alignSelf: 'center',
     },
     scenarioContent: {
-      margin: 5,
-      marginBottom: 15,
+      marginVertical: 10,
+      fontSize: 18,
       alignSelf: 'center',
+      color: '#2196F3',
     },
     emailInput: {
       margin: 3,
@@ -71,47 +74,33 @@ const PartnerLogin = () => {
       margin: 3,
     },
     signinButton: {
-      margin: 10,
+      marginTop: 15,
+      paddingVertical: 5,
+      marginHorizontal: 20,
     },
     passwordButton: {
-      margin: 10,
-    },
-    registrationSurface: {
-      width: '95%',
-      margin: 0,
-      padding: 15,
       marginTop: 15,
+      paddingVertical: 5,
+      marginHorizontal: 20,
     },
     registerButton: {
-      margin: 10,
-    },
-    sidbiImageStyle: {
-      marginTop: 10,
-      height: 60,
-      resizeMode: 'contain',
-    },
-    button: {
-      alignSelf: 'flex-start',
-      display: 'flex',
-      marginTop: 10,
-    },
-    buttonTermsAccept: {
-      borderRadius: 20,
-      padding: 10,
-      elevation: 2,
+      marginTop: 15,
+      paddingVertical: 5,
+      marginHorizontal: 20,
     },
     centeredView: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: 22,
+      backgroundColor: 'rgba(0,0,0, 0.4)',
     },
     modalView: {
-      margin: 20,
-      backgroundColor: 'white',
-      borderRadius: 20,
-      padding: 35,
+      marginHorizontal: 20,
+      backgroundColor: '#FBF9FC',
+      borderRadius: 12,
+      padding: 20,
       alignItems: 'center',
+      rowGap: 15,
       shadowColor: '#000',
       shadowOffset: {
         width: 0,
@@ -121,20 +110,24 @@ const PartnerLogin = () => {
       shadowRadius: 4,
       elevation: 5,
     },
-    buttonOpen: {
-      backgroundColor: '#F194FF',
+    modalText: {
+      textAlign: 'justify',
     },
-    buttonClose: {
-      backgroundColor: `${theme.colors.primary}`,
+    buttonTermsAccept: {
+      paddingVertical: 10,
+      width: 100,
+      borderRadius: 5,
     },
     textStyle: {
       color: 'white',
       fontWeight: 'bold',
       textAlign: 'center',
     },
-    modalText: {
-      marginBottom: 15,
-      textAlign: 'justify',
+    buttonOpen: {
+      backgroundColor: '#F194FF',
+    },
+    buttonClose: {
+      backgroundColor: `${theme.colors.primary}`,
     },
   });
 
@@ -153,7 +146,7 @@ const PartnerLogin = () => {
         source={require('../../images/sidbi.png')}
       />
 
-      <Surface elevation={4} style={styles.loginSurface}>
+      <View style={styles.loginSurface}>
         <Text style={styles.scenarioQuestion}>Facilitator</Text>
         <Text style={styles.scenarioContent}>Sign in to continue</Text>
         <Formik
@@ -162,10 +155,10 @@ const PartnerLogin = () => {
           onSubmit={async values => {
             await encrypt(values.password).then(
               async (encryptedPassword: {password: string; key: string}) => {
-                console.log(
-                  'loginUser getting called',
-                  encryptedPassword.password,
-                );
+                // console.log(
+                //   'loginUser getting called',
+                //   encryptedPassword.password,
+                // );
                 await loginUser({
                   username: values.email,
                   password: encryptedPassword.password,
@@ -204,10 +197,9 @@ const PartnerLogin = () => {
                 autoCapitalize="none"
               />
               <Field
-                component={CustomInput}
+                component={CustomPasswordInput}
                 name="password"
                 label="Password (*)"
-                secureTextEntry
               />
               <Button
                 onPress={(e: any) => setSignInModalVisible(true)}
@@ -244,7 +236,7 @@ const PartnerLogin = () => {
                         setSignInModalVisible(false);
                         handleSubmit(e);
                       }}>
-                      <Text style={styles.textStyle}>Ok</Text>
+                      <Text style={styles.textStyle}>OK</Text>
                     </Pressable>
                   </View>
                 </View>
@@ -299,7 +291,7 @@ const PartnerLogin = () => {
             </View>
           </View>
         </Modal>
-      </Surface>
+      </View>
     </View>
   );
 };

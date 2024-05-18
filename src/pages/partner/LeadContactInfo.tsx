@@ -1,7 +1,7 @@
 import { Field, Formik } from "formik";
 import * as yup from 'yup';
 import CustomInput from "../../components/CustomInput";
-import { ScrollView, StyleSheet, Text } from "react-native";
+import { ScrollView, StyleSheet, Text ,View} from "react-native";
 import React, { useEffect, useState } from "react";
 import { Button, Surface, useTheme } from "react-native-paper";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -21,13 +21,26 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
   const theme = useTheme();
   
   const styles = StyleSheet.create({
-    contactInfoSurface: { width: "90%", margin: 20, padding: 20 },
-    header: { 
+    screenWrapper: {
+      flex: 1,
+      backgroundColor: '#FCFAFE',
+    },
+    formContainer: {
+      width: '100%',
+      height: '100%',
+      paddingTop: 50,
+      alignItems: 'center',
+      rowGap: 10,
+      paddingHorizontal: 20,
+    },
+    headerText: {
       color: `${theme.colors.onBackground}`,
-      fontSize: 20, fontWeight: "bold", marginBottom: 20 },
-    scrollView: { padding: 5 },
-    continueButton: { alignSelf: "flex-end", display: "flex", margin: 10 }
-  })
+      fontWeight: '500',
+      fontSize: 25,
+      textAlign: 'center',
+    },
+    continueButton: {},
+  });
   
 
   const route = useRoute<LeadContactInfoRouteProps>();
@@ -107,104 +120,103 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
       .required("Address is required")
   })
 
-  return <Formik
-    validationSchema={contactInfoValidationSchema}
-    initialValues={initialValues}
-    onSubmit={(values, form) => {
-      let currentValues = {...leadInfo, ...values} as Lead
-      form.validateForm()
-      console.log("Navigating to submission", currentValues)
-      disptach(saveLead(currentValues));
-      setLeadInfo(currentValues)
-      navigation.navigate(
-        'LeadSubmission',
-        {lead: currentValues})
-    }}
-  >
-    {({
-      values,
-      handleSubmit,
-      isValid
-    }) => (<Surface
-      elevation={4}
-      style={styles.contactInfoSurface}
-    >
-      <ScrollView style={styles.scrollView}>
-        <Text style={styles.header}>Contact Information</Text>
-        <Field
-          component={CustomInput}
-          name="emailId"
-          label="Email (*)"
-        />
-        <Field
-          component={CustomInput}
-          name="mobileNo"
-          label="Phone No (*)"
-        />
-        <Field
-          component={CustomInput}
-          name="pincode"
-          label="Pincode (*)"
-          validateOnChange={true}
-          onChange = {(value: any) => {
-            if(/^[1-9][0-9]{5}$/.test(value)) {
-              setPinCode(value)
-              setRefreshList(true)
-            }
-          } }
-        />
-        {masterError && 
-          <><Text style={{color: 'red'}}>City & State not found for the pin code.</Text>
-          <Field
-          component={CustomInput}
-          name="city"
-          label="City (*)"
-          enableReinitialize
-          disabled={isMasterLoading}
-        />
-        <Field
-          component={CustomInput}
-          name="state"
-          label="State (*)"
-          enableReinitialize
-          disabled={isMasterLoading}
-        /></>
-        }
-        {!masterError && <><Field
-          component={CustomDropDownEditable}
-          name="city"
-          label="City (*)"
-          list={cities}
-          enableReinitialize
-          clearValue={refreshList}
-          disabled={isMasterLoading}
-        />
-        <Field
-          component={CustomDropDownEditable}
-          name="state"
-          label="State (*)"
-          list={states}
-          enableReinitialize
-          clearValue={refreshList}
-          disabled={isMasterLoading}
-        /></>}
-        <Field
-          component={CustomInput}
-          name="officeAddress"
-          label="Address Details (*)"
-          multiline={true}
-          numberOfLines={4}
-        />
-      </ScrollView>
-      <Button 
-        mode="contained" 
-        style={styles.continueButton} 
-        disabled={!isValid}
-        onPress={(e:any) => handleSubmit(e)}>
-          Continue
-      </Button>
-    </Surface>)}
-  </Formik>
+  return (
+    <Formik
+      validationSchema={contactInfoValidationSchema}
+      initialValues={initialValues}
+      onSubmit={(values, form) => {
+        let currentValues = {...leadInfo, ...values} as Lead;
+        form.validateForm();
+        // console.log('Navigating to submission', currentValues);
+        disptach(saveLead(currentValues));
+        setLeadInfo(currentValues);
+        navigation.navigate('LeadSubmission', {lead: currentValues});
+      }}>
+      {({values, handleSubmit, isValid}) => (
+        <View style={styles.screenWrapper}>
+          <ScrollView contentContainerStyle={styles.formContainer}>
+            <Text style={[styles.headerText]}>Contact Information</Text>
+            <Field component={CustomInput} name="emailId" label="Email (*)" />
+            <Field
+              component={CustomInput}
+              name="mobileNo"
+              label="Phone No (*)"
+            />
+            <Field
+              component={CustomInput}
+              name="pincode"
+              label="Pincode (*)"
+              validateOnChange={true}
+              onChange={(value: any) => {
+                if (/^[1-9][0-9]{5}$/.test(value)) {
+                  setPinCode(value);
+                  setRefreshList(true);
+                }
+              }}
+            />
+            {masterError && (
+              <>
+                <Text style={{color: 'red'}}>
+                  City & State not found for the pin code.
+                </Text>
+                <Field
+                  component={CustomInput}
+                  name="city"
+                  label="City (*)"
+                  enableReinitialize
+                  disabled={isMasterLoading}
+                />
+                <Field
+                  component={CustomInput}
+                  name="state"
+                  label="State (*)"
+                  enableReinitialize
+                  disabled={isMasterLoading}
+                />
+              </>
+            )}
+            {!masterError && (
+              <>
+                <Field
+                  component={CustomDropDownEditable}
+                  name="city"
+                  label="City (*)"
+                  list={cities}
+                  enableReinitialize
+                  clearValue={refreshList}
+                  disabled={isMasterLoading}
+                />
+                <Field
+                  component={CustomDropDownEditable}
+                  name="state"
+                  label="State (*)"
+                  list={states}
+                  enableReinitialize
+                  clearValue={refreshList}
+                  disabled={isMasterLoading}
+                />
+              </>
+            )}
+            <Field
+              component={CustomInput}
+              name="officeAddress"
+              label="Address Details (*)"
+              multiline={true}
+              numberOfLines={4}
+            />
+            <Button
+              labelStyle={{fontSize: 16}}
+              mode="contained"
+              style={styles.continueButton}
+              disabled={!isValid}
+              onPress={(e: any) => handleSubmit(e)}>
+              Continue
+            </Button>
+          </ScrollView>
+        </View>
+      )}
+    </Formik>
+  );
 }
 
 

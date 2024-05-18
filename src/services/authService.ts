@@ -20,6 +20,21 @@ async function me() {
   });
 }
 
+
+async function verifyUser() {
+  const token = await getToken()
+
+  // console.log("token for the number", token);
+
+  return fetch(`${visitApiEndpoint}/api/users/me`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+  });
+}
+
 function loginUser(credentials: {
   username: string;
   password: string;
@@ -113,4 +128,4 @@ async function profile () {
   });
 }
 
-export { me, loginUser, forgotPassword, signupUser, setUserPassword, randomKeys, generateOtp, loginEmployee, profile };
+export { me, loginUser, forgotPassword, signupUser, setUserPassword, randomKeys, verifyUser, generateOtp, loginEmployee, profile, };

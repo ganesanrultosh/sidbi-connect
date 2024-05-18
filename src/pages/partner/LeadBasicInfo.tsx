@@ -17,15 +17,26 @@ const LeadBasicInfo = (props : LeadBasicInfoProps) => {
   const navigation = useNavigation();
   const theme = useTheme();
   const styles = StyleSheet.create({
-    viewStyle: { flex: 1 },
-    surfaceStyle: { width: "90%", margin: 20, padding: 20 },
-    headerText: { 
+    screenWrapper: {
+      flex: 1,
+      backgroundColor: '#FCFAFE',
+    },
+    formContainer: {
+      width: '100%',
+      height: '100%',
+      paddingTop: 50,
+      alignItems: 'center',
+      rowGap: 10,
+      paddingHorizontal: 20,
+    },
+    headerText: {
       color: `${theme.colors.onBackground}`,
-      fontSize: 20, fontWeight: "bold", marginBottom: 20 },
-    scrollView: { padding: 5 },
-    continueButton: { alignSelf: "flex-end", display: "flex", margin: 10 },
-    radioGroupEnclosure: { marginTop: 10, borderBlockColor: "black", borderWidth: 1, padding: 10, borderRadius: 3 }
-  })
+      fontWeight: '500',
+      fontSize: 25,
+      textAlign: 'center',
+    },
+    continueButton: {},
+  });
 
   const dispatch = useAppDispatch();
   const route = useRoute<LeadBasicInfoRouteProps>();
@@ -65,8 +76,11 @@ const LeadBasicInfo = (props : LeadBasicInfoProps) => {
       .required('Entity Name is required.'),
     loanAmount: yup
       .number()
-      .min(10, "Loan Amount should be atleast 10 Lakhs ₹")
-      .max(100, "Loan Amount should not be more than 100 Lakhs ₹")
+      .min(10, ({min}) => `Loan Amount should be atleast ${min} Lakhs (₹)`)
+      .max(
+        100,
+        ({max}) => `Loan Amount should not be more than ${max} Lakhs (₹)`,
+      )
       .required('Loan amount is required.'),
     // loanType: yup
     //   .string()
@@ -76,32 +90,21 @@ const LeadBasicInfo = (props : LeadBasicInfoProps) => {
     //   .required('Customer Type is required')
   });
 
-  return <Formik
-    validationSchema={basicInfoValidationSchema}
-    initialValues={leadInfo}
-    onSubmit={values => {
-      let currentValues = {...leadInfo, ...values} as Lead
-      dispatch(saveLead(currentValues));
-      setLeadInfo(currentValues)
-      navigation.navigate(
-        'LeadContactInfo',
-        {lead: currentValues})
-    }}
-  >
-    {({
-      values,
-      handleSubmit,
-      isValid
-    }) => (<View style={styles.viewStyle}>
-      <ScrollView>
-        <Surface elevation={4} style={styles.surfaceStyle}>
-          <ScrollView style={styles.scrollView}>
-            <Text style={styles.headerText}>Basic Information</Text>
-            <Field
-              component={CustomInput}
-              name="pan"
-              label="PAN (*)"
-            />
+  return (
+    <Formik
+      validationSchema={basicInfoValidationSchema}
+      initialValues={leadInfo}
+      onSubmit={values => {
+        let currentValues = {...leadInfo, ...values} as Lead;
+        dispatch(saveLead(currentValues));
+        setLeadInfo(currentValues);
+        navigation.navigate('LeadContactInfo', {lead: currentValues});
+      }}>
+      {({values, handleSubmit, isValid}) => (
+        <View style={styles.screenWrapper}>
+          <View style={[styles.formContainer]}>
+            <Text style={[styles.headerText]}>Basic Information</Text>
+            <Field component={CustomInput} name="pan" label="PAN (*)" />
             <Field
               component={CustomInput}
               name="entityName"
@@ -112,35 +115,19 @@ const LeadBasicInfo = (props : LeadBasicInfoProps) => {
               name="loanAmount"
               label="Loan Amount (Lakhs ₹) (*)"
             />
-            {/* <Field
-              component={CustomDropDown}
-              name="loanType"
-              label="Loan Type (*)"
-              enableReinitialize
-              list={loanTypeDomain}
-            /> */}
-            {/* <View style={styles.radioGroupEnclosure}>
-              <Field
-                component={CustomRadioGroup}
-                name="customerType"
-                label="Customer Type (*)"
-                header={"Customer Type"}
-                radioList={customerValueList}
-              />
-            </View> */}
-          </ScrollView>
-          <Button
-            mode="contained"
-            style={styles.continueButton}
-            disabled={!isValid}
-            onPress={(e: any) => handleSubmit(e)}>
-            Continue
-          </Button>
-        </Surface>
-      </ScrollView>
-      {/* <Footer /> */}
-    </View>)}
-  </Formik>
+            <Button
+              labelStyle={{fontSize: 16}}
+              style={[styles.continueButton]}
+              mode="contained"
+              disabled={!isValid}
+              onPress={(e: any) => handleSubmit(e)}>
+              Continue
+            </Button>
+          </View>
+        </View>
+      )}
+    </Formik>
+  );
 }
 
 export default LeadBasicInfo;

@@ -3,7 +3,11 @@ import {Button, Surface, useTheme} from 'react-native-paper';
 import CustomInput from '../../components/CustomInput';
 import {Field, Formik} from 'formik';
 import * as yup from 'yup';
-import {generateOtp, loginEmployee} from '../../services/authService';
+import {
+  generateOtp,
+  loginEmployee,
+  verifyUser,
+} from '../../services/authService';
 import Toast from 'react-native-root-toast';
 import useToken from '../../components/Authentication/useToken';
 import {CommonActions, useNavigation} from '@react-navigation/native';
@@ -11,10 +15,11 @@ import {useAppSelector} from '../../app/hooks';
 import {useDispatch} from 'react-redux';
 import {setMPin} from '../../slices/visitCacheSlice';
 import React, {useEffect, useState} from 'react';
+import CustomPasswordInput from '../../components/CustomPasswordInput';
 
 const EmployeeLogin = () => {
   const theme = useTheme();
-  const {setToken, getToken, setUserType} = useToken();
+  const {setToken, getToken, setUserType, setUserRole} = useToken();
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const {mpin} = useAppSelector(state => state.persistedVisists);
@@ -22,34 +27,35 @@ const EmployeeLogin = () => {
   const styles = StyleSheet.create({
     scenarioQuestion: {
       fontWeight: 'bold',
-      margin: 5,
+      margin: 12,
+      fontSize: 20,
       alignSelf: 'center',
     },
     registrationSurface: {
+      flex: 3,
       width: '95%',
-      margin: 0,
-      padding: 15,
-      marginTop: 15,
+      marginHorizontal: 15,
+      paddingHorizontal: 15,
     },
     registerButton: {
-      margin: 10,
+      marginVertical: 15,
     },
     signinButton: {
-      margin: 10,
+      marginVertical: 15,
     },
     sidbiImageStyle: {
-      marginTop: 10,
-      height: 60,
+      flex: 1,
       resizeMode: 'contain',
     },
     loginContainer: {
-      paddingTop: 15,
       width: '100%',
       height: '100%',
       alignContent: 'center',
       alignItems: 'center',
       alignSelf: 'center',
-      backgroundColor: '#F5F7F9',
+      justifyContent: 'center',
+      gap: 15,
+      backgroundColor: '#FCFAFE',
     },
   });
 
@@ -101,7 +107,7 @@ const EmployeeLogin = () => {
         style={styles.sidbiImageStyle}
         source={require('../../images/sidbi.png')}
       />
-      <Surface elevation={4} style={styles.registrationSurface}>
+      <View  style={styles.registrationSurface}>
         <Text style={styles.scenarioQuestion}>SIDBI Employee </Text>
         {!loggedIn && !otpSent && (
           <Formik
@@ -112,7 +118,7 @@ const EmployeeLogin = () => {
                 .then(response => response.json())
                 .then(async (data: any) => {
                   if (data.error) {
-                    console.log(data);
+                    console.log(`error at "generateOtp" api`, data);
                     Toast.show(data.error);
                   } else {
                     Toast.show('OTP Sent sucessfully.');
@@ -161,7 +167,7 @@ const EmployeeLogin = () => {
                 .then(response => response.json())
                 .then(async (data: any) => {
                   if (data.error) {
-                    console.log(data);
+                    console.log(`error at "loginEmployee" method`, data.error);
                     Toast.show(data.error);
                   } else {
                     setOtpSent(false);
@@ -198,7 +204,6 @@ const EmployeeLogin = () => {
                   <Button
                     onPress={() => setOtpSent(false)}
                     mode="outlined"
-                    style={styles.signinButton}
                     disabled={!isValid}>
                     Cancel
                   </Button>
@@ -219,10 +224,9 @@ const EmployeeLogin = () => {
               <>
                 <View>
                   <Field
-                    component={CustomInput}
+                    component={CustomPasswordInput}
                     name="mpin"
                     label="Mobile PIN"
-                    secureTextEntry
                     autoCapitalize="none"
                   />
                   <Button
@@ -248,22 +252,39 @@ const EmployeeLogin = () => {
             onSubmit={async values => {
               if (mpin === values.mpin) {
                 setUserType('EMPLOYEE');
+                // vigneshj
+                await verifyUser()
+                  .then(response => response.json())
+                  .then(async (data: any) => {
+                    if (data.error) {
+                      console.log(`error at "verifyUser" method`, data.error);
+                      Toast.show(data.error);
+                    } else {
+                      if (data.role) {
+                        setUserRole(data.role);
+                      }
+                    }
+                  })
+                  .catch((error: any) => {
+                    console.log('error at "verifyUser" method', error);
+                  });
                 navigation.dispatch(
                   CommonActions.reset({
                     index: 0,
                     routes: [{name: 'Root'}],
                   }),
                 );
+              } else {
+                Toast.show('Incorrect PIN entered');
               }
             }}>
             {({handleSubmit, isValid}) => (
               <>
                 <View>
                   <Field
-                    component={CustomInput}
+                    component={CustomPasswordInput}
                     name="mpin"
                     label="Mobile PIN"
-                    secureTextEntry
                     autoCapitalize="none"
                   />
                   <Button
@@ -284,7 +305,6 @@ const EmployeeLogin = () => {
                       Toast.show('Login again to set a new MPIN');
                     }}
                     mode="outlined"
-                    style={styles.signinButton}
                     disabled={!isValid}>
                     Forgot Mpin
                   </Button>
@@ -293,7 +313,7 @@ const EmployeeLogin = () => {
             )}
           </Formik>
         )}
-      </Surface>
+      </View>
     </View>
   );
 };

@@ -9,11 +9,13 @@ import {persistStore} from 'redux-persist';
 import BackgroundFetch from 'react-native-background-fetch';
 import {postVisitTrigger} from './src/services/visitService';
 import {useAppDispatch} from './src/app/hooks';
+import {AppDispatch} from './src/app/store';
+import { deleteVisit } from './src/slices/visitCacheSlice';
 
 function App(): JSX.Element {
   let persistor = persistStore(store);
 
-  // let dispatch = useAppDispatch();
+  let dispatch = store.dispatch;
 
   useEffect(() => {
     initBackgroundFetch();
@@ -25,7 +27,7 @@ function App(): JSX.Element {
     const onEvent = async (taskId: string) => {
       console.log('[BackgroundFetch] task: ', taskId);
       // Do your background work...
-      // await submitVisit();
+      await submitVisit();
       Promise.resolve();
       // IMPORTANT:  You must signal to the OS that your task is complete.
       BackgroundFetch.finish(taskId);
@@ -40,56 +42,35 @@ function App(): JSX.Element {
     };
 
     // Initialize BackgroundFetch only once when component mounts.
-    // let status = await BackgroundFetch.configure(
-    //   {
-    //     minimumFetchInterval: 5,
-    //     requiredNetworkType: BackgroundFetch.NETWORK_TYPE_ANY,
-    //   },
-    //   onEvent,
-    //   onTimeout,
-    // );
-
-    let status = await BackgroundFetch.configure({
-      minimumFetchInterval: 15, // Minimum fetch interval in minutes
-      stopOnTerminate: false, // Whether to stop background fetch on app termination
-      startOnBoot: true, // Whether to start background fetch on device boot
-      enableHeadless: true, // Whether to run the task even if the app is not running
-    }, () => {
-      performBackgroundTask();
-    }, (error) => {
-      console.log('Background fetch failed to start', error);
-    });
+    let status = await BackgroundFetch.configure(
+      {
+        minimumFetchInterval: 5,
+        requiredNetworkType: BackgroundFetch.NETWORK_TYPE_ANY,
+      },
+      onEvent,
+      onTimeout,
+    );
 
     console.log('[BackgroundFetch] configure status: ', status);
   }
 
-  const performBackgroundTask = () => {
-    // Code that needs to be executed in the background
-    const startTime = new Date().getTime();
-  
-    // Code to execute the background task
-    // ...
-  
-    const endTime = new Date().getTime();
-    const timeTaken = endTime - startTime;
-    console.log(`Time taken: ${timeTaken}ms`);
+  async function submitVisit() {
+    let visitsStore = store.getState().persistedVisists;
+    if (Object.keys(visitsStore.visits).length > 0) {
+      Object.keys(visitsStore.visits).map(visitKey => {
+        let visit = visitsStore.visits[visitKey]
+        if(visit.visit.status === "submitted" || visit.visit.status === "syncfailure") {
+          console.log("Trying to post visit");
+          dispatch(postVisitTrigger({visit: visit.visit}))
+        } else if (visit.visit.status === "synced") {
+          dispatch(deleteVisit(visit.visit))
+        }
+      })
+      Promise.resolve();``
+    } else {
+      Promise.resolve();
+    }
   }
-
-  // async function submitVisit() {
-  //   let visitsStore = store.getState().persistedVisists;
-  //   if (Object.keys(visitsStore.visits).length > 0) {
-  //     Object.keys(visitsStore.visits).map(visitKey => {
-  //       let visit = visitsStore.visits[visitKey]
-  //       if(visit.visit.status === "submitted") {
-  //         console.log("Trying to post visit");
-  //         // dispatch(postVisitTrigger({visit: visit.visit}))
-  //       }
-  //     })
-  //     Promise.resolve();``
-  //   } else {
-  //     Promise.resolve();
-  //   }
-  // }
 
   return (
     <Provider store={store}>

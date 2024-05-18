@@ -1,11 +1,12 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import {Linking} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {Surface} from 'react-native-paper';
+import {Card, Surface} from 'react-native-paper';
 import {useListLeadsQuery} from '../../slices/leadSlice';
 import {me} from '../../services/authService';
 import {skipToken} from '@reduxjs/toolkit/query';
+const {height: screenHeight} = Dimensions.get('window');
 
 const Leads = () => {
   const [partnerId, setPartnerId] = useState<number>();
@@ -92,60 +93,63 @@ const Leads = () => {
     }
   };
 
+  const styles = StyleSheet.create({
+    screenWrapper: {
+      flex: 1,
+      backgroundColor: '#FCFAFE',
+    },
+    scrollContainer: {
+      width: '100%',
+      alignItems: 'center',
+      rowGap: 12,
+      paddingHorizontal: 20,
+      paddingVertical: 12,
+    },
+    Card: {
+      width: '100%',
+      backgroundColor: '#fff',
+      borderRadius: 5,
+      borderWidth: 0.2,
+    },
+    cardContent: {
+      width: '100%',
+    },
+    // cell: {
+    //   overflow: 'visible',
+    //   whiteSpace: 'normal',
+    // },
+  });
+
   return (
-    <View>
-      <ScrollView decelerationRate={0} snapToAlignment={'center'}>
-        <View>
-          {!error && !isFetching && (!leads || leads?.length == 0) && (
-            <Surface
-              elevation={4}
-              style={{
-                margin: 10,
-                padding: 10,
-                width: '95%',
-                backgroundColor: '#FFFFED',
-              }}>
-              <Text>No leads found.</Text>
-            </Surface>
-          )}
-          {isFetching && (
-            <Surface
-              elevation={4}
-              style={{
-                margin: 10,
-                padding: 10,
-                width: '95%',
-                backgroundColor: '#FFFFED',
-              }}>
-              <Text>Fetching leads...</Text>
-            </Surface>
-          )}
-          {error && (
-            <Surface
-              elevation={4}
-              style={{
-                margin: 10,
-                padding: 10,
-                width: '95%',
-                backgroundColor: '#FFFFED',
-              }}>
-              <Text style={{color: 'red'}}>
-                Error fetching leads! {JSON.stringify(error)}
-              </Text>
-            </Surface>
-          )}
-          {!error && !isFetching && (!leads || leads?.length > 0) && (
-            <Surface
-              elevation={4}
-              style={{
-                margin: 10,
-                padding: 10,
-                width: '95%',
-                backgroundColor: '#FFFFED',
-              }}>
-              <Text>
-                Following leads are successfully created. Facilitator can complete the application for assistance
-                by visiting{' '}
+    <View style={[styles.screenWrapper, {paddingBottom: 15}]}>
+      <ScrollView
+        decelerationRate={0}
+        snapToAlignment={'center'}
+        contentContainerStyle={styles.scrollContainer}>
+        {!error && !isFetching && (!leads || leads?.length == 0) && (
+          <View style={[styles.Card, {backgroundColor: '#FFFFED'}]}>
+            <Text style={{color: 'red'}}>No Leads Found !</Text>
+          </View>
+        )}
+        {isFetching && (
+          <View style={[styles.Card, {backgroundColor: '#FFFFED'}]}>
+            <Text style={{color: 'red'}}>Fetching Leads...</Text>
+          </View>
+        )}
+        {error && (
+          <View style={[styles.Card, {backgroundColor: '#FFFFED'}]}>
+            <Text style={{color: 'red'}}>
+              Error fetching leads! {JSON.stringify(error)}
+            </Text>
+          </View>
+        )}
+        {!error && !isFetching && (!leads || leads?.length > 0) && (
+          <Card style={[styles.Card]}>
+            <Card.Content style={styles.cardContent}>
+              <Text
+                style={{fontSize: 16, color: '#4b5563', fontStyle: 'italic'}}>
+                Following leads are successfully created. Facilitator can
+                complete the application for assistance by visiting{' '}
                 <Text
                   style={{color: 'blue'}}
                   onPress={() =>
@@ -156,22 +160,19 @@ const Leads = () => {
                   SIDBI online application
                 </Text>
               </Text>
-            </Surface>
-          )}
-          {leads?.map(lead => {
-            console.log(lead);
-            return (
-              <Surface
-                elevation={4}
-                key={`surface-${lead.id}`}
-                style={{
-                  margin: 10,
-                  padding: 15,
-                  width: '95%',
-                  backgroundColor: `${getBgColor(lead.leadStatus)}`,
-                }}>
-                <View style={{flexDirection: 'row', alignContent: 'center'}}>
-                  <View style={{flex: 5, alignSelf: 'flex-start'}}>
+            </Card.Content>
+          </Card>
+        )}
+        {leads?.map(lead => {
+          return (
+            <Card key={`surface-${lead.id}`} style={styles.Card}>
+              <Card.Content style={styles.cardContent}>
+                <View
+                  style={{
+                    width: '100%',
+                    flexDirection: 'row',
+                  }}>
+                  <View style={{flex: 3}}>
                     <Text
                       style={{
                         fontWeight: 'bold',
@@ -188,7 +189,6 @@ const Leads = () => {
                         fontWeight: 'bold',
                         color: 'black',
                         fontSize: 15,
-                        marginTop: 10,
                       }}>
                       Loan Amount: ₹ {lead.loanAmount} lakhs
                     </Text>
@@ -202,16 +202,15 @@ const Leads = () => {
                     </Text>
                     <View
                       style={{
+                        width: '100%',
                         flexDirection: 'row',
-                        justifyContent: 'flex-start',
+                        height: 30,
                         alignItems: 'center',
-                        marginTop: 10,
+                        columnGap: 10,
                       }}>
                       <Text
                         style={{
                           color: 'black',
-                          textAlignVertical: 'top',
-                          verticalAlign: 'top',
                           fontSize: 15,
                         }}>
                         {lead.mobileNo}
@@ -219,19 +218,19 @@ const Leads = () => {
                       <FontAwesome6
                         name={'phone'}
                         solid
-                        style={{paddingLeft: 10, textAlignVertical: 'bottom'}}
                         onPress={() => {
                           Linking.openURL(`tel:${lead.mobileNo}`);
                         }}
                       />
                     </View>
                   </View>
-                  <View style={{flex: 5, alignSelf: 'flex-start'}}>
+                  <View style={{flex: 2}}>
                     <Text style={{fontWeight: 'bold', color: 'black'}}>
-                      <Text style={{fontWeight: 'normal'}}>ID:</Text> {lead.id}
+                      <Text>ID:</Text> {lead.id}
                     </Text>
                     <Text
                       style={{
+                        fontSize: 16,
                         fontWeight: 'bold',
                         color: `${getColor(lead.leadStatus)}`,
                       }}>
@@ -239,20 +238,13 @@ const Leads = () => {
                     </Text>
                   </View>
                 </View>
-              </Surface>
-            );
-          })}
-        </View>
+              </Card.Content>
+            </Card>
+          );
+        })}
       </ScrollView>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  cell: {
-    overflow: 'visible',
-    whiteSpace: 'normal',
-  },
-});
 
 export default Leads;
