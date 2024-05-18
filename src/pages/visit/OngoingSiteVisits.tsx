@@ -138,32 +138,34 @@ const OngoingSiteVisits = () => {
               </View>
             )}
             {props.status !== 'created' && (
-              <>
-                <View
-                  style={[
-                    styles.buttonContainer,
-                    {
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      paddingVertical: 0,
-                    },
-                  ]}>
-                  <Text style={{fontWeight: 'bold', fontSize: 16}}>
-                    {getStatus(props.status)}
-                  </Text>
-                  {props.status !== 'synced' && (
-                    <Button
-                      onPress={() => {
-                        dispatch(postVisitTrigger({visit: props}));
-                      }}>
-                      Sync
-                    </Button>
-                  )}
-                </View>
-                {props.status === "syncfailure" && <Text style={{fontWeight: 'bold', fontSize: 10, color: 'red'}}>
-                  {props.error}
-                </Text>}
-              </>
+              <View
+                style={[
+                  styles.buttonContainer,
+                  {
+                    flexDirection: 'row',
+                    columnGap: 10,
+                    alignItems: 'center',
+                    paddingVertical: 0,
+                    marginTop: 5,
+                  },
+                ]}>
+                <Text style={{fontWeight: 'bold', fontSize: 16}}>
+                  {getStatus(props.status)}
+                </Text>
+                {props.status !== 'synced' && (
+                  <Button
+                    onPress={() => {
+                      dispatch(postVisitTrigger({visit: props}));
+                    }}>
+                    Sync
+                  </Button>
+                )}
+              </View>
+            )}
+            {props.status === 'syncfailure' && (
+              <Text style={{fontWeight: 'bold', fontSize: 10, color: 'red'}}>
+                {props.error}
+              </Text>
             )}
             {props.status === 'syncfailure' && (
               <Text style={{fontWeight: 'bold', fontSize: 10, color: 'red'}}>
