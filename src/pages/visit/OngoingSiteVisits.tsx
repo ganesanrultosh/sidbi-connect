@@ -138,6 +138,7 @@ const OngoingSiteVisits = () => {
               </View>
             )}
             {props.status !== 'created' && (
+<<<<<<< HEAD
               <View
                 style={[
                   styles.buttonContainer,
@@ -161,6 +162,34 @@ const OngoingSiteVisits = () => {
                   </Button>
                 )}
               </View>
+=======
+              <>
+                <View
+                  style={[
+                    styles.buttonContainer,
+                    {
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      paddingVertical: 0,
+                    },
+                  ]}>
+                  <Text style={{fontWeight: 'bold', fontSize: 16}}>
+                    {getStatus(props.status)}
+                  </Text>
+                  {props.status !== 'synced' && (
+                    <Button
+                      onPress={() => {
+                        dispatch(postVisitTrigger({visit: props}));
+                      }}>
+                      Sync
+                    </Button>
+                  )}
+                </View>
+                {props.status === "syncfailure" && <Text style={{fontWeight: 'bold', fontSize: 10, color: 'red'}}>
+                  {props.error}
+                </Text>}
+              </>
+>>>>>>> 3f0ec48 (merged vignesh changes)
             )}
             {props.status === 'syncfailure' && (
               <Text style={{fontWeight: 'bold', fontSize: 10, color: 'red'}}>
