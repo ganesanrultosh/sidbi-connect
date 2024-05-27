@@ -4,7 +4,8 @@ import Visit from '../models/visit/visit';
 import VisitFieldUpdateContext from '../models/visit/VisitFieldUpdateContext';
 import Toast from 'react-native-root-toast';
 import VisitService from '../services/visitService';
-import { stat } from 'fs';
+import ReportStructure from '../models/visit/reportStructure/reportStructure';
+import Report from '../models/visit/reportStructure/report';
 
 interface VisitLocalStore {
   mpin: string | undefined;
@@ -16,9 +17,10 @@ interface VisitLocalStore {
       error: string | undefined;
     };
   };
+  reportStructure: Report[] | undefined
 }
 
-const initialState: VisitLocalStore = {mpin: undefined, isSpeechOn: false, visits: {}};
+const initialState: VisitLocalStore = {mpin: undefined, isSpeechOn: false, visits: {}, reportStructure: undefined};
 
 export const getCachedVisits = createAsyncThunk(
   'visits/cachedVisits',
@@ -32,28 +34,12 @@ export const visitLocalStoreSlice = createSlice({
   name: 'visitsLocalStore',
   initialState,
   reducers: {
-    // submitVisit: async (
-    //   state: VisitLocalStore,
-    //   action: PayloadAction<VisitFieldUpdateContext>,
-    // ) => {
-    //   console.log('Visit Local Store: ', action.payload);
-    //   if (action.payload.pan && action.payload.reportId) {
-    //     let visitKey = action.payload.pan + action.payload.reportId;
-    //     console.log('visitKey', action.payload);
-    //     if (state.visits[visitKey]) {
-    //       let visit = state.visits[visitKey].visit;
-    //       visit.status = 'submitted';
-    //       await VisitService.postVisitTrigger(visit).then((data) => {
-    //         visit.status = 'synced';
-    //         Toast.show("Visit posted sucessfully");
-    //         console.log('Visit Posted', data);
-    //       }).catch(error => {
-    //         console.log('Error posting visit', error);
-    //         visit.error = error;
-    //       });
-    //     }
-    //   }
-    // },
+    saveReportStructure: (
+      state: VisitLocalStore,
+      action: PayloadAction<Report[]>
+    ) => {
+      state.reportStructure = action.payload;
+    },
     saveFieldValue: (
       state: VisitLocalStore,
       action: PayloadAction<VisitFieldUpdateContext>,
@@ -244,7 +230,8 @@ export const visitLocalStoreSlice = createSlice({
           console.log('getDomainData', visitKey)
           //Clear values
           if(!state.visits[visitKey].visit.domainValues) state.visits[visitKey].visit.domainValues = {}
-          state.visits[visitKey].visit.domainValues[key] = {status: 'Loading', values: []}
+          let domainValues = state.visits[visitKey].visit.domainValues;
+          if(domainValues) domainValues[key] = {status: 'Loading', values: []}
 
           //Try to get values
 
@@ -268,11 +255,14 @@ export const visitLocalStoreSlice = createSlice({
             .catch((error) => {
               console.log('Get Domain Data Error', error)
               //Update status to error
-              state.visits[visitKey].visit.domainValues[key].status = 'Error'
+              let domainValues = state.visits[visitKey].visit.domainValues;
+              if(domainValues) domainValues[key].status = 'Error'
+              
             })
           } catch(e) {
             console.log('Get Domain Data Exception', e)
-            state.visits[visitKey].visit.domainValues[key].status = 'Error'
+            let domainValues = state.visits[visitKey].visit.domainValues;
+            if(domainValues) domainValues[key].status = 'Error'
           }
         }
       }
@@ -293,7 +283,8 @@ export const {
   onAddVisitId,
   updateVisitStatus,
   getDomainData,
-  setSpeechOn
+  setSpeechOn,
+  saveReportStructure
 } = visitLocalStoreSlice.actions;
 
 export default visitLocalStoreSlice.reducer;

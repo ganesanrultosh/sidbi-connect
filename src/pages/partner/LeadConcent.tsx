@@ -1,22 +1,30 @@
-import React, {useEffect, useState} from 'react';
-import {Modal, Pressable, ScrollView,SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import React, {useState} from 'react';
+import {
+  Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {Button, Surface, useTheme} from 'react-native-paper';
+import {Button, useTheme} from 'react-native-paper';
 import {Field, Formik} from 'formik';
 import * as yup from 'yup';
 import CustomInput from '../../components/CustomInput';
-import {LeadConsentProps, LeadConsentRouteProps} from '../navigation/NavigationProps';
+import {
+  LeadConsentProps,
+  LeadConsentRouteProps,
+} from '../navigation/NavigationProps';
 import {useAddLeadMutation} from '../../slices/leadSlice';
 import {Lead, leadDefaultValue} from '../../models/partner/Lead';
 import Toast from 'react-native-root-toast';
 import {useGetMasterQuery} from '../../slices/masterSlice';
 import {skipToken} from '@reduxjs/toolkit/query';
-import {sendConsent, sendOtp} from '../../services/concentService';
+import {sendConsent} from '../../services/concentService';
 import {deleteLead, saveLead} from '../../slices/leadCacheSlice';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import Moment from 'moment';
 import {me} from '../../services/authService';
-import { CountDownTimer } from '../../components/CountDownTimer'
+import {CountDownTimer} from '../../components/CountDownTimer';
 
 const LeadConcent = (props: LeadConsentProps) => {
   const navigation = useNavigation();
@@ -107,47 +115,46 @@ const LeadConcent = (props: LeadConsentProps) => {
         }
       : ({...leadDefaultValue} as Lead);
 
-      const sendConsentOtp = async (values: any) => {
-        setResendConsent(false);
-        me()
-          .then(response => response.json())
-          .then((partner: Partner) => {
-            console.log("partner", partner);
-            if(partner.id) {
-              console.log("Concent", {
-                partnerId: partner.id,
-                entityName: lead?.entityName,
-                pan: lead?.pan,
-                loanAmount: lead?.loanAmount,
-                emailId: lead?.emailId,
-                mobileNo: lead?.mobileNo,
-              })
-              sendConsent({
-                partnerId: partner.id,
-                entityName: lead?.entityName,
-                pan: lead?.pan,
-                loanAmount: lead?.loanAmount,
-                emailId: lead?.emailId,
-                mobileNo: lead?.mobileNo,
-              })
-                .then(response => response?.json())
-                .then(async (data: any) => {
-                  Toast.show('Consent sent sucessfully!');
-                  setTimeout(() => {
-                    setResendConsent(true);
-                  }, 180000);
-                  setConcentSent(true);
-                })
-                .catch(error => {
-                  Toast.show('Unable to sent consent!');
-                });
-            }
+  const sendConsentOtp = async (values: any) => {
+    setResendConsent(false);
+    me()
+      .then(response => response.json())
+      .then((partner: Partner) => {
+        console.log('partner', partner);
+        if (partner.id) {
+          console.log('Concent', {
+            partnerId: partner.id,
+            entityName: lead?.entityName,
+            pan: lead?.pan,
+            loanAmount: lead?.loanAmount,
+            emailId: lead?.emailId,
+            mobileNo: lead?.mobileNo,
+          });
+          sendConsent({
+            partnerId: partner.id,
+            entityName: lead?.entityName,
+            pan: lead?.pan,
+            loanAmount: lead?.loanAmount,
+            emailId: lead?.emailId,
+            mobileNo: lead?.mobileNo,
           })
-          .catch((error: any) => {
+            .then(response => response?.json())
+            .then(async (data: any) => {
+              Toast.show('Consent sent sucessfully!');
+              setTimeout(() => {
+                setResendConsent(true);
+              }, 180000);
+              setConcentSent(true);
+            })
+            .catch(error => {
+              Toast.show('Unable to sent consent!');
+            });
+        }
+      })
+      .catch((error: any) => {
         console.log('error at me() api', error);
-        // manually edited by nisg_vigneshj
       });
-      };
+  };
 
   const {
     data: master,

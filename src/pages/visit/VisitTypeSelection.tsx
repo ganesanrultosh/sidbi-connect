@@ -27,11 +27,12 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
   const navigation = useNavigation();
   const route = useRoute<VisitTypeSelectionRouteProps>();
   const {customer} = route.params;
-  const {visits} = useAppSelector(state => state.persistedVisists);
+  const {visits, reportStructure} = useAppSelector(state => state.persistedVisists);
   const dispatch = useDispatch();
 
   const {getUserRole, getToken} = useToken();
 
+<<<<<<< Updated upstream
   const [reportCards, setReportCards] = useState<Report[] | undefined>();
 
   const getReportStructure = async () => {
@@ -86,13 +87,15 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
     };
   }, []);
 
+=======
+>>>>>>> Stashed changes
   const VisitTypeSelectionCard = (report: Report) => {
     return (
       <TouchableOpacity
         style={{width: screenWidth * 0.4, height: 120}}
         onPress={() => {
           if (customer) {
-            let reportToCreate: Report | undefined = reportCards?.find(
+            let reportToCreate: Report | undefined = reportStructure?.find(
               item => item.reportId === report.reportId,
             );
             if (reportToCreate) {
@@ -221,7 +224,7 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
           style={[styles.scrollView]}
           contentContainerStyle={[styles.scrollContainer]}>
           <View style={[styles.cardsContainer]}>
-            {reportCards && getVisitTypeSelectionCards(reportCards)}
+            {reportStructure && getVisitTypeSelectionCards(reportStructure)}
           </View>
         </ScrollView>
       </View>

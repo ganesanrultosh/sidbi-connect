@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Platform, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {CommonActions, useNavigation, useRoute} from '@react-navigation/native';
-import {Button, Surface, useTheme} from 'react-native-paper';
+import {Button, useTheme} from 'react-native-paper';
 import {Field, Formik} from 'formik';
 import * as yup from 'yup';
 import CustomDropDown from '../../components/CustomDropDown';
 import CustomRadioGroup from '../../components/CustomRadioGroup';
-import CustomerDataPicker from '../../components/CustomerDataPicker';
 import CustomSwitch from '../../components/CustomSwitch';
 import {
   LeadSubmissionProps,
@@ -18,13 +17,11 @@ import {useGetMasterQuery} from '../../slices/masterSlice';
 import {skipToken} from '@reduxjs/toolkit/query';
 import {saveLead} from '../../slices/leadCacheSlice';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import Moment from 'moment';
 import {HasLocationPermission} from '../../utils/hasPermissions';
 import Toast from 'react-native-root-toast';
 import Geolocation from 'react-native-geolocation-service';
 import BranchServices from '../../services/branchService';
 import useToken from '../../components/Authentication/useToken';
-import CustomTextInput from '../visit/report/CustomTextInput';
 import CustomInput from '../../components/CustomInput';
 
 const LeadSubmission = (props: LeadSubmissionProps) => {
