@@ -1,4 +1,12 @@
-import {Pressable, ScrollView, Text, View, Dimensions} from 'react-native';
+import {
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+  Image,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import {Linking} from 'react-native';
 import React, {useEffect, useState} from 'react';
@@ -12,6 +20,7 @@ import {StyleSheet} from 'react-native';
 import {createEntityAdapter} from '@reduxjs/toolkit';
 import useToken from '../../components/Authentication/useToken';
 const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 const OngoingLeads = () => {
   const theme = useTheme();
@@ -21,6 +30,24 @@ const OngoingLeads = () => {
   const [leadsArray, setLeadsArray] = useState([] as Array<Lead | undefined>);
 
   const {leads} = useAppSelector(state => state.persistedLeads);
+
+  const {getToken, getUserType} = useToken();
+
+  useEffect(() => {
+    let mounted = true;
+    if (mounted) {
+      // getToken().then(data => {
+      //   console.log('currentUser from ongoingLeads', data);
+      // });
+      // getUserType().then(data => {
+      //   console.log('usertype from ongoingLeads', data);
+      // });
+    }
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -48,79 +75,87 @@ const OngoingLeads = () => {
   const LeadCard = (props: Lead) => {
     return (
       <>
-        <Card style={styles.leadCard}>
-          <Card.Content style={styles.contentWrapper}>
-            <View style={styles.contentContainer}>
-              <View style={styles.cardDetails}>
-                <View style={styles.cardHeader}>
-                  <View style={styles.customerNameContainer}>
-                    <Paragraph
-                      numberOfLines={2}
-                      style={{
-                        fontSize: 18,
-                        color: '#2F5596',
-                        fontWeight: '600',
-                      }}>
-                      {props.entityName}
-                      {/* Lorem, ipsum dolor sit amet consectetur */}
-                    </Paragraph>
-                  </View>
-                  <View style={styles.deleteIconContainer}>
+        <Card
+          onPress={() => {
+            navigation.navigate('LeadBasicInfo', {lead: props as Lead});
+          }}
+          style={styles.leadCard}>
+          <Card.Content style={[styles.cardContentFirst]}>
+            <View style={[styles.cardContentFirstWrapper]}>
+              <View
+                style={{
+                  height: 40,
+                  justifyContent: 'center',
+                }}>
+                <Text
+                  numberOfLines={2}
+                  style={{color: '#000', fontSize: 16, fontWeight: '600'}}>
+                  {props.entityName}
+                </Text>
+              </View>
+              <View style={{}}>
+                <Text style={{color: '#000', fontSize: 16, fontWeight: '600'}}>
+                  Amount: {props.loanAmount} lakh
+                </Text>
+              </View>
+              <View
+                style={{
+                  height: 40,
+                  justifyContent: 'center',
+                }}>
+                <Text
+                  numberOfLines={2}
+                  style={{color: '#000', fontSize: 16, fontWeight: '600'}}>
+                  Type: {props.loanType}
+                </Text>
+              </View>
+            </View>
+            <View style={[styles.cardContentFirstRight]}>
+              <View style={[styles.deleteIconContainer, {marginBottom: 10}]}>
+                <FontAwesome6
+                  name={'trash-can'}
+                  solid
+                  size={20}
+                  style={{color: '#36454F'}}
+                  onPress={() => {
+                    dispatch(deleteLead(props.pan));
+                  }}
+                />
+              </View>
+              <Text style={[styles.cardDate]}>{props.dateCreated}</Text>
+              {props.mobileNo && (
+                <View
+                  style={[
+                    styles.mobileNoContainer,
+                    {justifyContent: 'center'},
+                  ]}>
+                  <Text
+                    style={{fontWeight: '500', fontSize: 14, color: '#000'}}>
+                    {props.mobileNo}
+                  </Text>
+                  <View>
                     <FontAwesome6
-                      name={'trash-can'}
+                      name={'phone'}
                       solid
-                      size={20}
-                      style={{color: '#36454F'}}
+                      size={16}
+                      style={{color: '#2F5596'}}
                       onPress={() => {
-                        dispatch(deleteLead(props.pan));
+                        Linking.openURL(`tel:${props?.mobileNo}`);
                       }}
                     />
                   </View>
                 </View>
-                <Paragraph style={{fontSize: 14}}>
-                  {props.dateCreated}
-                </Paragraph>
-                <View style={styles.loanDetails}>
-                  <Paragraph style={{fontSize: 16, fontWeight: '500', flex: 1}}>
-                    Amount: {props.loanAmount} lakh
-                  </Paragraph>
-                  <Paragraph style={{fontSize: 16, fontWeight: '500', flex: 1}}>
-                    Type: {props.loanType}
-                  </Paragraph>
-                </View>
-                {props.mobileNo && (
-                  <View style={styles.mobileNoContainer}>
-                    <View>
-                      <FontAwesome6
-                        name={'phone'}
-                        solid
-                        size={18}
-                        style={{color: '#2F5596'}}
-                        onPress={() => {
-                          Linking.openURL(`tel:${props?.mobileNo}`);
-                        }}
-                      />
-                    </View>
-                    <View>
-                      <Text style={{fontWeight: '500', fontSize: 14}}>
-                        {props.mobileNo}
-                      </Text>
-                    </View>
-                  </View>
-                )}
-              </View>
+              )}
             </View>
-            <View style={styles.buttonContainer}>
-              <Button
-                style={styles.continueButton}
-                labelStyle={{fontSize: 14}}
-                mode="contained"
-                onPress={() => {
-                  navigation.navigate('LeadBasicInfo', {lead: props as Lead});
-                }}>
-                Continue
-              </Button>
-            </View>
+          </Card.Content>
+          <Card.Content style={[styles.cardContentSecond]}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('LeadBasicInfo', {lead: props as Lead});
+              }}
+              style={[styles.cardContentTouchable]}>
+              <Text style={[styles.touchableText]}>Continue</Text>
+            </TouchableOpacity>
           </Card.Content>
         </Card>
       </>
@@ -137,69 +172,32 @@ const OngoingLeads = () => {
     );
   };
 
+  // leadsArray.length === 0
   if (leadsArray.length === 0) {
     return (
       <>
-        <View style={styles.headerContainer}>
-          <Text style={styles.headerText}>Ongoing Leads</Text>
-        </View>
-        <View style={{paddingHorizontal: 10}}>
-          <Text style={{fontSize: 16}} numberOfLines={3}>
-            No ongoing leads found. Please create a new lead by clicking "Lead
-            Generation" icon above.
-          </Text>
+        <View style={{marginTop: 20}}>
+          <View style={{paddingHorizontal: 10, paddingVertical: 20}}>
+            <Text style={{fontSize: 16, color: '#000'}} numberOfLines={3}>
+              No ongoing leads found. Please create a new lead by clicking "Lead
+              Generation" icon above.
+            </Text>
+          </View>
         </View>
       </>
     );
   } else {
     return (
       <>
-        <View style={styles.headerContainer}>
-          <Text style={styles.headerText}>Ongoing Leads</Text>
+        <View style={[styles.screenWrapper]}>
+          <ScrollView
+            style={{flex: 1, marginBottom: 15}}
+            showsVerticalScrollIndicator={true}
+            contentContainerStyle={[styles.scrollContentContainer]}
+            decelerationRate={0}>
+            {getLeads()}
+          </ScrollView>
         </View>
-        {
-          <View style={{width: screenWidth, flexDirection: 'row'}}>
-            <View
-              style={{
-                width: (screenWidth * 0.15) / 2,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <FontAwesome6
-                name={'caret-left'}
-                light
-                size={40}
-                style={{
-                  color: '#a1a1aa',
-                }}
-              />
-            </View>
-            <ScrollView
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{padding: 8, columnGap: 12}}
-              decelerationRate={0}
-              snapToAlignment={'center'}
-              snapToInterval={screenWidth * 0.8}>
-              {getLeads()}
-            </ScrollView>
-            <View
-              style={{
-                width: (screenWidth * 0.15) / 2,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <FontAwesome6
-                name={'caret-right'}
-                light
-                size={40}
-                style={{
-                  color: '#a1a1aa',
-                }}
-              />
-            </View>
-          </View>
-        }
       </>
     );
   }
@@ -208,73 +206,78 @@ const OngoingLeads = () => {
 export default OngoingLeads;
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    padding: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  screenWrapper: {
+    flex: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 20,
+    width: '100%',
   },
-  headerText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#3f7ebb',
+  scrollContentContainer: {
+    borderTopColor: '#475569',
+    borderTopWidth: 1.5,
+    padding: 10,
+    rowGap: 25,
+    alignItems: 'center',
   },
   leadCard: {
-    width: screenWidth * 0.8,
+    width: '100%',
     backgroundColor: '#fff',
-    borderRadius: 5,
-    borderWidth: 0.2,
+    overflow: 'hidden',
+    borderRadius: 12,
+    borderTopColor: '#e5e7eb',
+    borderTopWidth: 1,
   },
-  contentWrapper: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-  },
-  contentContainer: {
+  cardContentFirst: {
     flexDirection: 'row',
-    width: '100%',
+    alignItems: 'center',
     height: 120,
+    columnGap: 5,
+    paddingTop: 0,
   },
-  cardDetails: {
-    width: '100%',
-    flexDirection: 'column',
-    rowGap: 3,
-  },
-  cardHeader: {
-    width: '100%',
-    flexDirection: 'row',
-  },
-  customerNameContainer: {
-    width: '85%',
-    height: 42,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  loanDetails: {
-    width: '100%',
-    flexDirection: 'row',
-  },
-  mobileNoContainer: {
-    width: '100%',
-    flexDirection: 'row',
+  cardContentFirstWrapper: {
     flex: 1,
-    alignItems: 'center',
-    columnGap: 12,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    rowGap: 5,
+  },
+  cardContentFirstRight: {
+    width: '42%',
+    height: 120 - 16,
+    flexDirection: 'column',
+    rowGap: 12,
   },
   deleteIconContainer: {
-    width: '15%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
-  buttonContainer: {
+  cardDate: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#000',
+    textAlign: 'center',
+  },
+  cardContentSecond: {
+    height: 50,
+    borderRadius: 5,
+    backgroundColor: '#2A4B86',
+    paddingBottom: 0,
+  },
+  cardContentTouchable: {
     width: '100%',
+    height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 5,
   },
-  continueButton: {
-    width: '60%',
-    alignSelf: 'center',
-    backgroundColor: '#2F5596',
-    borderRadius: 50,
+  touchableText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  mobileNoContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 12,
   },
 });

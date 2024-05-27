@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Dimensions, ScrollView,StyleSheet, Text, View} from 'react-native';
-// import _reports from '../../../reports.json'; not needed [vigneshj]
+import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
 import ReportStructure from '../../models/visit/reportStructure/reportStructure';
 import {Surface, Card, Paragraph} from 'react-native-paper';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -51,6 +50,7 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
           const {reports} = _reportsAll;
 
           getUserRole().then(data => {
+            // console.log('data', data);
             if (data !== 'GST' && data !== 'NBFC') {
               const reportsArray = reports?.filter((item: any) =>
                 [1, 2, 3, 4, 5, 6].includes(item.reportId),
@@ -189,8 +189,11 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
     Card: {
       width: '100%',
       height: '100%',
-      backgroundColor: '#e5e5e5',
-      borderRadius: 5,
+      backgroundColor: '#fff',
+      borderWidth: 1,
+      borderColor: '#d1d5db',
+      overflow: 'hidden',
+      borderRadius: 10,
     },
     cardContent: {
       height: '100%',

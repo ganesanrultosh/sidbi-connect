@@ -1,44 +1,69 @@
-import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text } from "react-native"
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { Button, Surface, useTheme } from "react-native-paper";
-import { Field, Formik } from "formik";
+import React, {useEffect, useState} from 'react';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {Button, Surface, useTheme} from 'react-native-paper';
+import {Field, Formik} from 'formik';
 import * as yup from 'yup';
-import CustomInput from "../../components/CustomInput";
-import { PartnerRegistrationContactProps, PartnerRegistrationContactRouteProps } from "../navigation/NavigationProps";
-import { skipToken } from "@reduxjs/toolkit/query";
-import { useGetMasterQuery } from "../../slices/masterSlice";
-import CustomDropDownEditable from "../../components/CustomDropDownEditable";
+import CustomInput from '../../components/CustomInput';
+import {
+  PartnerRegistrationContactProps,
+  PartnerRegistrationContactRouteProps,
+} from '../navigation/NavigationProps';
+import {skipToken} from '@reduxjs/toolkit/query';
+import {useGetMasterQuery} from '../../slices/masterSlice';
+import CustomDropDownEditable from '../../components/CustomDropDownEditable';
 
 const RegisterContactInfo = (props: PartnerRegistrationContactProps) => {
-
   const navigation = useNavigation();
   const route = useRoute<PartnerRegistrationContactRouteProps>();
 
   const theme = useTheme();
 
   const styles = StyleSheet.create({
-    contactInfoSurface: { width: "90%", margin: 20, padding: 20 },
-    header: { 
-        color: `${theme.colors.onBackground}`,
-        fontSize: 20, fontWeight: "bold", marginBottom: 20 },
-    scrollView: { padding: 5 },
-  })
-  
+    screenWrapper: {
+      flex: 1,
+      backgroundColor: '#fff',
+      paddingHorizontal: 20,
+    },
+    registerLabel: {
+      paddingTop: 20,
+      height: 50,
+      justifyContent: 'center',
+    },
+    registerText: {
+      fontSize: 18,
+      fontWeight: '600',
+      color: '#000',
+    },
+    infoWrapper: {
+      paddingTop: 50,
+      paddingHorizontal: 30,
+      rowGap: 20,
+    },
+    titleContainer: {
+      height: 30,
+      justifyContent: 'center',
+    },
+    titleText: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: '#000',
+    },
+  });
 
-  const { partner } = route.params;
+  const {partner} = route.params;
 
-  const [pincode, setPinCode] = useState<number>()
-  const [states, setStates] = useState<any>()
-  const [cities, setCities] = useState<any>()
-  const [refreshList, setRefreshList] = useState(false)
+  const [pincode, setPinCode] = useState<number>();
+  const [states, setStates] = useState<any>();
+  const [cities, setCities] = useState<any>();
+  const [refreshList, setRefreshList] = useState(false);
 
   const {
-    data : master, 
-    error : masterError, 
+    data: master,
+    error: masterError,
     isLoading: isMasterLoading,
-    isSuccess : isMasterSuccess,
-   } = useGetMasterQuery(pincode || skipToken)
+    isSuccess: isMasterSuccess,
+  } = useGetMasterQuery(pincode || skipToken);
 
   useEffect(() => {
     console.log("-----", refreshList, isMasterLoading, isMasterSuccess, master)
@@ -111,102 +136,115 @@ const RegisterContactInfo = (props: PartnerRegistrationContactProps) => {
     ...partner
   };
 
-  return <Formik
-    validationSchema={contactInfoValidationSchema}
-    initialValues={initialValue}
-    onSubmit={values => {
-      navigation.navigate(
-        'Register',
-        {partner: values as Partner})
-    }}
-  >
-    {({
-      values,
-      handleSubmit,
-      isValid
-    }) => (<Surface
-      elevation={4}
-      style={styles.contactInfoSurface}
-    >
-      <ScrollView style={styles.scrollView}>
-        <Text style={styles.header}>Contact Information</Text>
-        <Field
-          component={CustomInput}
-          name="username"
-          label="Email (*)"
-          autoCapitalize='none'
-        />
-        <Field
-          component={CustomInput}
-          name="partnerMobileNo"
-          label="Phone No (*)"
-        />
-        <Field
-          component={CustomInput}
-          name="pinCode"
-          label="Pincode (*)"
-          validateOnChange={true}
-          onChange = {(value: any) => {
-            if(/^[1-9][0-9]{5}$/.test(value)) {
-              console.log(value)
-              setPinCode(value)
-              setRefreshList(true)
-            }
-          } }
-        />
-        {isMasterLoading && <Text>Loading city and state ...</Text>}
-        {masterError && 
-          <><Text style={{color: 'red'}}>City & State not found for the pin code.</Text>
-          <Field
-          component={CustomInput}
-          name="city"
-          label="City (*)"
-          enableReinitialize
-          disabled={isMasterLoading}
-        />
-        <Field
-          component={CustomInput}
-          name="state"
-          label="State (*)"
-          enableReinitialize
-          disabled={isMasterLoading}
-        /></>
-        }
-        {!masterError && <><Field
-          component={CustomDropDownEditable}
-          name="city"
-          label="City (*)"
-          list={cities}
-          enableReinitialize
-          clearValue={refreshList}
-          disabled={isMasterLoading}
-        />
-        <Field
-          component={CustomDropDownEditable}
-          name="state"
-          label="State (*)"
-          list={states}
-          enableReinitialize
-          clearValue={refreshList}
-          disabled={isMasterLoading}
-        /></>}
-        <Field
-          component={CustomInput}
-          name="address"
-          label="Address Details (*)"
-          multiline={true}
-          numberOfLines={4}
-        />
-      </ScrollView>
-      <Button 
-        mode="contained" 
-        style={{ alignSelf: "flex-end", display: "flex", margin: 10 }} 
-        disabled={!isValid}
-        onPress={(e:any) => handleSubmit(e)}>
-          Continue
-      </Button>
-    </Surface>)}
-  </Formik>
-}
+  return (
+    <Formik
+      validationSchema={contactInfoValidationSchema}
+      initialValues={initialValue}
+      onSubmit={values => {
+        navigation.navigate('Register', {partner: values as Partner});
+      }}>
+      {({values, handleSubmit, isValid}) => (
+        <ScrollView
+          automaticallyAdjustKeyboardInsets={true}
+          keyboardShouldPersistTaps="handled"
+          style={[styles.screenWrapper]}>
+          <View style={[styles.registerLabel]}>
+            <Text style={[styles.registerText]}>Registration</Text>
+          </View>
+          <View style={[styles.infoWrapper]}>
+            <View style={[styles.titleContainer]}>
+              <Text style={[styles.titleText]}>Contact Information</Text>
+            </View>
+            <View style={[{rowGap: 10}]}>
+              <Field
+                component={CustomInput}
+                name="username"
+                label="Email (*)"
+                autoCapitalize="none"
+              />
+              <Field
+                component={CustomInput}
+                name="partnerMobileNo"
+                label="Phone No (*)"
+              />
+              <Field
+                component={CustomInput}
+                name="pinCode"
+                label="Pincode (*)"
+                validateOnChange={true}
+                onChange={(value: any) => {
+                  if (/^[1-9][0-9]{5}$/.test(value)) {
+                    console.log(value);
+                    setPinCode(value);
+                    setRefreshList(true);
+                  }
+                }}
+              />
+              {isMasterLoading && <Text>Loading city and state ...</Text>}
+              {masterError && (
+                <>
+                  <Text style={{color: 'red'}}>
+                    City & State not found for the pin code.
+                  </Text>
+                  <Field
+                    component={CustomInput}
+                    name="city"
+                    label="City (*)"
+                    enableReinitialize
+                    disabled={isMasterLoading}
+                  />
+                  <Field
+                    component={CustomInput}
+                    name="state"
+                    label="State (*)"
+                    enableReinitialize
+                    disabled={isMasterLoading}
+                  />
+                </>
+              )}
+              {!masterError && (
+                <>
+                  <Field
+                    component={CustomDropDownEditable}
+                    name="city"
+                    label="City (*)"
+                    list={cities}
+                    enableReinitialize
+                    clearValue={refreshList}
+                    disabled={isMasterLoading}
+                  />
+                  <Field
+                    component={CustomDropDownEditable}
+                    name="state"
+                    label="State (*)"
+                    list={states}
+                    enableReinitialize
+                    clearValue={refreshList}
+                    disabled={isMasterLoading}
+                  />
+                </>
+              )}
+              <Field
+                component={CustomInput}
+                name="address"
+                label="Address Details (*)"
+                multiline={true}
+                numberOfLines={4}
+              />
+            </View>
+            <Button
+              labelStyle={{paddingVertical: 2}}
+              style={{width: '50%', alignSelf: 'flex-end'}}
+              mode="contained"
+              disabled={!isValid}
+              onPress={(e: any) => handleSubmit(e)}>
+              Continue
+            </Button>
+          </View>
+        </ScrollView>
+      )}
+    </Formik>
+  );
+};
 
 export default RegisterContactInfo;

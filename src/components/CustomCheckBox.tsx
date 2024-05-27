@@ -1,39 +1,41 @@
 // CustomInput.js
-import React from 'react'
-import { Text, StyleSheet } from 'react-native'
-import CheckBox from 'react-native-check-box'
-import { TextInput } from 'react-native-paper'
+import React from 'react';
+import {Text, StyleSheet, TouchableOpacity} from 'react-native';
+import CheckBox from 'react-native-check-box';
+import {TextInput} from 'react-native-paper';
 
-
-const CustomCheckBox = (props : any) => {
+const CustomCheckBox = (props: any) => {
   const {
-    field: { name, onBlur, onChange, value },
-    form: { errors, touched, setFieldTouched, setFieldValue },
+    field: {name, onBlur, onChange, value, rightText},
+    form: {errors, touched, setFieldTouched, setFieldValue},
     ...inputProps
-  } = props
+  } = props;
 
-  const hasError = errors[name] && touched[name]
+  const hasError = errors[name] && touched[name];
 
   return (
     <>
       <CheckBox
-        style={{ flex: 1, padding: 10 }}
+        style={{flex: 1, padding: 10}}
         isChecked={value}
-        onClick={() => { 
-            props.onChange && props.onChange(!value)
-            setFieldValue(name, !value)
+        onClick={() => {
+          props.onChange && props.onChange(!value);
+          setFieldValue(name, !value);
+          if (!value) {
+            inputProps.showModal(true);
           }
-        }
+        }}
+        rightText={rightText}
         {...inputProps}
       />
       {hasError && <Text style={styles.errorText}>{errors[name]}</Text>}
     </>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   textInput: {
-    width: "100%",
+    width: '100%',
     marginBottom: 10,
   },
   errorText: {
@@ -41,8 +43,8 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   errorInput: {
-    backgroundColor: '#FFCCBB'
-  }
-})
+    backgroundColor: '#FFCCBB',
+  },
+});
 
 export default CustomCheckBox;

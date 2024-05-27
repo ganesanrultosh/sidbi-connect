@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Login from './src/pages/authentication/Login';
 import RegisterBasicInfo from './src/pages/partner/RegisterBasicInfo';
 import RegisterContactInfo from './src/pages/partner/RegisterContactInfo';
@@ -24,6 +24,13 @@ import Visit from './src/models/visit/visit';
 import Gallery from './src/pages/visit/Gallery';
 import EmployeeLogin from './src/pages/authentication/EmployeeLogin';
 import PartnerLogin from './src/pages/authentication/PartnerLogin';
+import {View} from 'react-native';
+import {Text} from 'react-native';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import {TouchableOpacity} from 'react-native';
+import EmployeeLoginHeader from './src/headers/EmployeeLoginHeader';
+import PartnerLoginHeader from './src/headers/PartnerLoginHeader';
+import HomeHeader from './src/headers/HomeHeader';
 
 declare global {
   namespace ReactNavigation {
@@ -93,100 +100,144 @@ function Navigation(): JSX.Element {
     }
   }
 
-  return <Provider theme={theme}><RootSiblingParent>
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{
-          contentStyle:{
-            backgroundColor:'#F5F7F9'
-          }
-        }}>
-        <Stack.Group screenOptions={{
-          headerStyle: {
-            backgroundColor: "#2F5596",
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-          headerBackTitleVisible: false,
-        }}>
-          <Stack.Screen 
-            name="Login" 
-            component={Login} 
-            options={{headerShown: false}} />
-          <Stack.Screen 
-            name="EmployeeLogin" 
-            component={EmployeeLogin} 
-            options={{title: 'Employee Login'}} />
-          <Stack.Screen 
-            name="PartnerLogin" 
-            component={PartnerLogin} 
-            options={{title: 'Partner Login'}} />
-          <Stack.Screen
-            name="RegisterBasicInfo"
-            component={RegisterBasicInfo}
-            options={{ title: 'Registration' }}
-          />
-          <Stack.Screen
-            name="RegisterContactInfo"
-            component={RegisterContactInfo}
-            options={{ title: 'Registration' }}
-          />
-          <Stack.Screen 
-            name="Register" 
-            component={Register} 
-            options={{ title: 'Registration' }} />
-          <Stack.Screen 
-            name="LeadBasicInfo" 
-            component={LeadBasicInfo} 
-            options={{ title: 'Lead Generation' }} />
-          <Stack.Screen 
-            name="LeadContactInfo" 
-            component={LeadContactInfo} 
-            options={{ title: 'Lead Generation' }} />
-          <Stack.Screen 
-            name="Leads" 
-            component={Leads} />
-          <Stack.Screen 
-            name="LeadSubmission" 
-            component={LeadSubmission} 
-            options={{ title: 'Lead Generation' }} />
-          <Stack.Screen 
-            name="LeadConsent" 
-            component={LeadConcent} 
-            options={{ title: 'Lead Consent' }} />
-          <Stack.Screen 
-            name="ForgotPassword" 
-            component={ForgotPassword} 
-            options={{ title: 'Forgot Password' }} />
-          <Stack.Screen
-            name="SiteVisitCustomerSearch"
-            component={SiteVisitCustomerSearch}
-            options={{title: "Select Customer"}}/>
-          <Stack.Screen
-            name="VisitTypeSelection"
-            component={VisitTypeSelection}
-            options={{title: "Select Visit Type"}}/>
-          <Stack.Screen
-            name="VisitReport"
-            component={VisitReport}
-            options={{title: "Visit Report"}}/>
-          <Stack.Screen
-            name="Gallery"
-            component={Gallery}
-            options={{title: "Visit Images"}}/>
-            
-        </Stack.Group>
-        <Stack.Group screenOptions={{
-          headerShown: false
-        }}>
-          <Stack.Screen name="Root" component={Root} options={{ headerShown: false }} />
-        </Stack.Group>
-      </Stack.Navigator>
-    </NavigationContainer>
-  </RootSiblingParent>
-  </Provider>
+  return (
+    <Provider theme={theme}>
+      <RootSiblingParent>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{
+              contentStyle: {
+                backgroundColor: '#fff',
+              },
+            }}>
+            <Stack.Group
+              screenOptions={{
+                headerStyle: {
+                  backgroundColor: '#2A4B86',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+                headerBackTitleVisible: false,
+              }}>
+              <Stack.Screen
+                name="Login"
+                component={Login}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="EmployeeLogin"
+                component={EmployeeLogin}
+                options={{
+                  headerBackVisible: false,
+                  header: () => <EmployeeLoginHeader />,
+                }}
+              />
+              <Stack.Screen
+                name="PartnerLogin"
+                component={PartnerLogin}
+                options={{
+                  headerBackVisible: false,
+                  header: () => <PartnerLoginHeader title="Partner Login" />,
+                }}
+              />
+              <Stack.Screen
+                name="RegisterBasicInfo"
+                component={RegisterBasicInfo}
+                options={{
+                  headerBackVisible: false,
+                  header: () => (
+                    <PartnerLoginHeader title="Partner Registration" />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="RegisterContactInfo"
+                component={RegisterContactInfo}
+                options={{
+                  headerBackVisible: false,
+                  header: () => (
+                    <PartnerLoginHeader title="Partner Registration" />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="Register"
+                component={Register}
+                options={{
+                  headerBackVisible: false,
+                  header: () => (
+                    <PartnerLoginHeader title="Partner Registration" />
+                  ),
+                }}
+              />
+              <Stack.Screen
+                name="LeadBasicInfo"
+                component={LeadBasicInfo}
+                options={{title: 'Lead Generation'}}
+              />
+              <Stack.Screen
+                name="LeadContactInfo"
+                component={LeadContactInfo}
+                options={{title: 'Lead Generation'}}
+              />
+              <Stack.Screen
+                name="Leads"
+                component={Leads}
+                options={{title: 'Leads'}}
+              />
+              <Stack.Screen
+                name="LeadSubmission"
+                component={LeadSubmission}
+                options={{title: 'Lead Generation'}}
+              />
+              <Stack.Screen
+                name="LeadConsent"
+                component={LeadConcent}
+                options={{title: 'Lead Consent'}}
+              />
+              <Stack.Screen
+                name="ForgotPassword"
+                component={ForgotPassword}
+                options={{title: 'Forgot Password'}}
+              />
+              <Stack.Screen
+                name="SiteVisitCustomerSearch"
+                component={SiteVisitCustomerSearch}
+                options={{title: 'Search Customers'}}
+              />
+              <Stack.Screen
+                name="VisitTypeSelection"
+                component={VisitTypeSelection}
+                options={{title: 'Visit Type Selection'}}
+              />
+              <Stack.Screen
+                name="VisitReport"
+                component={VisitReport}
+                options={{title: 'Visit Report'}}
+              />
+              <Stack.Screen
+                name="Gallery"
+                component={Gallery}
+                options={{title: 'Visit Images'}}
+              />
+            </Stack.Group>
+            <Stack.Group
+              screenOptions={{
+                headerShown: false,
+              }}>
+              <Stack.Screen
+                name="Root" // UI worked by nisg_vigneshj
+                component={Root}
+                options={{headerShown: false}}
+              />
+            </Stack.Group>
+          </Stack.Navigator>
+        </NavigationContainer>
+      </RootSiblingParent>
+    </Provider>
+  );
 }
-
 
 export default Navigation;

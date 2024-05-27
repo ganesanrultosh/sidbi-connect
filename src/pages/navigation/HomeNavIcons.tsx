@@ -1,13 +1,13 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
-  Image,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
   Dimensions,
+  Image,
 } from 'react-native';
 import {Card, Paragraph} from 'react-native-paper';
 import {Lead} from '../../models/partner/Lead';
@@ -27,146 +27,134 @@ const HomeNavIcons = () => {
     getUserType().then(data => {
       setUserType(data);
     });
-  });
+  }, []);
 
   return (
     <>
-      <ScrollView
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={[
-          styles.scrollContainer,
-          userType === 'TPE' ? styles.flexibleContainer : {},
-        ]}
-        decelerationRate={0}
-        snapToAlignment={'center'}>
-        {/* Lead Generation */}
-        <TouchableOpacity
-          onPress={() => {
-            if (userType === 'TPE') {
-              navigation.navigate('LeadBasicInfo', {lead: {} as Lead});
-            } else {
-              Toast.show(
-                'Only facilitators are allowed to create leads at the moment.',
-              );
-            }
-          }}>
-          <Card style={styles.Card}>
-            <Card.Content style={styles.cardContent}>
-              <View style={styles.iconWrapper}>
-                <FontAwesome6
-                  name={'handshake'}
-                  size={40}
-                  color="#2F5596"
-                  sharpSolid
-                />
-              </View>
-              <View style={styles.titleWrapper}>
-                <Text style={styles.titleText}>Lead</Text>
-                <Text style={styles.titleText}>Generation</Text>
-              </View>
-            </Card.Content>
-          </Card>
-        </TouchableOpacity>
-        {/* Site Visits */}
-        {userType === 'EMPLOYEE' && (
-          <TouchableOpacity
-            onPress={() => {
-              // console.log('userType', userType);
-              if (userType === 'EMPLOYEE') {
-                navigation.navigate('SiteVisitCustomerSearch');
-              } else {
-                Toast.show(
-                  'Only employees are allowed to perform site visit at the moment.',
-                );
-              }
-            }}>
-            <Card style={styles.Card}>
-              <Card.Content style={styles.cardContent}>
-                <View style={styles.iconWrapper}>
-                  <FontAwesome6
-                    name={'building'}
-                    size={40}
-                    color="#2F5596"
-                    sharpSolid
+      {userType === 'TPE' && (
+        <>
+          <View style={[styles.headerWrapper]}>
+            <Card style={[styles.headerCard]}>
+              <Card.Content style={[styles.headerCardContent]}>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (userType === 'TPE') {
+                      navigation.navigate('LeadBasicInfo', {lead: {} as Lead});
+                    } else {
+                      Toast.show(
+                        'Only facilitators are allowed to create leads at the moment.',
+                      );
+                    }
+                  }}
+                  style={[styles.headerTouchable]}>
+                  <Image
+                    style={[styles.headerCardImage]}
+                    source={require('../../images/LeadGenerationIcon.png')}
                   />
-                </View>
-                <View style={styles.titleWrapper}>
-                  <Text style={styles.titleText}>Site</Text>
-                  <Text style={styles.titleText}>Visits</Text>
-                </View>
+                  <View style={{width: '100%'}}>
+                    <Text style={[styles.headerCardText]}>Lead Generation</Text>
+                  </View>
+                </TouchableOpacity>
               </Card.Content>
             </Card>
-          </TouchableOpacity>
-        )}
-        {/* View Leads */}
-        <TouchableOpacity
-          onPress={() => {
-            if (userType === 'TPE') {
-              navigation.navigate('Leads' as never);
-            } else {
-              Toast.show(
-                'Only facilitators are allowed to view leads at the moment.',
-              );
-            }
-          }}>
-          <Card style={styles.Card}>
-            <Card.Content style={styles.cardContent}>
-              <View style={styles.iconWrapper}>
-                <FontAwesome6
-                  name={'users-viewfinder'}
-                  size={40}
-                  color="#2F5596"
-                  sharpSolid
-                />
-              </View>
-              <View style={styles.titleWrapper}>
-                <Text style={styles.titleText}>View</Text>
-                <Text style={styles.titleText}>Leads</Text>
-              </View>
-            </Card.Content>
-          </Card>
-        </TouchableOpacity>
-      </ScrollView>
+            <Card style={[styles.headerCard]}>
+              <Card.Content style={[styles.headerCardContent]}>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (userType === 'TPE') {
+                      navigation.navigate('Leads' as never);
+                    } else {
+                      Toast.show(
+                        'Only facilitators are allowed to view leads at the moment.',
+                      );
+                    }
+                  }}
+                  style={[styles.headerTouchable]}>
+                  <Image
+                    style={[styles.headerCardImage]}
+                    source={require('../../images/ViewLeadsIcon.png')}
+                  />
+                  <View style={{width: '100%'}}>
+                    <Text style={[styles.headerCardText]}>View Leads</Text>
+                  </View>
+                </TouchableOpacity>
+              </Card.Content>
+            </Card>
+          </View>
+        </>
+      )}
+      {userType === 'EMPLOYEE' && (
+        <>
+          <View style={[styles.headerWrapper]}>
+            <Card style={[styles.headerCard]}>
+              <Card.Content style={[styles.headerCardContent]}>
+                <TouchableOpacity
+                  onPress={() => {
+                    // console.log('userType', userType);
+                    if (userType === 'EMPLOYEE') {
+                      navigation.navigate('SiteVisitCustomerSearch');
+                    } else {
+                      Toast.show(
+                        'Only employees are allowed to perform site visit at the moment.',
+                      );
+                    }
+                  }}
+                  style={[styles.headerTouchable]}>
+                  <Image
+                    style={[styles.headerCardImage]}
+                    source={require('../../images/sitevisit.png')}
+                  />
+                  <View style={{width: '100%'}}>
+                    <Text style={[styles.headerCardText]}>Site Visits</Text>
+                  </View>
+                </TouchableOpacity>
+              </Card.Content>
+            </Card>
+          </View>
+        </>
+      )}
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    padding: 10,
-    columnGap: 10,
-    backgroundColor: '#f4f4f5',
+  headerWrapper: {
+    height: 130,
+    flexDirection: 'row',
     justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingVertical: 10,
+    marginTop: 20,
   },
-  Card: {
+  headerCard: {
+    height: 120,
+    width: screenWidth * 0.4,
+    backgroundColor: 'transparent',
+    overflow: 'hidden',
+    borderRadius: 12,
+  },
+  headerCardContent: {
+    alignItems: 'center',
     backgroundColor: '#fff',
-    borderRadius: 5,
-    width: (screenWidth - 40) / 3,
+    height: '100%',
   },
-  cardContent: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  iconWrapper: {
+  headerTouchable: {
     width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 5,
-  },
-  titleWrapper: {
-    width: '100%',
-    justifyContent: 'center',
+    height: '100%',
+    backgroundColor: '#fff',
+    justifyContent: 'space-around',
     alignItems: 'center',
   },
-  titleText: {
+  headerCardImage: {
+    width: '95%',
+    height: 50,
+    resizeMode: 'contain',
+    overflow: 'hidden',
+  },
+  headerCardText: {
     textAlign: 'center',
-    fontSize: 14,
-    color: '#334155',
-  },
-  flexibleContainer: {
-    flex: 1,
+    fontSize: 16,
+    color: '#1e293b',
   },
 });
 

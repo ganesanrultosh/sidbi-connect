@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {useFormik} from 'formik';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -10,82 +10,20 @@ import {
   GestureResponderEvent,
   ScrollView,
 } from 'react-native';
-import {Button, Surface,Card, TextInput, useTheme} from 'react-native-paper';
-import {tr} from 'react-native-paper-dates';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import {Button, Card, TextInput, useTheme} from 'react-native-paper';
 import * as Yup from 'yup';
-import { useFilterCustomersQuery } from '../../slices/customerSlice';
-import { skipToken } from '@reduxjs/toolkit/query';
+import {useFilterCustomersQuery} from '../../slices/customerSlice';
+import {skipToken} from '@reduxjs/toolkit/query';
 import decrypt from '../../utils/decrypt';
 import encrypt from '../../utils/encrypt';
-
-// const customers = [
-//   {
-//     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-//     pan: 'ALQPG9479C',
-//     customerName: 'First Customer',
-//   },
-//   {
-//     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-//     pan: 'ALQPG9479C',
-//     customerName: 'Second Customer',
-//   },
-//   {
-//     id: '58694a0f-3da1-471f-bd96-145571e29d72',
-//     pan: 'ALQPG9479C',
-//     customerName: 'Third Customer',
-//   },
-//   {
-//     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-//     pan: 'ALQPG9479C',
-//     customerName: 'First Customer',
-//   },
-//   {
-//     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-//     pan: 'ALQPG9479C',
-//     customerName: 'Second Customer',
-//   },
-//   {
-//     id: '58694a0f-3da1-471f-bd96-145571e29d72',
-//     pan: 'ALQPG9479C',
-//     customerName: 'Third Customer',
-//   },
-//   {
-//     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-//     pan: 'ALQPG9479C',
-//     customerName: 'First Customer',
-//   },
-//   {
-//     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-//     pan: 'ALQPG9479C',
-//     customerName: 'Second Customer',
-//   },
-//   {
-//     id: '58694a0f-3da1-471f-bd96-145571e29d72',
-//     pan: 'ALQPG9479C',
-//     customerName: 'Third Customer',
-//   },
-//   {
-//     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-//     pan: 'ALQPG9479C',
-//     customerName: 'First Customer',
-//   },
-//   {
-//     id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-//     pan: 'ALQPG9479C',
-//     customerName: 'Second Customer',
-//   },
-//   {
-//     id: '58694a0f-3da1-471f-bd96-145571e29d72',
-//     pan: 'ALQPG9479C',
-//     customerName: 'Third Customer',
-//   },
-// ];
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import Customer from '../../models/visit/customer';
 
 const SiteVisitCustomerSearch = () => {
   const navigation = useNavigation();
   const [showCreate, setShowCreate] = useState(false);
   const [panOrName, setPanOrName] = useState<string>('');
+  const [customersList, setCustomersList] = useState<Customer[] | undefined>();
   const [panOrNameForSearch, setPanOrNameForSearch] = useState<string>('');
 
   const {
@@ -93,7 +31,7 @@ const SiteVisitCustomerSearch = () => {
     isLoading: isCustomerLoading,
     isSuccess: isCustomerSuccess,
     isError: isCustomerError,
-  } = useFilterCustomersQuery(panOrNameForSearch || skipToken)
+  } = useFilterCustomersQuery(panOrName || skipToken);
 
   const theme = useTheme();
 
@@ -112,7 +50,6 @@ const SiteVisitCustomerSearch = () => {
     },
     validationSchema: CompanySchema,
     onSubmit: values => {
-      console.log(values);
       setShowCreate(false);
       formik.setFieldValue('pan', '');
       formik.setFieldValue('name', '');
@@ -128,26 +65,41 @@ const SiteVisitCustomerSearch = () => {
     },
   });
 
-  const createCustomers = () => {
-    if (panOrNameForSearch !== '') {
+  useEffect(() => {
+    // mount every panOrName change
+    let mounted = true;
+
+    if (mounted) {
       if (panOrName !== '') {
-        if (isCustomerError || !(customers && customers.length > 0)) {
-          return (
-            <>
-              <Text style={{color: 'red', fontSize: 16}}>
-                No customers record found.
-              </Text>
-              <Button
-                mode="contained"
-                style={{marginBottom: 10}}
-                onPress={() => {
-                  setShowCreate(true);
-                }}>
-                Create customer
-              </Button>
-            </>
-          );
-        }
+        setCustomersList(customers);
+      } else {
+        setCustomersList(undefined);
+      }
+    }
+
+    return () => {
+      mounted = false;
+    };
+  }, [panOrName, customers]);
+
+  const createCustomers = () => {
+    if (panOrName !== '') {
+      if (isCustomerError || !(customersList && customersList.length > 0)) {
+        return (
+          <>
+            <Text style={{color: 'red', fontSize: 16}}>
+              No customers record found.
+            </Text>
+            <Button
+              mode="contained"
+              style={{marginBottom: 10}}
+              onPress={() => {
+                setShowCreate(true);
+              }}>
+              Create customer
+            </Button>
+          </>
+        );
       }
     } else {
       return <></>;
@@ -157,18 +109,16 @@ const SiteVisitCustomerSearch = () => {
   const styles = StyleSheet.create({
     screenWrapper: {
       flex: 1,
-      backgroundColor: '#FCFAFE',
+      paddingHorizontal: 20,
     },
     searchContainer: {
       flex: 1,
       width: '100%',
-      paddingHorizontal: 20,
-      paddingTop: 20,
+      marginTop: 50,
     },
     headerText: {
       color: `${theme.colors.onBackground}`,
-      fontWeight: '500',
-      fontSize: 25,
+      fontSize: 18,
       textAlign: 'center',
     },
     inputWrapper: {
@@ -206,8 +156,9 @@ const SiteVisitCustomerSearch = () => {
     },
     card: {
       width: '100%',
-      borderRadius: 5,
-      backgroundColor: '#e5e5e5',
+      backgroundColor: '#fff',
+      borderRadius: 10,
+      borderWidth: 0.2,
     },
     cartTitle: {
       fontSize: 18,
@@ -220,7 +171,9 @@ const SiteVisitCustomerSearch = () => {
       rowGap: 5,
       paddingBottom: 10,
     },
-    cardActions: {},
+    cardActions: {
+      paddingHorizontal: 16,
+    },
     error: {
       color: 'red',
       fontSize: 14,
@@ -240,26 +193,43 @@ const SiteVisitCustomerSearch = () => {
           <>
             <View style={styles.inputWrapper}>
               <TextInput
+                contentStyle={{paddingLeft: 10, fontSize: 16}}
+                outlineStyle={{
+                  borderRadius: 10,
+                }}
                 mode="outlined"
                 placeholder="Search Name or PAN"
                 value={panOrName}
                 onChangeText={value => {
                   setPanOrName(value);
                 }}
+                right={
+                  <TextInput.Icon
+                    icon={() => (
+                      <FontAwesome6
+                        name={'magnifying-glass'}
+                        size={20}
+                        color={'#2F5596'}
+                      />
+                    )} // where <Icon /> is any component from vector-icons or anything else
+                  />
+                }
               />
-              <Button
+              {/* Not needed, Dynamic search implemented */}
+              {/* <Button
                 labelStyle={{fontSize: 16}}
                 mode="contained"
                 onPress={() => {
                   setPanOrNameForSearch(panOrName);
                 }}>
                 Search
-              </Button>
+              </Button> */}
             </View>
             <ScrollView
+              showsVerticalScrollIndicator={true}
               style={styles.scrollView}
               contentContainerStyle={styles.scrollContainer}>
-              {customers?.map(item => {
+              {customersList?.map(item => {
                 return (
                   <TouchableOpacity
                     style={{width: '100%'}}
@@ -284,7 +254,6 @@ const SiteVisitCustomerSearch = () => {
                         }}>
                         {item.name}
                       </Text>
-                      <Text style={{fontSize: 16}}>{decrypt(item.pan)}</Text>
                     </View>
                   </TouchableOpacity>
                 );
@@ -303,6 +272,7 @@ const SiteVisitCustomerSearch = () => {
                 titleStyle={styles.cartTitle}></Card.Title>
               <Card.Content style={styles.cardContent}>
                 <TextInput
+                  outlineStyle={{borderRadius: 10}}
                   mode="outlined"
                   placeholder="Name"
                   style={{width: '100%'}}
@@ -321,6 +291,7 @@ const SiteVisitCustomerSearch = () => {
                   </Text>
                 )}
                 <TextInput
+                  outlineStyle={{borderRadius: 10}}
                   mode="outlined"
                   placeholder="PAN"
                   value={formik.values.pan}

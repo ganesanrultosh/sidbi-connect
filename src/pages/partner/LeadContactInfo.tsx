@@ -22,29 +22,6 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
   const disptach = useAppDispatch();
 
   const theme = useTheme();
-  
-  const styles = StyleSheet.create({
-    screenWrapper: {
-      flex: 1,
-      backgroundColor: '#FCFAFE',
-    },
-    formContainer: {
-      width: '100%',
-      height: '100%',
-      paddingTop: 50,
-      alignItems: 'center',
-      rowGap: 10,
-      paddingHorizontal: 20,
-    },
-    headerText: {
-      color: `${theme.colors.onBackground}`,
-      fontWeight: '500',
-      fontSize: 25,
-      textAlign: 'center',
-    },
-    continueButton: {},
-  });
-  
 
   const route = useRoute<LeadContactInfoRouteProps>();
   const { lead } = route.params;
@@ -123,6 +100,37 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
       .string()
       .required("Address is required")
   })
+	const styles = StyleSheet.create({
+    screenWrapper: {
+      flex: 1,
+      backgroundColor: '#fff',
+      paddingHorizontal: 20,
+    },
+    registerLabel: {
+      paddingTop: 20,
+      height: 50,
+      justifyContent: 'center',
+    },
+    registerText: {
+      fontSize: 18,
+      fontWeight: '600',
+      color: '#000',
+    },
+    infoWrapper: {
+      paddingTop: 50,
+      paddingHorizontal: 30,
+      rowGap: 20,
+    },
+    titleContainer: {
+      height: 30,
+      justifyContent: 'center',
+    },
+    titleText: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: '#000',
+    },
+  });
 
   return (
     <Formik
@@ -157,87 +165,96 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
         });
       }}>
       {({values, handleSubmit, isValid}) => (
-        <View style={styles.screenWrapper}>
-          <ScrollView contentContainerStyle={styles.formContainer}>
-            <Text style={[styles.headerText]}>Contact Information</Text>
-            <Field component={CustomInput} name="emailId" label="Email (*)" />
-            <Field
-              component={CustomInput}
-              name="mobileNo"
-              label="Phone No (*)"
-            />
-            <Field
-              component={CustomInput}
-              name="pincode"
-              label="Pincode (*)"
-              validateOnChange={true}
-              onChange={(value: any) => {
-                if (/^[1-9][0-9]{5}$/.test(value)) {
-                  setPinCode(value);
-                  setRefreshList(true);
-                }
-              }}
-            />
-            {masterError && (
-              <>
-                <Text style={{color: 'red'}}>
-                  City & State not found for the pin code.
-                </Text>
-                <Field
-                  component={CustomInput}
-                  name="city"
-                  label="City (*)"
-                  enableReinitialize
-                  disabled={isMasterLoading}
-                />
-                <Field
-                  component={CustomInput}
-                  name="state"
-                  label="State (*)"
-                  enableReinitialize
-                  disabled={isMasterLoading}
-                />
-              </>
-            )}
-            {!masterError && (
-              <>
-                <Field
-                  component={CustomDropDownEditable}
-                  name="city"
-                  label="City (*)"
-                  list={cities}
-                  enableReinitialize
-                  clearValue={refreshList}
-                  disabled={isMasterLoading}
-                />
-                <Field
-                  component={CustomDropDownEditable}
-                  name="state"
-                  label="State (*)"
-                  list={states}
-                  enableReinitialize
-                  clearValue={refreshList}
-                  disabled={isMasterLoading}
-                />
-              </>
-            )}
-            <Field
-              component={CustomInput}
-              name="officeAddress"
-              label="Address Details (*)"
-              multiline={true}
-              numberOfLines={4}
-            />
+        <ScrollView
+          automaticallyAdjustKeyboardInsets={true}
+          keyboardShouldPersistTaps="handled"
+          style={[styles.screenWrapper]}>
+          <View style={[styles.infoWrapper]}>
+            <View style={[styles.titleContainer]}>
+              <Text style={[styles.titleText, {fontSize: 18}]}>
+                Contact Information
+              </Text>
+            </View>
+            <View style={[{rowGap: 10}]}>
+              <Field component={CustomInput} name="emailId" label="Email (*)" />
+              <Field
+                component={CustomInput}
+                name="mobileNo"
+                label="Phone No (*)"
+              />
+              <Field
+                component={CustomInput}
+                name="pincode"
+                label="Pincode (*)"
+                validateOnChange={true}
+                onChange={(value: any) => {
+                  if (/^[1-9][0-9]{5}$/.test(value)) {
+                    setPinCode(value);
+                    setRefreshList(true);
+                  }
+                }}
+              />
+              {masterError && (
+                <>
+                  <Text style={{color: 'red'}}>
+                    City & State not found for the pin code.
+                  </Text>
+                  <Field
+                    component={CustomInput}
+                    name="city"
+                    label="City (*)"
+                    enableReinitialize
+                    disabled={isMasterLoading}
+                  />
+                  <Field
+                    component={CustomInput}
+                    name="state"
+                    label="State (*)"
+                    enableReinitialize
+                    disabled={isMasterLoading}
+                  />
+                </>
+              )}
+              {!masterError && (
+                <>
+                  <Field
+                    component={CustomDropDownEditable}
+                    name="city"
+                    label="City (*)"
+                    list={cities}
+                    enableReinitialize
+                    clearValue={refreshList}
+                    disabled={isMasterLoading}
+                  />
+                  <Field
+                    component={CustomDropDownEditable}
+                    name="state"
+                    label="State (*)"
+                    list={states}
+                    enableReinitialize
+                    clearValue={refreshList}
+                    disabled={isMasterLoading}
+                  />
+                </>
+              )}
+              <Field
+                component={CustomInput}
+                name="officeAddress"
+                label="Address Details (*)"
+                multiline={true}
+                numberOfLines={4}
+              />
+            </View>
             <Button
-              labelStyle={{fontSize: 16}}
+              labelStyle={{paddingVertical: 2}}
+              style={{width: '50%', alignSelf: 'flex-end'}}
               mode="contained"
-              style={styles.continueButton}
               disabled={!isValid}
               onPress={(e: any) => handleSubmit(e)}>
               Continue
             </Button>
-          </ScrollView>
-        </View>
+          </View>
+        </ScrollView>
       )}
     </Formik>
   );

@@ -1,9 +1,15 @@
-import {Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {
   Button,
   Card,
-  IconButton,
   Paragraph,
   Surface,
   Tooltip,
@@ -15,6 +21,7 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Visit from '../../models/visit/visit';
 import VisitCacheSlice, {deleteVisit} from '../../slices/visitCacheSlice';
 import decrypt from '../../utils/decrypt';
+import encrypt from '../../utils/encrypt';
 import {postVisitTrigger} from '../../services/visitService';
 const screenWidth = Dimensions.get('window').width;
 
@@ -44,6 +51,9 @@ const OngoingSiteVisits = () => {
         // dataArray = [...dataArray, {...dataArray[0], ['status']: 'synced'}];
         setVisitsArray(dataArray);
       }
+
+      // const encryptedValue = encrypt('8558');
+      // console.log('encrypted value for otp', encryptedValue);
     }
 
     return () => {
@@ -80,98 +90,91 @@ const OngoingSiteVisits = () => {
     return (
       <>
         <Card
+          onPress={() => {
+            navigation.navigate('VisitReport', {visit: props as Visit});
+          }}
           style={[
             styles.leadCard,
             {backgroundColor: getBgColor(props.status)},
           ]}>
-          <Card.Content style={styles.contentWrapper}>
-            <View style={styles.contentContainer}>
-              <View style={[styles.cardDetails]}>
-                <View style={styles.cardHeader}>
-                  <View style={styles.customerNameContainer}>
-                    <Paragraph
-                      numberOfLines={2}
-                      style={{
-                        fontSize: 18,
-                        color: '#2F5596',
-                        fontWeight: '600',
+          <Card.Content style={[styles.contentFirst]}>
+            <View style={[styles.firstContentWrapper]}>
+              <View style={[styles.customerNameContainer]}>
+                <Text
+                  numberOfLines={2}
+                  style={{
+                    fontSize: 14,
+                    fontWeight: '600',
+                  }}>
+                  {props.customer?.name}
+                  {/* Lorem, ipsum dolor sit amet consectetur */}
+                </Text>
+              </View>
+              {props.status !== 'created' && (
+                <View style={styles.firstContentBody}>
+                  <Text style={{fontWeight: 'bold', fontSize: 14}}>
+                    {getStatus(props.status)}
+                  </Text>
+                  {props.status !== 'synced' && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        dispatch(postVisitTrigger({visit: props}));
                       }}>
-                      {props.customer?.name}
-                      {/* Lorem, ipsum dolor sit amet consectetur */}
-                    </Paragraph>
-                  </View>
-                  {props.status === 'created' && (
-                    <View style={styles.deleteIconContainer}>
-                      <FontAwesome6
-                        name={'trash-can'}
-                        solid
-                        size={20}
-                        style={{color: '#36454F'}}
-                        onPress={() => {
-                          dispatch(deleteVisit(props));
-                        }}
-                      />
-                    </View>
+                      <Text style={{color: '#2F5596', fontSize: 14}}>Sync</Text>
+                    </TouchableOpacity>
                   )}
                 </View>
-                <Paragraph style={{fontSize: 16, fontWeight: '500'}}>
-                  {decrypt(props.customer.pan)}
-                </Paragraph>
-                <Paragraph style={{fontSize: 16, fontWeight: '500'}}>
-                  {props.report.reportTitle}
-                </Paragraph>
-                <Paragraph style={{fontSize: 14}}>
-                  {props.dateCreated}
-                </Paragraph>
-              </View>
-            </View>
-            {props.status === 'created' && (
-              <View style={[styles.buttonContainer]}>
-                <Button
-                  style={styles.continueButton}
-                  mode="contained"
-                  onPress={() => {
-                    navigation.navigate('VisitReport', {visit: props as Visit});
-                  }}>
-                  Continue
-                </Button>
-              </View>
-            )}
-            {props.status !== 'created' && (
-              <View
-                style={[
-                  styles.buttonContainer,
-                  {
-                    flexDirection: 'row',
-                    columnGap: 10,
-                    alignItems: 'center',
-                    paddingVertical: 0,
-                    marginTop: 5,
-                  },
-                ]}>
-                <Text style={{fontWeight: 'bold', fontSize: 16}}>
-                  {getStatus(props.status)}
+              )}
+              {props.status === 'syncfailure' && (
+                <Text style={{fontWeight: 'bold', fontSize: 12, color: 'red'}}>
+                  {props.error}
                 </Text>
-                {props.status !== 'synced' && (
-                  <Button
+              )}
+            </View>
+            <View style={[styles.panContainer]}>
+              {props.status === 'created' && (
+                <View
+                  style={{
+                    alignItems: 'flex-end',
+                    height: 30,
+                  }}>
+                  <FontAwesome6
+                    name={'trash-can'}
+                    solid
+                    size={20}
+                    style={{color: '#36454F'}}
                     onPress={() => {
-                      dispatch(postVisitTrigger({visit: props}));
-                    }}>
-                    Sync
-                  </Button>
-                )}
-              </View>
-            )}
-            {props.status === 'syncfailure' && (
-              <Text style={{fontWeight: 'bold', fontSize: 10, color: 'red'}}>
-                {props.error}
+                      dispatch(deleteVisit(props));
+                    }}
+                  />
+                </View>
+              )}
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: '#000',
+                  fontWeight: '500',
+                }}>
+                PAN No
               </Text>
-            )}
-            {props.status === 'syncfailure' && (
-              <Text style={{fontWeight: 'bold', fontSize: 10, color: 'red'}}>
-                {props.error}
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: '#000',
+                  fontWeight: '500',
+                }}>
+                {decrypt(props.customer.pan)}
               </Text>
-            )}
+            </View>
+          </Card.Content>
+          <Card.Content style={[styles.contentSecond]}>
+            <Text style={[styles.reportTitle]}>
+              {props.report.reportTitle}
+              {/* Pre-Sanction Report - Express 2.0 */}
+              {/* JAKs Video Visit Format FoS/SIDBI */}
+            </Text>
+
+            <Text style={[styles.reportDateCreated]}>{props.dateCreated}</Text>
           </Card.Content>
         </Card>
       </>
@@ -191,73 +194,28 @@ const OngoingSiteVisits = () => {
   if (visitsArray.length === 0) {
     return (
       <>
-        <View style={styles.headerContainer}>
-          <Text style={styles.headerText}>Ongoing Visits</Text>
-        </View>
-        <View style={{paddingHorizontal: 10}}>
-          <Text style={{fontSize: 16}} numberOfLines={3}>
-            No ongoing leads found. Please create a new lead by clicking "Lead
-            Generation" icon above.
-          </Text>
+        <View style={{marginTop: 20}}>
+          <View style={{paddingHorizontal: 10, paddingVertical: 20}}>
+            <Text style={{fontSize: 16, color: '#000'}} numberOfLines={3}>
+              No ongoing visits found. Please create a new visit by clicking
+              "Site Visits" icon above.
+            </Text>
+          </View>
         </View>
       </>
     );
   } else {
     return (
       <>
-        <View style={styles.headerContainer}>
-          <Text style={styles.headerText}>Ongoing Visits</Text>
-        </View>
         {
-          <View
-            style={{
-              width: screenWidth,
-              flexDirection: 'row',
-              marginBottom: 12,
-            }}>
-            <View
-              style={{
-                width: (screenWidth * 0.15) / 2,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <FontAwesome6
-                name={'caret-left'}
-                light
-                size={40}
-                style={{
-                  color: '#a1a1aa',
-                }}
-              />
-            </View>
+          <View style={[styles.screenWrapper]}>
             <ScrollView
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{
-                padding: 10,
-                columnGap: 12,
-              }}
-              // how to set props for pagination?
-              decelerationRate={0}
-              snapToAlignment={'center'}
-              snapToInterval={screenWidth * 0.8}>
+              style={{flex: 1, marginBottom: 15}}
+              showsVerticalScrollIndicator={true}
+              contentContainerStyle={[styles.scrollContentContainer]}
+              decelerationRate={0}>
               {getVisits()}
             </ScrollView>
-            <View
-              style={{
-                width: (screenWidth * 0.15) / 2,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <FontAwesome6
-                name={'caret-right'}
-                light
-                size={40}
-                style={{
-                  color: '#a1a1aa',
-                }}
-              />
-            </View>
           </View>
         }
       </>
@@ -268,74 +226,68 @@ const OngoingSiteVisits = () => {
 export default OngoingSiteVisits;
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    padding: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  screenWrapper: {
+    flex: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 20,
+    width: '100%',
   },
-  headerText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#3f7ebb',
+  scrollContentContainer: {
+    borderTopColor: '#475569',
+    borderTopWidth: 1.5,
+    padding: 10,
+    rowGap: 20,
+    alignItems: 'center',
   },
   leadCard: {
-    width: screenWidth * 0.8,
+    width: screenWidth * 0.9,
     backgroundColor: '#fff',
     borderRadius: 5,
     borderWidth: 0.2,
   },
-  contentWrapper: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-  },
-  contentContainer: {
+  contentFirst: {
+    height: 110,
     flexDirection: 'row',
-    width: '100%',
-    height: 120,
+    columnGap: 2,
   },
-  cardDetails: {
-    width: '100%',
+  firstContentWrapper: {
+    flex: 1,
     flexDirection: 'column',
-    rowGap: 3,
-  },
-  cardHeader: {
-    width: '100%',
-    flexDirection: 'row',
   },
   customerNameContainer: {
-    width: '85%',
-    height: 42,
+    height: 40,
     flexDirection: 'row',
     alignItems: 'center',
   },
-  loanDetails: {
-    width: '100%',
-    flexDirection: 'row',
-  },
-  // duplicated here for future reference
-  mobileNoContainer: {
-    width: '100%',
-    flexDirection: 'row',
+  firstContentBody: {
+    flexDirection: 'column',
     flex: 1,
-    alignItems: 'center',
-    columnGap: 12,
-  },
-  deleteIconContainer: {
-    width: '15%',
     justifyContent: 'center',
-    alignItems: 'center',
   },
-  buttonContainer: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 5,
+  panContainer: {
+    width: '35%',
   },
-  continueButton: {
-    width: '60%',
-    alignSelf: 'center',
-    backgroundColor: '#2F5596',
-    borderRadius: 50,
+  contentSecond: {
+    height: 65,
+    paddingTop: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderRadius: 5,
+    columnGap: 5,
+    backgroundColor: '#2A4B86',
+  },
+  reportTitle: {
+    flex: 1,
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  reportDateCreated: {
+    width: '28%',
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#fff',
+    textAlign: 'center',
   },
 });

@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 12,
     color: 'red',
-    marginBottom: 10,
+    marginBottom: 5,
   },
   errorInput: {
     backgroundColor: '#FCFAFE',

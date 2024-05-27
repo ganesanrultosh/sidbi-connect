@@ -26,7 +26,6 @@ const Form: React.FC<{
   const styles = StyleSheet.create({
     screenWrapper: {
       flex: 1,
-      backgroundColor: '#FCFAFE',
     },
     formContainer: {
       width: '100%',
@@ -38,7 +37,7 @@ const Form: React.FC<{
     headerText: {
       color: `${theme.colors.onBackground}`,
       fontWeight: '500',
-      fontSize: 20,
+      fontSize: 16,
     },
     scrollView: {
       height: '84%',
@@ -49,6 +48,7 @@ const Form: React.FC<{
       borderRadius: 5,
       borderWidth: 0.2,
       backgroundColor: '#fff',
+      alignItems: 'center',
     },
     buttonsContainer: {
       width: '100%',
