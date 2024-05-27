@@ -34,57 +34,61 @@ const MultiSelectComp = ({field, visitFieldContext, domainValue, onChange}) => {
     }
   }, []);
 
-  const getFieldValuesAsArray = (value) => {
-    if(typeof value === 'string') {
+  const getFieldValuesAsArray = value => {
+    if (typeof value === 'string') {
       return [value];
     } else {
       return value;
     }
-  }
+  };
 
   return (
     <>
-        {domainValues && status === 'success' && domainValues.length > 0 && (
-          <View style={{backgroundColor: '#EBF9F9', padding: 5, marginVertical: 5}}>
-            <MultiSelect
-              items={domainValues}
-              uniqueKey={`label`}
-              onSelectedItemsChange={this.onSelectedItemsChange}
-              selectedItems={getFieldValuesAsArray(field.fieldValue) || []}
-              textInputProps={{
-                style: {backgroundColor: '#CBF9F9'},
-              }}
-              selectText="Select ..."
-              searchInputPlaceholderText="Search ..."
-              tagRemoveIconColor="#CCC"
-              tagBorderColor="#CBF9F9"
-              tagTextColor="black"
-              selectedItemTextColor="#CCC"
-              selectedItemIconColor="#CCC"
-              itemTextColor="#000"
-              displayKey="label"
-              searchInputStyle={{color: '#CCC'}}
-              submitButtonColor="#rgba(108,78,212,0.88)"
-              submitButtonText="Submit"
-              tagContainerStyle={{
-                flexBasis: '100%',
-                backgroundColor: '#CBF9F9',
-              }}
-            />
-          </View>
-        )}
-        {domainValues && status === 'success' && domainValues.length === 0 && (
-          <>
+      {domainValues && status === 'success' && domainValues.length > 0 && (
+        <View
+          style={{backgroundColor: '#EBF9F9', padding: 5, marginVertical: 5}}>
+          <MultiSelect
+            items={domainValues}
+            uniqueKey={`label`}
+            onSelectedItemsChange={this.onSelectedItemsChange}
+            selectedItems={getFieldValuesAsArray(field.fieldValue) || []}
+            textInputProps={{
+              style: {backgroundColor: '#CBF9F9'},
+            }}
+            selectText="Select ..."
+            searchInputPlaceholderText="Search ..."
+            tagRemoveIconColor="#CCC"
+            tagBorderColor="#CBF9F9"
+            tagTextColor="black"
+            selectedItemTextColor="#CCC"
+            selectedItemIconColor="#CCC"
+            itemTextColor="#000"
+            displayKey="label"
+            searchInputStyle={{color: '#CCC'}}
+            submitButtonColor="#rgba(108,78,212,0.88)"
+            submitButtonText="Submit"
+            tagContainerStyle={{
+              flexBasis: '100%',
+              backgroundColor: '#CBF9F9',
+            }}
+          />
+        </View>
+      )}
+      {((domainValues && status === 'success' && domainValues.length === 0) ||
+        status === 'error') && (
+        <>
           <CustomTextAreaInput
             field={field}
             visitFieldUpdateContext={visitFieldContext}
             onChange={onChange}
           />
-          <Text style={{fontSize: 10, color: "orange"}}>Unable to load list. Please type manually</Text>
-          </>
-        )}
-        {status === 'loading' && <Text>Loading...</Text>}
-        {status === 'error' && <Text>Error loading data</Text>}
+          <Text style={{fontSize: 10, color: 'orange'}}>
+            Unable to load list. Please type manually
+          </Text>
+        </>
+      )}
+      {status === 'loading' && <Text>Loading...</Text>}
+      {status === 'error' && <Text>Error loading data</Text>}
     </>
   );
 };

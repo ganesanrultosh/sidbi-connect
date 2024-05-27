@@ -17,6 +17,7 @@ const CustomTextInput: React.FC<{
 }> = ({field, visitFieldUpdateContext, onChange}) => {
 
   const me = useToken();
+  const {getUserName} = useToken();
   const [defaultValue, setDefaultValue] = useState<string | undefined>()
   const {visits} = useAppSelector(state => state.persistedVisists);
   
@@ -28,9 +29,12 @@ const CustomTextInput: React.FC<{
   const getDefaultValue = (defaultValue: string | null | undefined) => {
     console.log("getDefaultValue", defaultValue)
     if(defaultValue && defaultValue.indexOf("default:username") >= 0) {
-      profile()
-        .then(response => response.json())
-        .then(value => setDefaultValue(value.name));      
+      // profile()
+      //   .then(response => response.json())
+      //   .then(value => setDefaultValue(value.name));
+      getUserName().then(
+        (userName => setDefaultValue(userName))
+      );
     } else if (defaultValue && defaultValue.indexOf("default:name") >= 0) {
       let visitInState = visits[visitFieldUpdateContext.pan + visitFieldUpdateContext.reportId];
       if (visitInState) {

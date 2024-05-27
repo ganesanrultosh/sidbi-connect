@@ -15,7 +15,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import BranchServices from "../../services/branchService";
 import { useValidateLeadMutation } from "../../slices/leadSlice";
 import { me } from "../../services/authService";
-import Toast from "react-native-root-toast";
+import Toast from 'react-native-root-toast';
 
 const LeadContactInfo = (props : LeadContactInfoProps ) => {
   const navigation = useNavigation();
@@ -152,12 +152,19 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
               ...leadInfo,
               ...values,
               parentId: partner.id ? partner.id : 0,
+              customerType: "new"
             };
+            console.log("Validating Lead", {
+              ...leadInfo,
+              ...values,
+              parentId: partner.id ? partner.id : 0,
+              customerType: "new"
+            });
             validateLead(lead)
+              .unwrap()
               .then(() => navigation.navigate('LeadSubmission', {lead: currentValues}))
               .catch((error) => {
-                // console.log("validate lead", error, lead);
-                Toast.show(JSON.stringify(error.data.error))
+                Toast.show(error.data.error)
               })
           }
 

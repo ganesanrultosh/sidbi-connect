@@ -58,6 +58,14 @@ export default function useToken() {
     }
   }
 
+  const getUserName = async () => {
+    const tokenString = await EncryptedStorage.getItem(tokenKey);
+    if (tokenString !== undefined && tokenString !== "undefined") {
+      const userToken = tokenString && JSON.parse(tokenString);
+      return userToken && userToken?.name;
+    } 
+  }
+
   const setToken = async (userToken: { currentUser: string, userType: string, userRole: string } | undefined) => {
     if (!userToken) {
       await EncryptedStorage.removeItem(tokenKey);
@@ -74,5 +82,6 @@ export default function useToken() {
     setUserType,
     setUserRole,
     getUserRole,
+    getUserName
   };
 }
