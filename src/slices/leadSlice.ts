@@ -88,7 +88,7 @@ export const leadSlice = createApi({
           request.parentId ? request.parentId : 0
         }/${entity}/validate`,
         method: 'POST',
-        request,
+        body: request,
         headers: {
           'Content-Type': 'application/json',
         },

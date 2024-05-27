@@ -25,16 +25,9 @@ import {useDispatch} from 'react-redux';
 import {saveReportStructure, setMPin} from '../../slices/visitCacheSlice';
 import React, {useEffect, useState} from 'react';
 import CustomPasswordInput from '../../components/CustomPasswordInput';
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
 import Config from 'react-native-config';
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 const visitApiEndpoint = Config.REACT_APP_VISIT_API_ENDPOINT;
-=======
-const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
->>>>>>> c73e9e1 (Code and UI changes for latest-theme update of the App)
-
 const employeeMobileNoValidation = yup.object().shape({
   mobileNo: yup
     .string()
@@ -60,10 +53,6 @@ const mpinValidationSchema = yup.object().shape({
     .min(4, ({min}) => `MPIN should be ${min} characters`)
     .max(4, ({max}) => `MPIN should be ${max} characters`),
 });
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> c73e9e1 (Code and UI changes for latest-theme update of the App)
 
 const EmployeeLogin = () => {
   const theme = useTheme();
@@ -167,6 +156,7 @@ const EmployeeLogin = () => {
       })
         .then(res => res.json())
         .then(_reportsAll => {
+          console.log("Response", _reportsAll)
           // set report cards for different user roles
           const {reports} = _reportsAll;
 

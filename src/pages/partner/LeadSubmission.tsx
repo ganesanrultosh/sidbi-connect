@@ -117,6 +117,7 @@ const LeadSubmission = (props: LeadSubmissionProps) => {
               .getLatLng(officeAddress)
               .then(response => response.json())
               .then((response: any) => {
+                console.log("Branch Service", response)
                 if(response.results[0] !== undefined) {
                   BranchServices.getBranches(
                     response.results[0].geometry.location.lat, response.results[0].geometry.location.lng

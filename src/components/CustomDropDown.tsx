@@ -28,7 +28,7 @@ const CustomDropDown = (props: any) => {
     }
   }, [props.list]);
 
-  console.log('list', props.list);
+  // console.log('list', props.list);
 
   return props.list ? (
     <View style={styles.dropDownWrapper}>

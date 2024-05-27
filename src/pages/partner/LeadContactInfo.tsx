@@ -154,9 +154,11 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
               parentId: partner.id ? partner.id : 0,
             };
             validateLead(lead)
-              .unwrap()
               .then(() => navigation.navigate('LeadSubmission', {lead: currentValues}))
-              .catch((error) => Toast.show(JSON.stringify(error.data.error)))
+              .catch((error) => {
+                // console.log("validate lead", error, lead);
+                Toast.show(JSON.stringify(error.data.error))
+              })
           }
 
         })

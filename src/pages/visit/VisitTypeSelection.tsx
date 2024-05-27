@@ -31,64 +31,6 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
 
   const {getUserRole, getToken} = useToken();
 
-<<<<<<< Updated upstream
-  const [reportCards, setReportCards] = useState<Report[] | undefined>();
-
-  const getReportStructure = async () => {
-    const token = await getToken();
-    try {
-      await fetch(`${visitApiEndpoint}/api/reportstructure`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then(res => res.json())
-        .then(_reportsAll => {
-          // set report cards for different user roles
-          const {reports} = _reportsAll;
-
-          getUserRole().then(data => {
-            // console.log('data', data);
-            if (data !== 'GST' && data !== 'NBFC') {
-              const reportsArray = reports?.filter((item: any) =>
-                [1, 2, 3, 4, 5, 6].includes(item.reportId),
-              );
-              setReportCards(reportsArray);
-            } else if (data === 'NBFC') {
-              const reportsArray = reports?.filter((item: any) =>
-                [7].includes(item.reportId),
-              );
-              setReportCards(reportsArray);
-            } else if (data === 'GST') {
-              const reportsArray = reports?.filter((item: any) =>
-                [8, 9, 10, 11, 12, 13, 14].includes(item.reportId),
-              );
-              setReportCards(reportsArray);
-            }
-          });
-        });
-    } catch (error: any) {
-      console.log('error fetching reports structure ', error);
-    }
-  };
-
-  useEffect(() => {
-    let mounted = true;
-
-    if (mounted) {
-      // fetch reportStructure on mount
-      getReportStructure();
-    }
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-=======
->>>>>>> Stashed changes
   const VisitTypeSelectionCard = (report: Report) => {
     return (
       <TouchableOpacity
