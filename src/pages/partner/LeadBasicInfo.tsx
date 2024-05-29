@@ -58,6 +58,7 @@ const LeadBasicInfo = (props: LeadBasicInfoProps) => {
     pan: yup
       .string()
       .matches(/[A-Z]{5}[0-9]{4}[A-Z]{1}/, 'Please enter valid PAN')
+      .max(10, "Max 10 character")
       .required('PAN is Required'),
     entityName: yup.string().required('Entity Name is required.'),
     loanAmount: yup

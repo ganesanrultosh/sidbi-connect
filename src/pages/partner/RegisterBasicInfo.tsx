@@ -84,6 +84,7 @@ const RegisterBasicInfo = () => {
     pan: yup
       .string()
       .matches(/[A-Z]{5}[0-9]{4}[A-Z]{1}/, 'Please enter valid PAN')
+      .max(10, "Max 10 character")
       .required('PAN is Required'),
     name: yup.string().required('Name is required'),
     category: yup.string().required('Category is required'),
