@@ -1,7 +1,7 @@
 // CustomInput.js
-import React from 'react'
-import { Text, StyleSheet } from 'react-native'
-import { TextInput } from 'react-native-paper'
+import React, {useState} from 'react';
+import {Text, StyleSheet} from 'react-native';
+import {TextInput} from 'react-native-paper';
 
 
 const CustomInput = (props : any) => {
@@ -11,7 +11,9 @@ const CustomInput = (props : any) => {
     ...inputProps
   } = props
 
-  const hasError = errors[name] && touched[name]
+  const hasError = errors[name] && touched[name];
+  
+  const [isValidInput, setIsValidInput] = useState(true);
 
   return (
     <>
@@ -23,16 +25,29 @@ const CustomInput = (props : any) => {
           setFieldTouched(name);
         }}
         onChangeText={text => {
-          onChange(name)(text);
-          props.onChange && props.onChange(text);
+          const pattern = /[<>\/]/;
+
+          if (pattern.test(text)) {
+            setIsValidInput(false);
+          } else {
+            setIsValidInput(true);
+            onChange(name)(text);
+            props.onChange && props.onChange(text);
+          }
         }}
         onBlur={() => {
+          setIsValidInput(true);
           onBlur(name);
         }}
         {...inputProps}
       />
-      {hasError && <Text style={styles.errorText}>{errors[name]}</Text>}
-    </>
+      {hasError && isValidInput && (
+        <Text style={styles.errorText}>{errors[name]}</Text>
+      )}
+      {!isValidInput && (
+        <Text style={{color: 'red'}}>Invalid text entered</Text>
+      )}
+     </>
   );
 };
 
