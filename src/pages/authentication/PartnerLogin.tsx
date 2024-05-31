@@ -174,7 +174,7 @@ const PartnerLogin = () => {
                     .then(response => response.json())
                     .then(async (data: any) => {
                       if (data.error) {
-                        console.log(data);
+                        console.error(data);
                         Toast.show(data.error);
                       } else {
                         let token = data;
@@ -189,7 +189,7 @@ const PartnerLogin = () => {
                       }
                     })
                     .catch((error: any) => {
-                      console.log('Error', error);
+                      console.error('Error', error);
                       Toast.show('Login failed. Possible network error!');
                     });
                 },

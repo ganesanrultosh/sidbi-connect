@@ -158,7 +158,6 @@ const EmployeeLogin = () => {
       })
         .then(res => res.json())
         .then(_reportsAll => {
-          console.log("Response", _reportsAll)
           // set report cards for different user roles
           const {reports} = _reportsAll;
 
@@ -168,26 +167,23 @@ const EmployeeLogin = () => {
               const reportsArray = reports?.filter((item: any) =>
                 [1, 2, 3, 4, 5, 6].includes(item.reportId),
               );
-              console.log("Saving report structure");
               dispatch(saveReportStructure(reportsArray))
             } else if (data === 'NBFC') {
               const reportsArray = reports?.filter((item: any) =>
                 [7].includes(item.reportId),
               );
-              console.log("Saving report structure");
               dispatch(saveReportStructure(reportsArray))
             } else if (data === 'GST') {
               const reportsArray = reports?.filter((item: any) =>
                 [8, 9, 10, 11, 12, 13, 14].includes(item.reportId),
               );
-              console.log("Saving report structure");
               dispatch(saveReportStructure(reportsArray))
             }
           });
         });
     } catch (error: any) {
       Toast.show("Error fetching report");
-      console.log('error fetching reports structure ', error);
+      console.error('error fetching reports structure ', error);
     }
   };
 
@@ -230,7 +226,7 @@ const EmployeeLogin = () => {
                   .then(response => response.json())
                   .then(async (data: any) => {
                     if (data.error) {
-                      console.log(`error at "generateOtp" api`, data);
+                      console.error(`error at "generateOtp" api`, data);
                       Toast.show(data.error);
                     } else {
                       // console.log("'OTP sent sucessfully'");
@@ -240,7 +236,7 @@ const EmployeeLogin = () => {
                     }
                   })
                   .catch((error: any) => {
-                    console.log('error sending otp', error);
+                    console.error('error sending otp', error);
                     Toast.show('Error sending OTP. Please try again later.');
                   });
               }}>
@@ -285,7 +281,7 @@ const EmployeeLogin = () => {
                   .then(response => response.json())
                   .then(async (data: any) => {
                     if (data.error) {
-                      console.log(
+                      console.error(
                         `error at "loginEmployee" method`,
                         data.error,
                       );
@@ -386,12 +382,11 @@ const EmployeeLogin = () => {
                   // vigneshj
                   await verifyUser()
                     .then(response => {
-                      console.log("verify user", response);
-                      response.json()
+                      return response.json()
                     })
                     .then(async (data: any) => {
                       if (data && data.error) {
-                        console.log(`error at "verifyUser" method`, data);
+                        console.error(`error at "verifyUser" method`, data);
                         Toast.show(data.error);
                       } else {
                         if (data.role) {
@@ -400,7 +395,7 @@ const EmployeeLogin = () => {
                       }
                     })
                     .catch((error: any) => {
-                      console.log('error at "verifyUser" method', error);
+                      console.error('error at "verifyUser" method', error);
                     });
                   navigation.dispatch(
                     CommonActions.reset({

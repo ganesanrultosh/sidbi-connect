@@ -20,7 +20,6 @@ const CustomDropDown = (props: any) => {
       let found = props.list?.find((item: any) => {
         if (item.value === value) return true;
       });
-      console.log('Custom drop down props.list', name, found);
       if (!found) {
         setFieldValue(name, '');
         setFieldTouched(name, true);

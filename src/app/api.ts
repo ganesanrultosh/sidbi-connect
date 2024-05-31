@@ -11,13 +11,6 @@ export const crudApiTemplate = (entity: string) => {
       };
     },
     filterItem: (body: any) => {
-      console.log("filterItem",  {
-        url: `/${entity}/filter`,
-        method: "POST",
-        body,
-        headers: {
-          "Content-Type": "application/json",
-        }})
       return {
         url: `/${entity}/filter`,
         method: "POST",
@@ -69,17 +62,6 @@ export const crudApiTemplateWithParent = (parent: string, entity: string) => {
       };
     },
     addItem: (parentId: number, body: any, ) => {
-      console.log(
-        'addItem',
-        {
-          url: `/${parent}/${parentId}/${entity}`,
-          method: "POST",
-          body,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
       return (
       {
         url: `/${parent}/${parentId}/${entity}`,

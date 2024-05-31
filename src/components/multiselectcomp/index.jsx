@@ -20,12 +20,10 @@ const MultiSelectComp = ({field, visitFieldContext, domainValue, onChange}) => {
       // let key = 'ABECS7591N';
       VisitService.getDomainData({domain: domainValue, key})
         .then(res => {
-          console.log('Get Domain Data Success', res.data);
           setDomainValues(res.data);
           setStatus('success');
         })
         .catch(error => {
-          console.log('Get Domain Data Error', error);
           setStatus('error');
           setDomainValues([]);
         });

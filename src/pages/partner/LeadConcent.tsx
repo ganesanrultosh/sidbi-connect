@@ -120,16 +120,7 @@ const LeadConcent = (props: LeadConsentProps) => {
     me()
       .then(response => response.json())
       .then((partner: Partner) => {
-        console.log('partner', partner);
         if (partner.id) {
-          console.log('Concent', {
-            partnerId: partner.id,
-            entityName: lead?.entityName,
-            pan: lead?.pan,
-            loanAmount: lead?.loanAmount,
-            emailId: lead?.emailId,
-            mobileNo: lead?.mobileNo,
-          });
           sendConsent({
             partnerId: partner.id,
             entityName: lead?.entityName,
@@ -152,7 +143,7 @@ const LeadConcent = (props: LeadConsentProps) => {
         }
       })
       .catch((error: any) => {
-        console.log('error at me() api', error);
+        console.error('error at me() api', error);
       });
   };
 
@@ -172,13 +163,12 @@ const LeadConcent = (props: LeadConsentProps) => {
             ...values,
             parentId: partner.id ? partner.id : 0,
           };
-          console.log('Saving', lead);
           setLeadInfo(lead);
           dispatch(saveLead(lead));
         }
       })
       .catch((error: any) => {
-        console.log('error at me() api in saveLeadToStore', error);
+        console.error('error at me() api in saveLeadToStore', error);
       });
   };
 
@@ -200,8 +190,6 @@ const LeadConcent = (props: LeadConsentProps) => {
             .then(response => response.json())
             .then(async (partner: Partner) => {
               if (partner.id) {
-                console.log('Lead Consent', leadInfo);
-                console.log('Lead Consent', values);
                 let lead = {
                   ...leadInfo,
                   ...values,
@@ -217,9 +205,7 @@ const LeadConcent = (props: LeadConsentProps) => {
                 delete lead.gstRegimeLocal;
                 delete lead.itrFilingLocal;
 
-                console.log('lead consent submission', lead);
                 if (isValid) {
-                  console.log('Lead Submission', lead);
                   await addLead(lead as Lead)
                     .unwrap()
                     .then(() => {
@@ -229,7 +215,6 @@ const LeadConcent = (props: LeadConsentProps) => {
                       navigation.navigate('Root' as never);
                     })
                     .catch(error => {
-                      console.log('Error: ', error, result);
                       if (error.data.error) {
                         Toast.show(error.data.error);
                       } else {
@@ -237,7 +222,6 @@ const LeadConcent = (props: LeadConsentProps) => {
                       }
                     });
                 } else {
-                  console.log('Saving', lead);
                   dispatch(saveLead(lead));
                 }
               }

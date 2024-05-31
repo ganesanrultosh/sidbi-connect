@@ -23,21 +23,18 @@ const CustomTextInput: React.FC<{
   
   useEffect(() => {
     getDefaultValue(field.defaultValue)
-  },[])
+  })
   
   
   const getDefaultValue = (defaultValue: string | null | undefined) => {
-    console.log("getDefaultValue", defaultValue)
     if(defaultValue && defaultValue.indexOf("default:username") >= 0) {
-      // profile()
-      //   .then(response => response.json())
-      //   .then(value => setDefaultValue(value.name));
       getUserName().then(
         (userName => setDefaultValue(userName))
       );
     } else if (defaultValue && defaultValue.indexOf("default:name") >= 0) {
       let visitInState = visits[visitFieldUpdateContext.pan + visitFieldUpdateContext.reportId];
       if (visitInState) {
+        console.log("default:name", visitInState.visit.customer.name)
         setDefaultValue(visitInState.visit.customer.name);
       }
     } 
@@ -49,7 +46,7 @@ const CustomTextInput: React.FC<{
     <>
       <TextInput
         mode="outlined"
-        value={field.fieldValue || ''}
+        value={field.fieldValue || defaultValue}
         style={{
           marginVertical: 10,
           backgroundColor: '#FFFFFF',
@@ -64,7 +61,7 @@ const CustomTextInput: React.FC<{
             onChange(text);
           }
         }}
-        defaultValue={defaultValue || ''}
+        defaultValue={defaultValue}
         maxFontSizeMultiplier={1}
       />
       {!isValidInput && (

@@ -48,9 +48,7 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
    } = useGetMasterQuery(pincode || skipToken)
 
   useEffect(() => {
-    console.log("-----", refreshList, isMasterLoading, isMasterSuccess, master)
     if(refreshList && !isMasterLoading && isMasterSuccess) {
-      console.log("useeffect", "----")
       let stateList: any = [];
       master && stateList.push({
         label: master.state,
@@ -154,12 +152,6 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
               parentId: partner.id ? partner.id : 0,
               customerType: "new"
             };
-            console.log("Validating Lead", {
-              ...leadInfo,
-              ...values,
-              parentId: partner.id ? partner.id : 0,
-              customerType: "new"
-            });
             validateLead(lead)
               .unwrap()
               .then(() => navigation.navigate('LeadSubmission', {lead: currentValues}))
@@ -170,7 +162,7 @@ const LeadContactInfo = (props : LeadContactInfoProps ) => {
 
         })
         .catch((error: any) => {
-          console.log('error at me() api in saveLeadToStore', error);
+          console.error('error at me() api in saveLeadToStore', error);
         });
       }}>
       {({values, handleSubmit, isValid}) => (

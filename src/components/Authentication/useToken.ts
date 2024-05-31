@@ -31,7 +31,7 @@ export default function useToken() {
       userToken.userType = userType;
       await EncryptedStorage.setItem(tokenKey, JSON.stringify(userToken));
     } else {
-      console.log("Unable to set user type", tokenString)
+      console.error("Unable to set user type", tokenString)
       EncryptedStorage.removeItem(tokenKey);
     }
   }
@@ -43,7 +43,7 @@ export default function useToken() {
       userToken.userRole = userRole;
       await EncryptedStorage.setItem(tokenKey, JSON.stringify(userToken));
     } else {
-      console.log("Unable to set user Role", tokenString)
+      console.error("Unable to set user Role", tokenString)
       EncryptedStorage.removeItem(tokenKey);
     }
   }
@@ -62,7 +62,7 @@ export default function useToken() {
     const tokenString = await EncryptedStorage.getItem(tokenKey);
     if (tokenString !== undefined && tokenString !== "undefined") {
       const userToken = tokenString && JSON.parse(tokenString);
-      return userToken && userToken?.name;
+      return userToken && parseJwt(userToken.currentUser).preferred_username;
     } 
   }
 

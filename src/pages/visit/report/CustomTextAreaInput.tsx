@@ -6,6 +6,7 @@ import {Modal, TextInput} from 'react-native-paper';
 import {View, TouchableOpacity, StyleSheet, Text} from 'react-native';
 import { profile } from '../../../services/authService';
 import { useAppSelector } from '../../../app/hooks';
+import useToken from '../../../components/Authentication/useToken';
 
 const CustomTextAreaInput: React.FC<{
   field: Field;
@@ -13,6 +14,7 @@ const CustomTextAreaInput: React.FC<{
   onChange: (value: any) => void;
 }> = ({field, visitFieldUpdateContext, onChange}) => {
 
+  const {getUserName} = useToken();
   const [value, setValue] = useState<string | null | undefined>(field.fieldValue)
   const [defaultValue, setDefaultValue] = useState<string | undefined>()
   const {visits} = useAppSelector(state => state.persistedVisists);
@@ -24,12 +26,13 @@ const CustomTextAreaInput: React.FC<{
 
   const getDefaultValue = (defaultValue: string | null | undefined) => {
     if(defaultValue && defaultValue.indexOf("default:username") >= 0) {
-      profile()
-        .then(response => response.json())
-        .then(value => setDefaultValue(value.name));      
+      getUserName().then(
+        (userName => setDefaultValue(userName))
+      );
     } else if (defaultValue && defaultValue.indexOf("default:name") >= 0) {
       let visitInState = visits[visitFieldUpdateContext.pan + visitFieldUpdateContext.reportId];
       if (visitInState) {
+        console.log("default:name", visitInState.visit.customer.name)
         setDefaultValue(visitInState.visit.customer.name)
       }
     } 

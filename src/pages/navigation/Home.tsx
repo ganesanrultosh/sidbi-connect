@@ -17,11 +17,6 @@ const Home = () => {
   useEffect(() => {
     getUserType().then(data => {
       setUserType(data);
-      console.log('usertype', data);
-    });
-
-    getUserRole().then(data => {
-      console.log('Home comp', data);
     });
   }, []);
   return (
