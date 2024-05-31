@@ -37,6 +37,7 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
         style={{width: screenWidth * 0.4, height: 120}}
         onPress={() => {
           if (customer) {
+
             let reportToCreate: Report | undefined = reportStructure?.find(
               item => item.reportId === report.reportId,
             );
@@ -170,6 +171,7 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
           contentContainerStyle={[styles.scrollContainer]}>
           <View style={[styles.cardsContainer]}>
             {reportStructure && getVisitTypeSelectionCards(reportStructure)}
+            {(!reportStructure || reportStructure.length === 0) && <span>Required information for offline not available. Please logout and login where you have network to be ready for offline mode.</span> }
           </View>
         </ScrollView>
       </View>

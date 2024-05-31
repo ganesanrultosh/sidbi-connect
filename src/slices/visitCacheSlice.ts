@@ -39,6 +39,7 @@ export const visitLocalStoreSlice = createSlice({
       action: PayloadAction<Report[]>
     ) => {
       state.reportStructure = action.payload;
+      Toast.show("Ready for offline mode.");
     },
     saveFieldValue: (
       state: VisitLocalStore,
