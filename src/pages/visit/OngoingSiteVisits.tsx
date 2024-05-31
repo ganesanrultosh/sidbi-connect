@@ -23,6 +23,7 @@ import VisitCacheSlice, {deleteVisit} from '../../slices/visitCacheSlice';
 import decrypt from '../../utils/decrypt';
 import encrypt from '../../utils/encrypt';
 import {postVisitTrigger} from '../../services/visitService';
+import {me} from '../../services/authService';
 const screenWidth = Dimensions.get('window').width;
 
 const OngoingSiteVisits = () => {

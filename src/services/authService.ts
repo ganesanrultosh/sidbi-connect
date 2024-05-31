@@ -11,6 +11,13 @@ const { getToken } = useToken()
 
 async function me() {
   const token = await getToken()
+  console.log("Me function -------", `${apiEndpoint}/api/users/me`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+  })
   return fetch(`${apiEndpoint}/api/users/me`, {
     method: "GET",
     headers: {

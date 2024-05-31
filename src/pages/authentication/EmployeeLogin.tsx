@@ -57,7 +57,7 @@ const mpinValidationSchema = yup.object().shape({
 
 const EmployeeLogin = () => {
   const theme = useTheme();
-  const {setToken, getToken, setUserType, setUserRole, getUserRole} = useToken();
+  const {setToken, getToken, setUserType, setUserRole, getUserRole, setUserName} = useToken();
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const {mpin} = useAppSelector(state => state.persistedVisists);
@@ -389,8 +389,13 @@ const EmployeeLogin = () => {
                         console.error(`error at "verifyUser" method`, data);
                         Toast.show(data.error);
                       } else {
+                        
                         if (data.role) {
-                          setUserRole(data.role);
+                          setUserRole(data.role).then(() => {
+                            if(data.name) {
+                              setUserName(data.name);
+                            }
+                          })
                         }
                       }
                     })

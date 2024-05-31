@@ -41,6 +41,7 @@ export default function useToken() {
     if (tokenKey !== undefined && tokenString !== 'undefined' && tokenString !== null) {
       let userToken = JSON.parse(tokenString);
       userToken.userRole = userRole;
+      console.log('setting user role', userToken)  
       await EncryptedStorage.setItem(tokenKey, JSON.stringify(userToken));
     } else {
       console.error("Unable to set user Role", tokenString)
@@ -58,12 +59,28 @@ export default function useToken() {
     }
   }
 
+  const setUserName = async (userName: string) => {
+    const tokenString = await EncryptedStorage.getItem(tokenKey);
+    if (tokenKey !== undefined && tokenString !== 'undefined' && tokenString !== null) {
+      let userToken = JSON.parse(tokenString);
+      userToken.userName = userName;
+      console.log('setting user name', userToken)  
+      await EncryptedStorage.setItem(tokenKey, JSON.stringify(userToken));
+    } else {
+      console.error("Unable to set user Role", tokenString)
+      EncryptedStorage.removeItem(tokenKey);
+    }
+  }
+
   const getUserName = async () => {
     const tokenString = await EncryptedStorage.getItem(tokenKey);
     if (tokenString !== undefined && tokenString !== "undefined") {
       const userToken = tokenString && JSON.parse(tokenString);
-      return userToken && parseJwt(userToken.currentUser).preferred_username;
-    } 
+      console.log('getUserName', userToken?.userName)
+      return userToken && userToken?.userName;
+    } else {
+      EncryptedStorage.removeItem(tokenKey);
+    }
   }
 
   const setToken = async (userToken: { currentUser: string, userType: string, userRole: string } | undefined) => {
@@ -82,6 +99,7 @@ export default function useToken() {
     setUserType,
     setUserRole,
     getUserRole,
-    getUserName
+    setUserName,
+    getUserName,
   };
 }
