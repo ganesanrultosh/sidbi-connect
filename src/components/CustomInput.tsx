@@ -6,7 +6,7 @@ import {TextInput} from 'react-native-paper';
 
 const CustomInput = (props : any) => {
   const {
-    field: { name, onBlur, onChange, value },
+    field: { name, onBlur, onChange, value },	
     form: { errors, touched, setFieldTouched },
     ...inputProps
   } = props

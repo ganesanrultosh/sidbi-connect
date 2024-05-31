@@ -1,17 +1,43 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Field from '../../../models/visit/reportStructure/field';
 import VisitFieldUpdateContext from '../../../models/visit/VisitFieldUpdateContext';
 import TextAreaWithSpeech from '../../../components/speechToText';
 import {Modal, TextInput} from 'react-native-paper';
 import {View, TouchableOpacity, StyleSheet, Text} from 'react-native';
+import { profile } from '../../../services/authService';
+import { useAppSelector } from '../../../app/hooks';
 
 const CustomTextAreaInput: React.FC<{
   field: Field;
   visitFieldUpdateContext: VisitFieldUpdateContext;
   onChange: (value: any) => void;
 }> = ({field, visitFieldUpdateContext, onChange}) => {
-  const [value, setValue] = useState(field.fieldValue || '')
+
+  const [value, setValue] = useState<string | null | undefined>(field.fieldValue)
+  const [defaultValue, setDefaultValue] = useState<string | undefined>()
+  const {visits} = useAppSelector(state => state.persistedVisists);
+  
+  useEffect(() => {
+    getDefaultValue(field.defaultValue)
+  },[])
+  
+
+  const getDefaultValue = (defaultValue: string | null | undefined) => {
+    if(defaultValue && defaultValue.indexOf("default:username") >= 0) {
+      profile()
+        .then(response => response.json())
+        .then(value => setDefaultValue(value.name));      
+    } else if (defaultValue && defaultValue.indexOf("default:name") >= 0) {
+      let visitInState = visits[visitFieldUpdateContext.pan + visitFieldUpdateContext.reportId];
+      if (visitInState) {
+        setDefaultValue(visitInState.visit.customer.name)
+      }
+    } 
+  }
+  
 	const [isValidInput, setIsValidInput] = useState(true);
+	
+	
   return (
     <View
       style={{
@@ -28,32 +54,11 @@ const CustomTextAreaInput: React.FC<{
               onChange(t)
             }
           }
-          defaultValue={field.defaultValue || ''}
+          defaultValue={defaultValue || ''}
         />
-        {/* <TextInput
-          mode="flat"
-          underlineColor="transparent"
-          style={{
-            // marginRight: 20,
-            verticalAlign: 'top',
-            backgroundColor: '#FFFFFF',
-            paddingRight: 10,
-          }}
-          value={field.fieldValue || ''}
-          multiline={true}
-          numberOfLines={10}
-          placeholder={field.placeholder || ''}
-          placeholderTextColor="rgba(129,102,102,0.44)"
-          onChangeText={(t) => {
-            console.log('text area text change', t)
-            onChange(t)
-          }}
-          defaultValue={field.defaultValue || ''}
-          maxFontSizeMultiplier={1}
-        /> */}
         <TextInput
           mode="outlined"
-          value={value}
+          value={value || defaultValue || ''}
           style={{
             // marginRight: 20,
             verticalAlign: 'top',
@@ -77,7 +82,7 @@ const CustomTextAreaInput: React.FC<{
             setIsValidInput(true);
             onChange(value);
           }}
-          defaultValue={field.defaultValue || ""}
+          defaultValue={defaultValue || ""}
           maxFontSizeMultiplier={1}
         />
       </>
