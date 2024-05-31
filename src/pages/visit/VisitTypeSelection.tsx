@@ -26,7 +26,8 @@ const VisitTypeSelection = (props: VisitTypeSelectionProps) => {
   const navigation = useNavigation();
   const route = useRoute<VisitTypeSelectionRouteProps>();
   const {customer} = route.params;
-  const {visits, reportStructure} = useAppSelector(state => state.persistedVisists);
+  const {visits} = useAppSelector(state => state.persistedVisists);
+  const {reportStructure} = useAppSelector(state => state.reportsCached);
   const dispatch = useDispatch();
 
   const {getUserRole, getToken} = useToken();

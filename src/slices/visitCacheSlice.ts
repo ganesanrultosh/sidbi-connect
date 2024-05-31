@@ -17,10 +17,9 @@ interface VisitLocalStore {
       error: string | undefined;
     };
   };
-  reportStructure: Report[] | undefined
 }
 
-const initialState: VisitLocalStore = {mpin: undefined, isSpeechOn: false, visits: {}, reportStructure: undefined};
+const initialState: VisitLocalStore = {mpin: undefined, isSpeechOn: false, visits: {}};
 
 export const getCachedVisits = createAsyncThunk(
   'visits/cachedVisits',
@@ -34,13 +33,6 @@ export const visitLocalStoreSlice = createSlice({
   name: 'visitsLocalStore',
   initialState,
   reducers: {
-    saveReportStructure: (
-      state: VisitLocalStore,
-      action: PayloadAction<Report[]>
-    ) => {
-      state.reportStructure = action.payload;
-      Toast.show("Ready for offline mode.");
-    },
     saveFieldValue: (
       state: VisitLocalStore,
       action: PayloadAction<VisitFieldUpdateContext>,
@@ -285,7 +277,6 @@ export const {
   updateVisitStatus,
   getDomainData,
   setSpeechOn,
-  saveReportStructure
 } = visitLocalStoreSlice.actions;
 
 export default visitLocalStoreSlice.reducer;

@@ -15,12 +15,14 @@ import {
 import persistedLeadReducer from "./persistedLeadReducer";
 import persistedVisitReducer from "./persistedVisitReducer";
 import { customerSlice } from "../slices/customerSlice";
+import { reportLocalStoreSlice } from "../slices/reportCacheSlice";
 
 export const store = configureStore({
   reducer: {
     [leadSlice.reducerPath]: leadSlice.reducer,
     [masterSlice.reducerPath]: masterSlice.reducer,
     [customerSlice.reducerPath]: customerSlice.reducer,
+    reportsCached: reportLocalStoreSlice.reducer,
     persistedLeads: persistedLeadReducer,
     persistedVisists: persistedVisitReducer,
   },

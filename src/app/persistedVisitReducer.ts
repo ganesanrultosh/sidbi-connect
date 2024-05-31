@@ -6,7 +6,7 @@ const persistVisitConfig = {
   key: 'visits',
   version: 1,
   storage: AsyncStorage,
-  // blacklist: ['isSubmitting', 'isFetchingForm'],
+  blacklist: ['reportStructure'],
 };
 
 const persistedVisitReducer = persistReducer(

@@ -11,6 +11,13 @@ export const crudApiTemplate = (entity: string) => {
       };
     },
     filterItem: (body: any) => {
+      console.log("filterItem",  {
+        url: `/${entity}/filter`,
+        method: "POST",
+        body,
+        headers: {
+          "Content-Type": "application/json",
+        }})
       return {
         url: `/${entity}/filter`,
         method: "POST",

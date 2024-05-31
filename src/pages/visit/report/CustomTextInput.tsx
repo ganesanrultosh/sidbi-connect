@@ -1,6 +1,6 @@
 import {Text} from 'react-native';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Field from '../../../models/visit/reportStructure/field';
 import { TextInput } from 'react-native-paper';
 import Visit from '../../../models/visit/visit';
@@ -14,7 +14,7 @@ const CustomTextInput: React.FC<{
   field: Field;
   visitFieldUpdateContext: VisitFieldUpdateContext;
   onChange: (value:any) => void
-}> = ({field, onChange}) => {
+}> = ({visitFieldUpdateContext, field, onChange}) => {
   
   const me = useToken();
   const {getUserName} = useToken();

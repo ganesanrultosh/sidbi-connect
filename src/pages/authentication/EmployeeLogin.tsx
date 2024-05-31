@@ -22,10 +22,11 @@ import useToken from '../../components/Authentication/useToken';
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import {useAppSelector} from '../../app/hooks';
 import {useDispatch} from 'react-redux';
-import {saveReportStructure, setMPin} from '../../slices/visitCacheSlice';
+import {setMPin} from '../../slices/visitCacheSlice';
 import React, {useEffect, useState} from 'react';
 import CustomPasswordInput from '../../components/CustomPasswordInput';
 import Config from 'react-native-config';
+import { saveReportStructure } from '../../slices/reportCacheSlice';
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 const visitApiEndpoint = Config.REACT_APP_VISIT_API_ENDPOINT;
 const employeeMobileNoValidation = yup.object().shape({
@@ -384,10 +385,13 @@ const EmployeeLogin = () => {
                   setUserType('EMPLOYEE');
                   // vigneshj
                   await verifyUser()
-                    .then(response => response.json())
+                    .then(response => {
+                      console.log("verify user", response);
+                      response.json()
+                    })
                     .then(async (data: any) => {
-                      if (data.error) {
-                        console.log(`error at "verifyUser" method`, data.error);
+                      if (data && data.error) {
+                        console.log(`error at "verifyUser" method`, data);
                         Toast.show(data.error);
                       } else {
                         if (data.role) {

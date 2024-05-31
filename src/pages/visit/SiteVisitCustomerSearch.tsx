@@ -224,6 +224,7 @@ const SiteVisitCustomerSearch = () => {
                 labelStyle={{fontSize: 14}}
                 mode="contained"
                 onPress={() => {
+                  console.log("Setting pan", panOrName)
                   setPanOrNameForSearch(panOrName);
                 }}>
                 Search
