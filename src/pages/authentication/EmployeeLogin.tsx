@@ -88,6 +88,7 @@ const EmployeeLogin = () => {
     getToken().then(data => {
       if (data !== undefined && data !== null) {
         setLoggedIn(true);
+        getReportStructure();
       } else {
         setLoggedIn(false);
         dispatch(setMPin(undefined));
@@ -184,22 +185,23 @@ const EmployeeLogin = () => {
           });
         });
     } catch (error: any) {
+      Toast.show("Error fetching report");
       console.log('error fetching reports structure ', error);
     }
   };
 
-  useEffect(() => {
-    let mounted = true;
+  // useEffect(() => {
+  //   let mounted = true;
 
-    if (mounted) {
-      // fetch reportStructure on mount
-      getReportStructure();
-    }
+  //   if (mounted) {
+  //     // fetch reportStructure on mount
+  //     getReportStructure();
+  //   }
 
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  //   return () => {
+  //     mounted = false;
+  //   };
+  // }, []);
 
   return (
     <View style={[styles.screenWrapper]}>
