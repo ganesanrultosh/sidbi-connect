@@ -9,7 +9,8 @@
     "start": "react-native start",
     "test": "jest",
     "postinstall": "patch-package",
-    "android-apk": "cd ./android && ./gradlew app:assembleRelease"
+    "android-apk": "cd ./android && ./gradlew app:assembleRelease",
+    "android-aab": "react-native build-android --mode=release"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.19.3",
