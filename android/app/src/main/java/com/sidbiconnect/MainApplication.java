@@ -1,4 +1,4 @@
-package com.sidbiconnect;
+package com.sidbivisit;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
