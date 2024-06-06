@@ -48,7 +48,7 @@ const Login = () => {
             style={styles.loginImage}
             source={require('../../images/employeeLoginImage.png')}
           />
-          <Text style={[styles.loginTitle]}>Employee Login</Text>
+          <Text style={[styles.loginTitle]}>Officer Login</Text>
         </TouchableOpacity>
       </View>
     </View>
