@@ -74,9 +74,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.sidbivisit"
+    namespace "com.sidbiconnect"
     defaultConfig {
-        applicationId "com.sidbivisit"
+        applicationId "com.sidbiconnect"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 4

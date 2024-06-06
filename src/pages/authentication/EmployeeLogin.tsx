@@ -26,7 +26,7 @@ import {setMPin} from '../../slices/visitCacheSlice';
 import React, {useEffect, useState} from 'react';
 import CustomPasswordInput from '../../components/CustomPasswordInput';
 import Config from 'react-native-config';
-import { saveReportStructure } from '../../slices/reportCacheSlice';
+import {saveReportStructure} from '../../slices/reportCacheSlice';
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 const visitApiEndpoint = Config.REACT_APP_VISIT_API_ENDPOINT;
 const employeeMobileNoValidation = yup.object().shape({
@@ -57,7 +57,14 @@ const mpinValidationSchema = yup.object().shape({
 
 const EmployeeLogin = () => {
   const theme = useTheme();
-  const {setToken, getToken, setUserType, setUserRole, getUserRole, setUserName} = useToken();
+  const {
+    setToken,
+    getToken,
+    setUserType,
+    setUserRole,
+    getUserRole,
+    setUserName,
+  } = useToken();
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const {mpin} = useAppSelector(state => state.persistedVisists);
@@ -156,8 +163,11 @@ const EmployeeLogin = () => {
           Authorization: `Bearer ${token}`,
         },
       })
-        .then(res => res.json())
+        .then(res => {
+          return res.json();
+        })
         .then(_reportsAll => {
+          console.log('Log', _reportsAll);
           // set report cards for different user roles
           const {reports} = _reportsAll;
 
@@ -167,22 +177,22 @@ const EmployeeLogin = () => {
               const reportsArray = reports?.filter((item: any) =>
                 [1, 2, 3, 4, 5, 6].includes(item.reportId),
               );
-              dispatch(saveReportStructure(reportsArray))
+              dispatch(saveReportStructure(reportsArray));
             } else if (data === 'NBFC') {
               const reportsArray = reports?.filter((item: any) =>
                 [7].includes(item.reportId),
               );
-              dispatch(saveReportStructure(reportsArray))
+              dispatch(saveReportStructure(reportsArray));
             } else if (data === 'GST') {
               const reportsArray = reports?.filter((item: any) =>
                 [8, 9, 10, 11, 12, 13, 14].includes(item.reportId),
               );
-              dispatch(saveReportStructure(reportsArray))
+              dispatch(saveReportStructure(reportsArray));
             }
           });
         });
     } catch (error: any) {
-      Toast.show("Error fetching report");
+      Toast.show('Error fetching report');
       console.error('error fetching reports structure ', error);
     }
   };
@@ -223,8 +233,15 @@ const EmployeeLogin = () => {
               initialValues={{mobileNo: ''}}
               onSubmit={async values => {
                 await generateOtp(values.mobileNo)
-                  .then(response => response.json())
+                  .then(response => {
+                    if (response.ok) {
+                      return response.json();
+                    } else {
+                      return {error: "Error sending OTP!"}
+                    }
+                  })
                   .then(async (data: any) => {
+                    console.log('success', data);
                     if (data.error) {
                       console.error(`error at "generateOtp" api`, data);
                       Toast.show(data.error);
@@ -280,6 +297,7 @@ const EmployeeLogin = () => {
                 })
                   .then(response => response.json())
                   .then(async (data: any) => {
+                    console.log(data);
                     if (data.error) {
                       console.error(
                         `error at "loginEmployee" method`,
@@ -300,6 +318,7 @@ const EmployeeLogin = () => {
                     }
                   })
                   .catch((error: any) => {
+                    console.log(error);
                     Toast.show('Login failed. Possible network error!');
                   });
               }}>
@@ -382,20 +401,19 @@ const EmployeeLogin = () => {
                   // vigneshj
                   await verifyUser()
                     .then(response => {
-                      return response.json()
+                      return response.json();
                     })
                     .then(async (data: any) => {
                       if (data && data.error) {
                         console.error(`error at "verifyUser" method`, data);
                         Toast.show(data.error);
                       } else {
-                        
                         if (data.role) {
                           setUserRole(data.role).then(() => {
-                            if(data.name) {
+                            if (data.name) {
                               setUserName(data.name);
                             }
-                          })
+                          });
                         }
                       }
                     })
