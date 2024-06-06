@@ -1,5 +1,5 @@
 //IgnoreSSLFactory.java
-package com.sidbivisit;
+package com.sidbiconnect;
 
 import com.facebook.react.modules.network.OkHttpClientFactory;
 import com.facebook.react.modules.network.OkHttpClientFactory;
