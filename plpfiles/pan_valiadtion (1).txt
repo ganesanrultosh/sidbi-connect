@@ -1,0 +1,65 @@
+Token API Request:
+----------------------
+curl --location --request POST 'https://partneruat.sidbi.in/user/auth/generate-token' \
+--header 'client-id: SIDBI_INTERNAL' \
+--header 'Content-Type: application/json' \
+--header 'Cookie: HttpOnly' \
+--data-raw '{
+      "username":"289af78e-b02b-4952-b32d-710751e73826",
+      "password":"078841d1-9401-4724-a353-5403396f1522"
+}'
+
+Token API Response:
+----------------------
+
+{
+      "statusCode": "1000",
+      "statusMsg": "Success",
+      "payload": {
+            "statusCode": "2000",
+            "statusMsg": "token generated successfully",
+            "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0MSIsImlhdCI6MTcxMTUzNjUzNywiZXhwIjoxNzExNTM2ODM3LCJhdXRob3JpdGllcyI6IlJPTEVfVVNFUiJ9.uQbRg6LmiKERR6Ku1y7PodBbOj2P7EZ-hRA8Wn0HH_TekCvZ-AzU965YyQkonFXBztCe5tqbtGXatBDA8mWUPg"
+      }
+}
+
+
+
+
+PAN Validation Request:
+-------------------------------
+
+curl --location --request POST 'https://partneruat.sidbi.in/online/pan/validation-enquiry' \
+--header 'client-id: SIDBI_INTERNAL' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNzEwNDc5NjgwLCJleHAiOjE3OTY4Nzk2ODAsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSIn0.q7miF8y304AAk6yIhDRLJY8-rXx7qONqFlqTksXsNrkPCbf02R2t6DK-V3Zp0R5j2E3iOUzlhIaealSuNBZEFQ' \
+--header 'Content-Type: application/json' \
+--header 'Cookie: HttpOnly' \
+--data-raw '{
+      "inputData": [
+            {
+                  "pan": "AZOPA2620B",
+                  "name": "ABDULSAB",
+                  "fathername": "",
+                  "dob": "01/01/1965"
+            }
+      ]
+}'
+
+PAN Validation Response:
+-------------------------------
+{
+      "statusCode": "1000",
+      "statusMsg": "Success",
+      "payload": {
+            "data": [
+                  {
+                        "pan": "AZOPA2620B",
+                        "pan_status": "E"
+                  }
+            ]
+      }
+}
+
+
+DATABASE TABLEs where actual request and response will store:
+--------------------------------------------------------------
+SIDBICDA.PAN_VALIDATION_REQUESTS
