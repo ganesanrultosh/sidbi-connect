@@ -101,6 +101,21 @@ async function signupUser(signupInput: Partner) {
   })
 }
 
+// de-register user
+async function deRegister(request: { username: string }){
+
+  const token = await getToken();
+
+  return fetch(`${apiEndpoint}/api/users/deRegister`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+    body: JSON.stringify(request),
+  });
+}
+
 async function randomKeys(key: string) {
   return fetch(`${apiEndpoint}/auth/randomKeys/${key}`, {
     method: "GET",
@@ -135,4 +150,4 @@ async function profile () {
   });
 }
 
-export { me, loginUser, forgotPassword, signupUser, setUserPassword, randomKeys, verifyUser, generateOtp, loginEmployee, profile, };
+export { me, loginUser, forgotPassword, signupUser, deRegister, setUserPassword, randomKeys, verifyUser, generateOtp, loginEmployee, profile, };
