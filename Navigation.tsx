@@ -31,6 +31,7 @@ import {TouchableOpacity} from 'react-native';
 import EmployeeLoginHeader from './src/headers/EmployeeLoginHeader';
 import PartnerLoginHeader from './src/headers/PartnerLoginHeader';
 import HomeHeader from './src/headers/HomeHeader';
+import DeRegisterPage from './src/pages/navigation/DeRegisterPage';
 
 declare global {
   namespace ReactNavigation {
@@ -58,6 +59,7 @@ export type RootStackParamList = {
   VisitTypeSelection: { customer: Customer | undefined};
   VisitReport: {visit : Visit | undefined};
   Gallery: {visit : Visit | undefined};
+  DeRegister: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -228,8 +230,13 @@ function Navigation(): JSX.Element {
                 headerShown: false,
               }}>
               <Stack.Screen
-                name="Root" // UI worked by nisg_vigneshj
+                name="Root"
                 component={Root}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="DeRegister"
+                component={DeRegisterPage}
                 options={{headerShown: false}}
               />
             </Stack.Group>
