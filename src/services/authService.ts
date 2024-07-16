@@ -81,15 +81,43 @@ function loginEmployee(credentials: {
   });
 }
 
-async function forgotPassword(request: { username: string }) {
-  return fetch(`${apiEndpoint}/auth/forgotpassword`, {
-    method: "POST",
-    headers: {
+// async function forgotPassword(request: { username: string }) {
+//   return fetch(`${apiEndpoint}/auth/forgotpassword`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(request),
+//   });
+// }
+
+// Code changes by nisg_vigneshj for Partner/ForgotPassword implementation
+function forgotPasswordOtp(request: { username: string }){
+  return fetch(`${apiEndpoint}/auth/forgotPasswordOtp/generate`, {
+    method : "POST",
+    headers : {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(request),
-  });
+    body : JSON.stringify(request),
+  })
 }
+
+function forgotPassword(request: { 
+  username: string,
+  otp: string,
+  password: string,
+  saltkey: string
+  }){
+    
+  return fetch(`${apiEndpoint}/auth/forgotpassword`, {
+    method : "POST",
+    headers : {
+      "Content-Type": "application/json",
+    },
+    body : JSON.stringify(request),
+  })
+}
+
 
 async function signupUser(signupInput: Partner) {
   return fetch(`${apiEndpoint}/auth/signup`, {
@@ -150,4 +178,4 @@ async function profile () {
   });
 }
 
-export { me, loginUser, forgotPassword, signupUser, deRegister, setUserPassword, randomKeys, verifyUser, generateOtp, loginEmployee, profile, };
+export { me, loginUser, forgotPassword, forgotPasswordOtp, signupUser, deRegister, setUserPassword, randomKeys, verifyUser, generateOtp, loginEmployee, profile, };

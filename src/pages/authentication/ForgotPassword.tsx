@@ -6,6 +6,8 @@ import { StyleSheet, Text, View } from "react-native"
 import { Button, Surface } from "react-native-paper";
 import Toast from "react-native-root-toast";
 import CustomInput from "../../components/CustomInput";
+import { forgotPassword, forgotPasswordOtp } from '../../services/authService';
+import encrypt from '../../components/Authentication/passwordUtil';
 
 const ForgotPassword = () => {
   const navigation = useNavigation();
@@ -30,8 +32,8 @@ const ForgotPassword = () => {
   const userIdValidationSchema = yup.object().shape({
     userId: yup
       .string()
-      .required('Email Id or phone number is required')
-      .test('email_or_phone', 'Email / Phone is invalid', (value) => {
+      .required('Email Id is required')
+      .test('email_or_phone', 'Email is invalid', value => {
         return validateEmail(value) || validatePhone(parseInt(value ?? '0'));
       })
   })
@@ -65,14 +67,76 @@ const ForgotPassword = () => {
   return <Formik
     validationSchema={forgotPasswordValidationSchema}
     initialValues={initialValue}
-    onSubmit={values => {
-      Toast.show("Password set sucessfully!");
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: 'Login' }]
+    onSubmit={async values => {
+      await encrypt(values.password)
+      .then( async encryptedValues => {
+        await forgotPassword({
+          username: values.userId,
+          otp: values.otp,
+          password : encryptedValues.password,
+          saltkey : encryptedValues.key
         })
-      );
+        .then(response => {
+          return response.json()})
+        .then(data=>{
+          if(data && data.message){
+            switch (data.message) {
+              case "Password reset successful":
+                Toast.show(data.message);
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'Login' }]
+                  })
+                );
+                break;
+              case "User not active":
+                Toast.show(data.message);
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'Login' }]
+                  })
+                );
+              case "User not found":
+                Toast.show(data.message);
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'Login' }]
+                  })
+                );
+              default:
+                Toast.show("Something went wrong. Try later");
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'Login' }]
+                  })
+                );
+                break;
+            }
+          }else if(data && data.error){
+            Toast.show(data.error);
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'Login' }]
+              })
+            );
+          }
+        })
+        .catch(error => {
+          console.log("Error resetting password, ERR", error);
+          Toast.show(error);
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: 'Login' }]
+            })
+          );
+        })
+      });
     }}
   >
     {({
@@ -84,8 +148,39 @@ const ForgotPassword = () => {
         <Formik
           validationSchema={userIdValidationSchema}
           initialValues={initialValue}
-          onSubmit={values => {
-            setIsOtpSent(true)
+          onSubmit={ async values => {
+            await forgotPasswordOtp({username: values.userId})
+            .then(response => response.json())
+            .then(data =>  {
+              if(data && data.message){
+                switch (data.message) {
+                  case "OTP Sent sucessfully!":
+                    initialValue.userId = values.userId;
+                    setIsOtpSent(true);
+                    Toast.show(data.message);
+                    break;
+                  case "User not active":
+                    Toast.show(data.message);
+                    setIsOtpSent(false);
+                    break;
+                  case "User not found":
+                    Toast.show(data.message);
+                    setIsOtpSent(false);
+                    break;
+                  default:
+                    Toast.show("Something went wrong. Try later");
+                    setIsOtpSent(false);
+                    break;
+                }
+              }else if(data && data.error){
+                Toast.show(data.error);
+                setIsOtpSent(false);
+              }
+            }).catch(error=>{
+              console.log("Error sending OTP, ERR ", error);
+              Toast.show(error);
+              setIsOtpSent(false);
+            });
           }}
         >
           {({
@@ -96,7 +191,7 @@ const ForgotPassword = () => {
             <Field
               component={CustomInput}
               name="userId"
-              label="Email Id or phone number (*)"
+              label="Email Id (*)"
             />
             {!isOtpSent &&
               <Button
