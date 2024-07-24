@@ -64,6 +64,8 @@ const ForgotPassword = () => {
     confirmPassword: ''
   }
 
+  const [usermail, setUsermail] = useState<string>(initialValue.userId);
+
   return <Formik
     validationSchema={forgotPasswordValidationSchema}
     initialValues={initialValue}
@@ -71,7 +73,7 @@ const ForgotPassword = () => {
       await encrypt(values.password)
       .then( async encryptedValues => {
         await forgotPassword({
-          username: values.userId,
+          username: usermail,
           otp: values.otp,
           password : encryptedValues.password,
           saltkey : encryptedValues.key
@@ -155,7 +157,7 @@ const ForgotPassword = () => {
               if(data && data.message){
                 switch (data.message) {
                   case "OTP Sent sucessfully!":
-                    initialValue.userId = values.userId;
+                    setUsermail(values.userId);
                     setIsOtpSent(true);
                     Toast.show(data.message);
                     break;
