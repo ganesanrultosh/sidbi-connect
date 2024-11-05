@@ -96,7 +96,7 @@ const EmployeeLogin = () => {
     getToken().then(data => {
       if (data !== undefined && data !== null) {
         setLoggedIn(true);
-        getReportStructure();
+        // getReportStructure();
       } else {
         setLoggedIn(false);
         dispatch(setMPin(undefined));
@@ -411,6 +411,7 @@ const EmployeeLogin = () => {
                         if (data.role) {
                           setUserRole(data.role).then(() => {
                             if (data.name) {
+                              getReportStructure(); // call getReportStructure with updated user role set
                               setUserName(data.name);
                             }
                           });
